@@ -43,10 +43,10 @@
     
     // Animação para hero section
     const heroElements = {
-      subtitle: '.hero-subtitle',
-      title: '.hero-title',
-      description: '.hero-description',
-      buttons: '.hero-buttons'
+      subtitle: '.animate-subtitle',
+      title: '.animate-title',
+      description: '.animate-description',
+      buttons: '.animate-buttons'
     };
     
     gsap.from(heroElements.subtitle, {opacity: 0, y: 20, duration: 0.8, delay: 0.2});
@@ -55,7 +55,7 @@
     gsap.from(heroElements.buttons, {opacity: 0, y: 30, duration: 0.8, delay: 0.8});
     
     // Animação para dots na hero
-    gsap.from('.hero-dot', {
+    gsap.from('.animate-dots', {
       opacity: 0, 
       scale: 0, 
       duration: 0.5, 
@@ -72,13 +72,7 @@
       ease: 'power1.inOut'
     });
     
-    // Animação para shapes
-    gsap.to('.shape', {
-      rotation: 360,
-      duration: 40,
-      repeat: -1,
-      ease: 'none'
-    });
+
     
     // Animação para o contador
     const counters = document.querySelectorAll('.counter-value');
@@ -99,31 +93,6 @@
     });
   }
 
-  // Função para menu mobile
-  function initMobileMenu() {
-    const navToggle = document.querySelector('.nav-toggle');
-    const nav = document.querySelector('nav ul');
-    
-    if (navToggle && nav) {
-      navToggle.addEventListener('click', function() {
-        nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
-        
-        // Animar os spans do botão hamburger
-        const spans = this.querySelectorAll('span');
-        if (spans.length === 3) {
-          if (nav.style.display === 'flex') {
-            spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-            spans[1].style.opacity = '0';
-            spans[2].style.transform = 'rotate(-45deg) translate(7px, -8px)';
-          } else {
-            spans[0].style.transform = 'none';
-            spans[1].style.opacity = '1';
-            spans[2].style.transform = 'none';
-          }
-        }
-      });
-    }
-  }
 
   // Smooth scroll para links internos
   function initSmoothScroll() {
@@ -140,13 +109,7 @@
             top: targetElement.offsetTop - 80,
             behavior: 'smooth'
           });
-          
-          // Fechar menu mobile se estiver aberto
-          const nav = document.querySelector('nav ul');
-          const navToggle = document.querySelector('.nav-toggle');
-          if (window.innerWidth < 992 && nav && nav.style.display === 'flex' && navToggle) {
-            navToggle.click();
-          }
+        
         }
       });
     });
@@ -155,7 +118,6 @@
   // Inicializar tudo quando o DOM estiver pronto
   function initAll() {
     initGSAP();
-    initMobileMenu();
     initSmoothScroll();
   }
 

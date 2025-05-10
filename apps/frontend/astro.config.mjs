@@ -1,19 +1,20 @@
 import path from 'path';
 import { defineConfig } from 'astro/config';
-
-import tailwindcss from '@tailwindcss/vite';
+import tailwindcss from '@tailwindcss/vite'
 
 import vue from '@astrojs/vue';
 
 export default defineConfig({
   site: 'https://joqueianapolis.com.br',
+  integrations: [
+    vue(), // correto aqui!
+  ],
   vite: {
     resolve: {
       alias: {
         '@': path.resolve('./src')
       }
     },
-
     css: {
       preprocessorOptions: {
         scss: {
@@ -21,16 +22,12 @@ export default defineConfig({
         }
       }
     },
-
-    // Configurações para GSAP e Particles.js
     optimizeDeps: {
-      include: ['gsap', 'gsap/ScrollTrigger']
+      include: ['gsap', 'gsap/ScrollTrigger', 'vue'], 
     },
-    
     ssr: {
       noExternal: ['gsap', 'particles.js']
     },
-    integrations: [vue()],
     plugins: [tailwindcss()]
   }
 });

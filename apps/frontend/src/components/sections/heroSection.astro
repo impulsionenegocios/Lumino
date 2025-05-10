@@ -1,54 +1,55 @@
 ---
-import ParticlesBackground from "../animations/ParticlesBackground.astro"
+import { Image } from "astro:assets"
+import BgImage from '../../assets/images/bg.jpg'
+import Button from '../../components/buttons/mainButton.astro';
+
 ---
 <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="hero-shape-1"></div>
-        <div class="hero-shape-2"></div>
+    <section class="h-[100vh] bg-white flex items-center overflow-hidden relative " id="home">
         <div class="hero-bg">
-            <img src="https://placehold.co/1000x1000" alt="Lumino Clínica" class="hero-bg-image">
+            <Image src={BgImage} alt="Lumino Clínica" class="hero-bg-image">
         </div>
-        <div class="container">
-            <div class="hero-content">
-                <span class="hero-subtitle">BEM-VINDO À LUMINO CLÍNICA</span>
-                <h1 class="hero-title">O sorriso perfeito que você <span class="accent">merece</span></h1>
-                <p class="hero-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                <div class="hero-buttons">
-                    <a href="#services" class="btn">Nossos Serviços</a>
-                    <a href="#contact" class="btn btn-outline">Agendar Consulta</a>
+        <div class="counter-particles"></div>
+        <div class="mx-auto max-w-[1600px] lg:pl-40 w-full relative z-10">
+            <div class="lg:w-[50%] px-8 lg:px-0 relative z-3">
+                <span class="text-primary-gold font-bold animate-subtitle font-serif">BEM-VINDO À LUMINO CLÍNICA</span>
+                <h1 class="text-6xl font-bold font-serif animate-title">O sorriso perfeito que você <span class="accent">merece</span></h1>
+                <p class="text-md text-gray-500 animate-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+                <div class="flex flex-col lg:flex-row gap-4 animate-buttons">
+                    <Button title="Nossos Serviços" href="#services" />
+                    <Button title="Agendar Consulta" href="#contact" variant="outline" />
                 </div>
             </div>
         </div>
-        <div class="hero-dots">
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
-            <span class="hero-dot"></span>
+        <div class="hero-dots ">
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
+            <span class="hero-dot animate-dots"></span>
         </div>
-        <div class="scroll-down">
+        <!-- <div class="scroll-down">
             <span>&nbsp;</span>
             <p>Scroll Down</p>
-        </div>
+        </div> -->
     </section>
-    <ParticlesBackground />

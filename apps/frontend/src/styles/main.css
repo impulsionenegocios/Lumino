@@ -1,0 +1,85 @@
+  @import 'tailwindcss';
+
+/* ----------------------------------- FONTE ----------------------------------- */
+@font-face {
+  font-family: 'Poetsen One';
+  src: url('/fonts/PoetsenOne-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Import Cormorant and Montserrat for the luxury header */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;500;600;700&family=Montserrat:wght@200;300;400;500;600;700&display=swap');
+
+/* ----------------------------------- PALETA ----------------------------------- */
+@theme {
+  /* Existing colors */
+  --color-joquei-cian: #00818d;
+  --color-joquei-blue: #004966;
+  --color-joquei-yellow: #ffa400;
+  --color-joquei-orange: #ff7724;
+  --color-joquei-lightblue: #00bdba;
+  
+  /* Luxury header colors */
+  --color-primary-dark: #131f2f;
+  --color-primary-gold: #c9a874;
+  --color-gold-light: #e9d7b8;
+  --color-gold-dark: #a28350;
+  --color-light-bg: #f9f7f2;
+  --color-off-white: #f8f5f0;
+  --color-gray-light: #f0f0f0;
+  --color-gray-text: #777777;
+  
+  /* Existing gradients */
+  --gradient-primary: linear-gradient(180deg, #6f4bdb 30%, rgba(216, 121, 242, 1) 100%);
+  --gradient-orange: linear-gradient(to right, #ff9800, #f57c00);
+  --gradient-danger: linear-gradient(to right, #ef4444, #b91c1c);
+  --gradient-success: linear-gradient(to bottom, #36d869, #cbffdb);
+  
+  /* Luxury header gradients */
+  --gradient-dark: linear-gradient(145deg, #131f2f 0%, #1e2d42 100%);
+  --gradient-gold: linear-gradient(145deg, #c9a874 0%, #d9b88f 100%);
+  --gradient-blend: linear-gradient(145deg, #131f2f 0%, #c9a874 100%);
+  
+  /* Font families */
+  --font-sans: 'Montserrat', system-ui, sans-serif;
+  --font-serif: 'Cormorant', serif;
+  --font-poetsen: 'Poetsen One', sans-serif;
+
+
+  --animate-ease-out-expo: 'cubic-bezier(0.23, 1, 0.32, 1)';
+}
+
+
+
+/* Define utility classes for our custom font */
+.font-poetsen {
+  font-family: 'Poetsen One', sans-serif;
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+/* Define background gradients */
+.bg-gradient-gold {
+  background: var(--gradient-gold);
+}
+
+.bg-gradient-dark {
+  background: var(--gradient-dark);
+}
+
+.bg-gradient-blend {
+  background: var(--gradient-blend);
+}
+
+/* Smooth scroll for anchor links */
+html {
+  scroll-behavior: smooth;
+}

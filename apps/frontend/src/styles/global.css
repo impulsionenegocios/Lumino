@@ -17,12 +17,7 @@
             --gray-text: #777777;
         }
         
-        /* Reset e estilos base */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+
         
         html {
             scroll-behavior: smooth;
@@ -53,7 +48,6 @@
             color: var(--white);
             text-decoration: none;
             font-weight: 500;
-            font-size: 16px;
             border-radius: 50px;
             transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
             border: none;
@@ -621,14 +615,7 @@
             overflow: hidden;
         }
         
-        .counter-particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
+        
         
         .counter-grid {
             display: grid;
@@ -1673,3 +1660,21 @@
                 gap: 15px;
             }
         }
+       .counter-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none; /* Allows clicking through the particles */
+}
+
+        :not(.counter-particles) > .counter-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}

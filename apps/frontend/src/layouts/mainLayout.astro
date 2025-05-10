@@ -1,5 +1,16 @@
----
+--- 
 import '../styles/global.css'
+import '../styles/main.css'
+import MainHeader from '../components/headers/mainHeader.vue';
+import Animations from '../components/animations/Animations.astro';
+const menuItems = [
+  { label: 'Início', url: '#home' },
+  { label: 'Sobre Nós', url: '#about' },
+  { label: 'Serviços', url: '#services' },
+  { label: 'Galeria', url: '#gallery' },
+  { label: 'Localização', url: '#location' },
+  { label: 'Contato', url: '#contact' }
+];
 ---
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -10,6 +21,15 @@ import '../styles/global.css'
     <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js" is:inline></script>
 </head>
 <body>
-    <slot />
-  </body>
+  <!-- Hydrate assim que o JS carregar -->
+  <MainHeader 
+    client:load
+    logoText="Lumino" 
+    logoAccent="Clínica"
+    ctaText="Agendar Consulta"
+    :menuItems={menuItems}
+  />
+  <slot />
+  <Animations />
+</body>
 </html>  
