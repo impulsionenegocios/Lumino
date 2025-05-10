@@ -1,0 +1,43 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
+    ports:
+      - "4321:4321"
+    volumes:
+      - .:/app
+    working_dir: /app/apps/frontend
+    command: sh -c "pnpm install && pnpm dev --host"
+    depends_on:
+      - directus
+
+  directus:
+    build:
+      context: .
+      dockerfile: apps/cms/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8055:8055"
+    volumes:
+      - ./volumes/directus-data:/directus/data
+      - ./volumes/directus-uploads:/directus/uploads
+    env_file:
+      - .env
+    environment:
+      # Banco de dados
+      - DB_CLIENT=${DB_CLIENT}
+      - DB_FILENAME=${DB_FILENAME}
+      # URL pública
+      - PUBLIC_URL=${PUBLIC_URL}
+      # Usuário admin
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      # Chave de tokens
+      - SECRET=${SECRET}
+      # Configuração de arquivos
+      - STORAGE_LOCATIONS=local
+      - STORAGE_LOCAL_DRIVER=local
+      - STORAGE_LOCAL_ROOT=/directus/uploads
+      # Desativar telemetria
+      - TELEMETRY=false

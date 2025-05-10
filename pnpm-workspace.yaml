@@ -1,0 +1,13 @@
+packages:
+  - apps/*
+  - docker/*
+ignoredBuiltDependencies:
+  - argon2
+  - esbuild
+  - isolated-vm
+  - oracledb
+  - sharp
+onlyBuiltDependencies:
+  - '@tailwindcss/oxide'
+  - sqlite3
+  - vue-demi
