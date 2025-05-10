@@ -2,7 +2,7 @@
 import { Image } from "astro:assets"
 import BgImage from '../../assets/images/bg.jpg'
 import Button from '../../components/buttons/mainButton.astro';
-
+import DotsShape from "../shapes/dotsShape.astro";
 ---
 <!-- Hero Section -->
     <section class="h-[100vh] bg-white flex items-center overflow-hidden relative " id="home">
@@ -13,43 +13,17 @@ import Button from '../../components/buttons/mainButton.astro';
         <div class="mx-auto max-w-[1600px] lg:pl-40 w-full relative z-10">
             <div class="lg:w-[50%] px-8 lg:px-0 relative z-3">
                 <span class="text-primary-gold font-bold animate-subtitle font-serif">BEM-VINDO À LUMINO CLÍNICA</span>
-                <h1 class="text-6xl font-bold font-serif animate-title">O sorriso perfeito que você <span class="accent">merece</span></h1>
-                <p class="text-md text-gray-500 animate-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                <div class="flex flex-col lg:flex-row gap-4 animate-buttons">
+                <h1 class="text-6xl 2xl:text-7xl font-bold font-serif animate-title">O sorriso perfeito que você <span class="accent">merece</span></h1>
+                <p class="text-md text-gray-500 animate-description mt-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+                <div class="flex flex-col lg:flex-row gap-4 animate-buttons mt-8">
                     <Button title="Nossos Serviços" href="#services" />
                     <Button title="Agendar Consulta" href="#contact" variant="outline" />
                 </div>
             </div>
         </div>
-        <div class="hero-dots ">
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-            <span class="hero-dot animate-dots"></span>
-        </div>
-        <!-- <div class="scroll-down">
+        <DotsShape />
+        <div class="scroll-down">
             <span>&nbsp;</span>
             <p>Scroll Down</p>
-        </div> -->
+        </div>
     </section>
