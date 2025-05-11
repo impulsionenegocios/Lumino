@@ -1,21 +1,14 @@
 <template>
   <header 
     class="fixed top-0 left-0 w-full py-4 z-50 transition-all duration-500" 
-    :class="[isScrolled ? 'bg-white shadow-lg' : 'bg-transparent', isMenuOpen ? 'lg:bg-transparent' : '']"
+    :class="[isScrolled ? 'bg-white shadow-lg' : 'bg-transparent']"
     ref="headerRef"
   >
     <div class="container mx-auto px-4 md:px-8 flex items-center justify-between">
       <!-- Logo -->
       <div class="relative z-10">
-        <a href="#" class="flex items-center">
-          <div class="w-3 h-3 rounded-full bg-primary-gold mr-2"></div>
-          <span 
-            class="text-2xl md:text-3xl font-serif font-semibold" 
-            :class="{ 'text-white': !isScrolled && !isMenuOpen, 'text-primary-dark': isScrolled || isMenuOpen }"
-          >
-            {{ logoText }} 
-            <span class="text-primary-gold italic">{{ logoAccent }}</span>
-          </span>
+        <a href="/" class="flex items-center">
+          <img class="h-[60px]" :src="logoUrl" alt="Logo">
         </a>
       </div>
 
@@ -25,25 +18,18 @@
           <li v-for="(item, index) in menuItems" :key="index">
             <a 
               :href="item.url" 
-              class="relative font-medium text-base pb-1 transition-colors duration-300"
-              :class="{ 'text-white hover:text-primary-gold': !isScrolled, 'text-primary-dark hover:text-primary-gold': isScrolled }"
-              @mouseenter="animateLink"
-              @mouseleave="resetLink"
+              class="relative font-medium text-base pb-1 transition-colors duration-500 group"
+              :class="{ 'text-primary-dark hover:text-primary-gold': !isScrolled, 'hover:text-primary-gold': isScrolled }"
             >
               {{ item.label }}
-              <span class="absolute bottom-0 left-0 w-full h-px bg-primary-gold transform origin-left scale-x-0 transition-transform duration-500"></span>
+              <span class="absolute bottom-0 left-0 w-full h-px bg-primary-gold transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
             </a>
           </li>
         </ul>
       </nav>
 
       <!-- CTA Button -->
-      <a 
-        href="#contact" 
-        class="hidden lg:inline-block py-3 px-6 bg-gradient-to-r from-primary-gold to-gold-light text-white rounded-full text-sm font-medium uppercase tracking-wider shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-500"
-      >
-        {{ ctaText }}
-      </a>
+       <MainButton class="2xl:!text-sm text-xs !hidden lg:!block" :title="ctaText" href="#contact"/>
 
       <!-- Mobile Menu Toggle -->
       <button 
@@ -52,11 +38,11 @@
         aria-label="Toggle Menu"
       >
         <span 
-          class="block w-7 h-0.5 transition-all duration-500 ease-in-out mb-1.5"
+          class="block w-7 h-0.5 transition-all duration-500 ease-in-out"
           :class="isMenuOpen ? 'bg-primary-dark rotate-45 translate-y-2' : 'bg-primary-dark'"
         ></span>
         <span 
-          class="block w-7 h-0.5 transition-all duration-500 ease-in-out mb-1.5"
+          class="block w-7 h-0.5 transition-all duration-500 ease-in-out my-1.5"
           :class="isMenuOpen ? 'bg-primary-dark opacity-0' : 'bg-primary-dark'"
         ></span>
         <span 
@@ -65,73 +51,67 @@
         ></span>
       </button>
     </div>
+  </header>
 
-    <!-- Mobile Sidebar -->
-    <div 
-      class="fixed top-0 right-0 w-80 h-screen bg-white shadow-2xl transform transition-transform duration-700 ease-in-out z-40"
-      :class="isMenuOpen ? 'translate-x-0' : 'translate-x-full'"
-      ref="sidebarRef"
-    >
-      <!-- Sidebar Header: logo + close -->
-      <div class="flex items-center justify-between px-6 py-4 border-b">
-        <a href="#" class="flex items-center">
-          <div class="w-3 h-3 rounded-full bg-primary-gold mr-2"></div>
-          <span class="text-xl font-serif font-semibold text-primary-dark">
-            {{ logoText }} <span class="text-primary-gold italic">{{ logoAccent }}</span>
-          </span>
-        </a>
-        <button 
-          @click="closeMenu" 
-          aria-label="Fechar menu" 
-          class="text-2xl font-bold text-primary-dark"
-        >
-          &times;
-        </button>
-      </div>
-
-      <div class="flex flex-col h-full pt-4 pb-8 px-8">
-        <!-- Mobile Navigation -->
-        <ul class="flex flex-col gap-6">
-          <li v-for="(item, index) in menuItems" :key="index" class="opacity-0">
-            <a 
-              :href="item.url" 
-              class="relative font-medium text-lg pb-1 text-primary-dark hover:text-primary-gold transition-colors duration-300 inline-block"
-              @click="closeMenu"
-            >
-              {{ item.label }}
-              <span class="absolute bottom-0 left-0 w-0 h-px bg-primary-gold transition-all duration-500 group-hover:w-full"></span>
-            </a>
-          </li>
-        </ul>
-
-        <!-- Mobile CTA Button -->
-        <a 
-          href="#contact" 
-          class="mt-10 py-4 px-6 bg-gradient-to-r from-primary-gold to-gold-light text-white rounded-full text-sm font-medium uppercase tracking-wider text-center shadow-lg transform opacity-0"
-          @click="closeMenu"
-          ref="mobileCta"
-        >
-          {{ ctaText }}
-        </a>
-      </div>
+  <!-- Mobile Sidebar -->
+  <div 
+    class="fixed top-0 right-0 w-80 h-screen bg-white shadow-2xl transform transition-transform duration-700 ease-in-out z-[99999]"
+    :class="isMenuOpen ? 'translate-x-0' : 'translate-x-full'"
+    ref="sidebarRef"
+  >
+    <!-- Sidebar Header: logo + close -->
+    <div class="flex items-center justify-between px-6 py-4">
+      <img class="h-[60px]" :src="logoUrl" alt="">
+      <button 
+        @click="closeMenu" 
+        aria-label="Fechar menu" 
+        class="text-2xl font-bold cursor-pointer text-primary-dark hover:text-primary-gold transition-colors duration-300"
+      >
+        &times;
+      </button>
     </div>
 
-    <!-- Overlay para fechar ao clicar fora -->
-    <div 
-      class="fixed inset-0 bg-black bg-opacity-50 z-30 transition-opacity duration-500"
-      :class="isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'"
-      @click="closeMenu"
-    ></div>
-  </header>
+    <div class="flex flex-col h-full pt-4 pb-8 px-8">
+      <!-- Mobile Navigation -->
+      <ul class="flex flex-col gap-6">
+        <li v-for="(item, index) in menuItems" :key="index" class="mobile-menu-item">
+          <a 
+            :href="item.url" 
+            class="relative font-medium text-lg cursor-pointer pb-1 text-primary-dark hover:text-primary-gold transition-colors duration-300 inline-block group"
+            @click="closeMenu"
+          >
+            {{ item.label }}
+            <span class="absolute bottom-0 left-0 w-0 h-px bg-primary-gold transition-all duration-300 group-hover:w-full"></span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- Mobile CTA Button -->
+      <MainButton 
+        @click="closeMenu" 
+        ref="mobileCta" 
+        class="2xl:!text-sm text-xs !block lg:!hidden mt-8 mobile-cta" 
+        :title="ctaText" 
+        href="#contact"
+      />
+    </div>
+  </div>
+
+  <!-- Overlay para fechar ao clicar fora -->
+  <div 
+    class="fixed inset-0 bg-black/50 z-[9999] transition-opacity duration-500"
+    :class="isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'"
+    @click="closeMenu"
+  ></div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import gsap from 'gsap';
+import MainButton from '../buttons/mainButton.vue';
 
 interface Props {
-  logoText?: string;
-  logoAccent?: string;
+  logoUrl?: string;
   ctaText?: string;
   menuItems?: Array<{ label: string; url: string }>;
 }
@@ -151,56 +131,100 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 // Desestruturação para usar direto no template
-const { menuItems, logoText, logoAccent, ctaText } = props;
+const { menuItems, logoUrl, ctaText } = props;
 
 const isMenuOpen = ref(false);
 const isScrolled = ref(false);
 const headerRef = ref<HTMLElement | null>(null);
 const sidebarRef = ref<HTMLElement | null>(null);
 
-const toggleMenu = () => { isMenuOpen.value = !isMenuOpen.value };
-const closeMenu  = () => { isMenuOpen.value = false };
-
-const animateLink = (e: MouseEvent) => {
-  const line = (e.currentTarget as HTMLElement).querySelector('span') as HTMLElement;
-  gsap.to(line, { scaleX: 1, duration: 0.4, ease: 'power2.out' });
-};
-const resetLink = (e: MouseEvent) => {
-  const line = (e.currentTarget as HTMLElement).querySelector('span') as HTMLElement;
-  gsap.to(line, { scaleX: 0, duration: 0.4, ease: 'power2.in' });
+const toggleMenu = () => { 
+  isMenuOpen.value = !isMenuOpen.value;
+  // Prevenir scroll quando menu está aberto
+  if (isMenuOpen.value) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = 'auto';
+  }
 };
 
-const handleScroll = () => { isScrolled.value = window.scrollY > 50 };
+const closeMenu = () => { 
+  isMenuOpen.value = false;
+  document.body.style.overflow = 'auto';
+};
 
-watch(isMenuOpen, open => {
-  if (open) {
-    const items = document.querySelectorAll('.opacity-0');
-    const cta   = document.querySelector('.mt-10.opacity-0');
-    gsap.fromTo(items, { y:20, opacity:0 }, { y:0, opacity:1, stagger:0.1, delay:0.2, duration:0.6, ease:'power3.out' });
-    if (cta) gsap.fromTo(cta, { y:20, opacity:0 }, { y:0, opacity:1, delay:0.6, duration:0.6, ease:'power3.out' });
+const handleScroll = () => { 
+  isScrolled.value = window.scrollY > 50;
+};
+
+// Animação do menu mobile
+watch(isMenuOpen, (isOpen) => {
+  if (isOpen) {
+    // Reset das animações
+    gsap.set('.mobile-menu-item', { y: 20, opacity: 0 });
+    gsap.set('.mobile-cta', { y: 20, opacity: 0 });
+    
+    // Animar itens do menu
+    gsap.to('.mobile-menu-item', {
+      y: 0,
+      opacity: 1,
+      stagger: 0.1,
+      delay: 0.2,
+      duration: 0.6,
+      ease: 'power3.out'
+    });
+    
+    // Animar CTA
+    gsap.to('.mobile-cta', {
+      y: 0,
+      opacity: 1,
+      delay: 0.6,
+      duration: 0.6,
+      ease: 'power3.out'
+    });
   }
 });
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
   handleScroll();
+  
+  // Animação inicial do header
   if (headerRef.value) {
-    gsap.from(headerRef.value, { y:-100, opacity:0, duration:1, ease:'power3.out' });
+    gsap.fromTo(headerRef.value, 
+      { y: -100, opacity: 0 }, 
+      { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }
+    );
   }
 });
+
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll);
+  // Garantir que o scroll seja restaurado
+  document.body.style.overflow = 'auto';
 });
 </script>
 
-<style>
+<style scoped>
 /* Garante que o header fique acima de tudo */
-header { isolation: isolate; }
+header { 
+  isolation: isolate; 
+}
 
-/* Transições suaves */
-.header-container * { transition: all 0.3s ease; }
 
-@media (min-width: 1024px) {
-  .translate-x-full { display: none; }
+/* Fix para mobile hamburger */
+@media (max-width: 1024px) {
+  .translate-x-full {
+    transform: translateX(100%);
+  }
+}
+
+/* Estilo para o overlay em tela cheia */
+.fixed.inset-0 {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 </style>

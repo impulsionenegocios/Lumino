@@ -4,9 +4,27 @@ import ParticlesBackground from '../components/animations/ParticlesBackground.as
 import MainLayout from "../layouts/mainLayout.astro"
 import HeroSection from '../components/sections/heroSection.astro'
 import AboutUs from '../components/sections/aboutUs.astro'
+const heroData = 
+  {
+    subtitle: 'BEM VINDO Á LUMINO CLÍNICA',
+    title: 'O sorriso perfeito que você merece',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
+    firstButtonTitle: 'NOSSOS SERVIÇOS',
+    secondButtonTitle: 'AGENDAR CONSULTA',
+    firstButtonHref: '#services',
+    secondButtonHref: '#contacts'
+  }
 ---
 <MainLayout>
-  <HeroSection />
+  <HeroSection 
+    title={heroData.title}
+    subtitle={heroData.subtitle}
+    description={heroData.description}
+    firstButtonTitle={heroData.firstButtonTitle}
+    secondButtonTitle={heroData.secondButtonTitle}
+    firstButtonHref={heroData.firstButtonHref}
+    secondButtonHref={heroData.secondButtonHref}
+  />
   <AboutUs />
-    <ParticlesBackground />
+  <ParticlesBackground />
 </MainLayout>

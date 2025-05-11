@@ -3,6 +3,7 @@ import '../styles/global.css'
 import '../styles/main.css'
 import MainHeader from '../components/headers/mainHeader.vue';
 import Animations from '../components/animations/Animations.astro';
+import LogoUrl from '../assets/images/logo-escuro.png'
 const menuItems = [
   { label: 'Início', url: '#home' },
   { label: 'Sobre Nós', url: '#about' },
@@ -22,13 +23,13 @@ const menuItems = [
 </head>
 <body>
   <!-- Hydrate assim que o JS carregar -->
-  <MainHeader 
-    client:load
-    logoText="Lumino" 
-    logoAccent="Clínica"
-    ctaText="Agendar Consulta"
-    :menuItems={menuItems}
-  />
+<MainHeader 
+  client:load
+  logoUrl={LogoUrl.src} 
+  ctaText="Agendar Consulta"
+  :menuItems={menuItems}
+/>
+
   <slot />
   <Animations />
 </body>
