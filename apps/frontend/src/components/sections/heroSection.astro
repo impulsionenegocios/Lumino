@@ -1,6 +1,5 @@
 ---
 import { Image } from "astro:assets"
-import BgImage from '../../assets/images/bg.jpg'
 import Button from '../../components/buttons/mainButton.astro';
 import DotsShape from "../shapes/dotsShape.astro";
 const {
@@ -11,12 +10,20 @@ const {
   firstButtonHref,
   secondButtonTitle,
   secondButtonHref,
+  bgImage,
 } = Astro.props;
 ---
 <!-- Hero Section -->
     <section class="h-[100vh] bg-white flex items-center overflow-hidden relative " id="home">
         <div class="hero-bg">
-            <Image src={BgImage} alt="Lumino Clínica" class="hero-bg-image">
+            <Image 
+            src={bgImage}
+            alt="Lumino Clínica"
+            class="hero-bg-image"
+            layout="full-width"
+            loading="lazy"
+            decoding="async"
+            />
         </div>
         <div class="counter-particles"></div>
         <div class="mx-auto max-w-[1600px] lg:pl-40 w-full relative z-10">

@@ -79,7 +79,35 @@
   background: var(--gradient-blend);
 }
 
-/* Smooth scroll for anchor links */
-html {
-  scroll-behavior: smooth;
+
+
+/* 🔥 Regra geral para celular (até 768px) */
+@media (max-width: 768px) {
+  html, body {
+    scroll-behavior: smooth;
+    scrollbar-color: var(--primary-gold) transparent;
+  }
+
+  /* Chrome mobile ignora WebKit, então só isso funciona */
 }
+
+/* 🔥 Regra geral para desktop */
+@media (min-width: 769px) {
+  /* Aplica apenas no desktop, onde Chrome/Safari usam WebKit */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--primary-gold);
+    border-radius: 999px;
+    border: 1px solid transparent;
+    background-clip: content-box;
+  }
+}
+

@@ -23,14 +23,20 @@ const menuItems = [
 </head>
 <body>
   <!-- Hydrate assim que o JS carregar -->
-<MainHeader 
-  client:load
-  logoUrl={LogoUrl.src} 
-  ctaText="Agendar Consulta"
-  :menuItems={menuItems}
-/>
+  <MainHeader 
+    client:load
+    logoUrl={LogoUrl.src} 
+    ctaText="Agendar Consulta"
+    :menuItems={menuItems}
+  />
 
   <slot />
   <Animations />
 </body>
+<style>
+ html {
+  scroll-behavior: smooth;
+}
+/* Aplica a todos os scrolls do site */
+</style>
 </html>  

@@ -4,6 +4,29 @@ import ParticlesBackground from '../components/animations/ParticlesBackground.as
 import MainLayout from "../layouts/mainLayout.astro"
 import HeroSection from '../components/sections/heroSection.astro'
 import AboutUs from '../components/sections/aboutUs.astro'
+import BgImage from '../assets/images/bg.jpg'
+const features = [
+  {
+    icon: '✦',
+    title: 'Tecnologia Avançada',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  },
+  {
+    icon: '✦',
+    title: 'Equipe Especializada',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  },
+  {
+    icon: '✦',
+    title: 'Ambiente Luxuoso',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  },
+  {
+    icon: '✦',
+    title: 'Atendimento Premium',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  },
+];
 const heroData = 
   {
     subtitle: 'BEM VINDO Á LUMINO CLÍNICA',
@@ -12,7 +35,8 @@ const heroData =
     firstButtonTitle: 'NOSSOS SERVIÇOS',
     secondButtonTitle: 'AGENDAR CONSULTA',
     firstButtonHref: '#services',
-    secondButtonHref: '#contacts'
+    secondButtonHref: '#contacts',
+    bgImage: BgImage
   }
 ---
 <MainLayout>
@@ -24,7 +48,11 @@ const heroData =
     secondButtonTitle={heroData.secondButtonTitle}
     firstButtonHref={heroData.firstButtonHref}
     secondButtonHref={heroData.secondButtonHref}
+    bgImage={heroData.bgImage}
   />
-  <AboutUs />
+  <AboutUs 
+   features={features}
+  /> 
+
   <ParticlesBackground />
 </MainLayout>

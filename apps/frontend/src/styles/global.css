@@ -17,11 +17,6 @@
             --gray-text: #777777;
         }
         
-
-        
-        html {
-            scroll-behavior: smooth;
-        }
         
         body {
             font-family: 'Montserrat', sans-serif;
@@ -184,8 +179,8 @@
         }
         
         
-        /* Hero Section  */
-        .hero-bg {
+        /* Hero Section */
+            .hero-bg {
             position: absolute;
             top: 0;
             right: 0;
@@ -193,28 +188,28 @@
             height: 100%;
             z-index: 1;
             overflow: hidden;
-        }
-        
-        .hero-bg::before {
+            pointer-events: none; /* Evita interação com a imagem */
+            }
+
+            .hero-bg::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
             z-index: 2;
-        }
-        
-        .hero-bg-image {
-            position: absolute;
+            }
+
+            /* Aplica-se à tag <Image> do Astro */
+            .hero-bg-image {
+            position: absolute !important;
             top: 0;
             right: 0;
-            width: 100%;
-            height: 100%;
+            width: 100% !important;
+            height: 100% !important;
             object-fit: cover;
-        }
-        
+            z-index: 1;
+            }
+
         /* Scroll down indicator */
         .scroll-down {
             position: absolute;
@@ -302,12 +297,12 @@
         
         .about-image-wrapper {
             position: relative;
-            height: 700px;
+            height: 500px;
         }
         
         .about-image-main {
             position: absolute;
-            width: 80%;
+            width: 65%;
             height: 75%;
             top: 0;
             left: 0;
@@ -319,10 +314,10 @@
         
         .about-image-bg {
             position: absolute;
-            width: 80%;
+            width: 65%;
             height: 75%;
             bottom: 0;
-            right: 0;
+            right: 25px;
             background-color: var(--primary-gold);
             opacity: 0.1;
             border-radius: 250px 0 250px 0;
