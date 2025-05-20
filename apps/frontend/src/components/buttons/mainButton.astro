@@ -1,11 +1,7 @@
 ---
 // src/components/Button.astro
 
-const {
-  title,
-  href,
-  variant = 'default'
-} = Astro.props;
+const { title, href, variant = 'default' } = Astro.props;
 
 const isOutline = variant === 'outline';
 
@@ -27,7 +23,7 @@ const base = [
   'transform',
   'text-sm',
   'text-center',
-  '2xl:text-lg'
+  '2xl:text-lg',
 ].join(' ');
 
 const defaultStyles = [
@@ -52,7 +48,7 @@ const defaultStyles = [
   // hover
   'hover:shadow-[0_15px_30px_rgba(201,168,116,0.4)]',
   'hover:-translate-y-[3px]',
-  'hover:before:w-full'
+  'hover:before:w-full',
 ].join(' ');
 
 const outlineStyles = [
@@ -80,13 +76,10 @@ const outlineStyles = [
   'hover:text-white',
   'hover:shadow-[0_15px_30px_rgba(201,168,116,0.4)]',
   'hover:-translate-y-[3px]',
-  'hover:before:w-full'
+  'hover:before:w-full',
 ].join(' ');
 ---
 
-<a
-  href={href}
-  class={`${base} ${isOutline ? outlineStyles : defaultStyles}`}
->
+<a href={href} class={`${base} ${isOutline ? outlineStyles : defaultStyles}`}>
   {title}
 </a>

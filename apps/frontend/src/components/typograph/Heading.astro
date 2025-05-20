@@ -10,7 +10,7 @@ const {
   text,
   accent = '',
   color = 'dark',
-  fontWeight = 'bold' // pode ser 'bold' ou 'light'
+  fontWeight = 'bold', // pode ser 'bold' ou 'light'
 } = Astro.props;
 
 const isTitle = type === 'title';
@@ -25,13 +25,12 @@ const weightClass = fontWeight === 'bold' ? 'font-bold' : 'font-regular';
 let textColor = 'text-primary-dark';
 if (color === 'gold') textColor = 'text-primary-gold';
 else if (color === 'gray') textColor = 'text-gray-400';
-
 ---
 
-<component 
-  this={headingTag} 
+<component
+  this={headingTag}
   class={`relative leading-none ${fontSize} ${textColor} ${weightClass}`}
 >
-  {text} 
+  {text}
   {accent && <span class="text-primary-gold"> {accent}</span>}
 </component>

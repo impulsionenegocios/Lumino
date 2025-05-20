@@ -1,0 +1,75 @@
+---
+// components/LocationSection.astro
+
+interface LocationItem {
+  icon: string;
+  title: string;
+  info: string;
+}
+
+interface HoursItem {
+  day: string;
+  time: string;
+}
+
+const {
+  headingTitle,
+  headingAccent,
+  description,
+  locationItems,
+  hours,
+  mapImage,
+  mapAlt,
+} = Astro.props as {
+  headingTitle: string;
+  headingAccent: string;
+  description: string;
+  locationItems: LocationItem[];
+  hours: HoursItem[];
+  mapImage: string;
+  mapAlt: string;
+};
+---
+
+<section class="lg:px-16 px-8 lg:py-16 py-8 max-w-full" id="location">
+
+
+  <div class="location-container">
+    <div class="location-content reveal-effect">
+      <h2 class="section-title">
+        {headingTitle} <span class="accent">{headingAccent}</span>
+      </h2>
+      <p class="section-subtitle">
+        {description}
+      </p>
+
+      <div class="location-details">
+        {locationItems.map((item) => (
+          <div class="location-item">
+            <div class="location-icon">{item.icon}</div>
+            <div class="location-info">
+              <h3>{item.title}</h3>
+              <p set:html={item.info} />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="location-hours">
+        <h3>Horário de Funcionamento</h3>
+        <div class="hours-grid">
+          {hours.map((h) => (
+            <>
+              <div class="hours-day">{h.day}:</div>
+              <div class="hours-time">{h.time}</div>
+            </>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="location-map reveal-effect">
+      <img src={mapImage} alt={mapAlt} width="600" height="500"/>
+    </div>
+  </div>
+</section>

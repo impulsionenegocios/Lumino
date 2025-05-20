@@ -1,0 +1,65 @@
+---
+// components/ServicesSection.astro
+
+import { Image } from 'astro:assets';
+import Heading from '../typograph/Heading.astro';
+import Paragraph from '../typograph/Paragraph.astro';
+
+interface ServiceItem {
+  image: string;     
+  icon: string;
+  title: string;
+  description: string;
+}
+
+const {
+  headingTitle,
+  headingAccent,
+  description,
+  services,
+} = Astro.props as {
+  headingTitle: string;
+  headingAccent: string;
+  description: string;
+  services: ServiceItem[];
+};
+---
+
+<section class="section services" id="services">
+  <div class="absolute z-0 w-[300px] h-[300px] rounded-full bg-primary-gold/5 -top-36 -right-36"></div>
+  <div class="absolute z-0 w-[200px] h-[200px] rounded-full bg-primary-dark/5 -bottom-28 -left-28"></div>
+
+  <div class="text-center mb-12">
+    <Heading text={headingTitle} accent={headingAccent} />
+    <div class="mt-4">
+      <Paragraph fontWeight="300" text={description} />
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:px-20 px-8">
+    {services.map((service) => (
+      <div class="service-card cursor-pointer reveal-effect">
+        <div class="service-image">
+          <Image
+            src={service.image}
+            alt={service.title}
+            width={600}
+            layout="constrained"
+            loading="lazy"
+            decoding="async"
+            height={400}
+            class="w-full h-auto rounded"
+          />
+        </div>
+        <div class="service-content p-4">
+          <div class="service-icon mb-2 text-2xl">{service.icon}</div>
+          <h3 class="service-title text-xl font-semibold mb-2">{service.title}</h3>
+          <p class="service-description text-gray-500 mb-4">{service.description}</p>
+          <a href="#" class="service-link text-primary-gold hover:underline">
+            Saiba mais
+          </a>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

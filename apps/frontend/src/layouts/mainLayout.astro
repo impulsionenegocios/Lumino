@@ -1,42 +1,47 @@
---- 
-import '../styles/global.css'
-import '../styles/main.css'
+---
+import '../styles/global.css';
+import '../styles/main.css';
 import MainHeader from '../components/headers/mainHeader.vue';
+import MainFooter from '../components/footers/mainFooter.astro';
 import Animations from '../components/animations/Animations.astro';
-import LogoUrl from '../assets/images/logo-escuro.png'
+import LogoUrl from '../assets/images/logo-escuro.png';
 const menuItems = [
   { label: 'Início', url: '#home' },
   { label: 'Sobre Nós', url: '#about' },
   { label: 'Serviços', url: '#services' },
   { label: 'Galeria', url: '#gallery' },
   { label: 'Localização', url: '#location' },
-  { label: 'Contato', url: '#contact' }
+  { label: 'Contato', url: '#contact' },
 ];
 ---
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lumino Clínica - Odontologia de Luxo</title>
-    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js" is:inline></script>
-</head>
-<body>
-  <!-- Hydrate assim que o JS carregar -->
-  <MainHeader 
-    client:load
-    logoUrl={LogoUrl.src} 
-    ctaText="Agendar Consulta"
-    :menuItems={menuItems}
-  />
 
-  <slot />
-  <Animations />
-</body>
-<style>
- html {
-  scroll-behavior: smooth;
-}
-/* Aplica a todos os scrolls do site */
-</style>
-</html>  
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lumino Clínica - Odontologia de Luxo</title>
+    <script
+      src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"
+      is:inline></script>
+  </head>
+  <body>
+    <!-- Hydrate assim que o JS carregar -->
+    <MainHeader
+      client:load
+      logoUrl={LogoUrl.src}
+      ctaText="Agendar Consulta"
+      :menuItems={menuItems}
+    />
+
+    <slot />
+    <Animations />
+    <MainFooter />
+  </body>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    /* Aplica a todos os scrolls do site */
+  </style>
+</html>

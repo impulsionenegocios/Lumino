@@ -1,46 +1,262 @@
 ---
 // index.astro
-import ParticlesBackground from '../components/animations/ParticlesBackground.astro'
-import MainLayout from "../layouts/mainLayout.astro"
-import HeroSection from '../components/sections/heroSection.astro'
-import AboutUs from '../components/sections/aboutUs.astro'
-import BgImage from '../assets/images/bg.jpg'
-const features = [
-  {
-    icon: '✦',
-    title: 'Tecnologia Avançada',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  },
-  {
-    icon: '✦',
-    title: 'Equipe Especializada',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  },
-  {
-    icon: '✦',
-    title: 'Ambiente Luxuoso',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  },
-  {
-    icon: '✦',
-    title: 'Atendimento Premium',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  },
+import ParticlesBackground from '../components/animations/ParticlesBackground.astro';
+import MainLayout from '../layouts/mainLayout.astro';
+import HeroSection from '../components/sections/heroSection.astro';
+import CounterSection from '../components/sections/counterSection.astro';
+import ServicesSection from '../components/sections/servicesSection.astro';
+import GallerySection from '../components/sections/gallerySection.astro';
+import LocationSection from '../components/sections/locationSection.astro';
+import TestimonialSection from '../components/sections/testimonialSection.astro';
+import CtaSection from '../components/sections/ctaSection.astro';
+import AboutUs from '../components/sections/aboutUs.astro';
+import BgImage from '../assets/images/bg.jpg';
+
+const heroData = {
+  subtitle: 'BEM VINDO Á LUMINO CLÍNICA',
+  title: 'O sorriso perfeito que você merece',
+  description:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
+  firstButtonTitle: 'NOSSOS SERVIÇOS',
+  secondButtonTitle: 'AGENDAR CONSULTA',
+  firstButtonHref: '#services',
+  secondButtonHref: '#contacts',
+  bgImage: BgImage,
+};
+
+const aboutUsData = {
+  headingTitle: 'Sobre a',
+  headingAccent: 'Clínica Lúmino',
+  headingSubtitle: 'Transformando sorrisos com excelência e inovação há mais de 10 anos.',
+  description:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis...',
+  shapeImage: BgImage,
+  features: [
+    {
+      icon: '✦',
+      title: 'Tecnologia Avançada',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
+    {
+      icon: '✦',
+      title: 'Equipe Especializada',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
+    {
+      icon: '✦',
+      title: 'Ambiente Luxuoso',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
+    {
+      icon: '✦',
+      title: 'Atendimento Premium',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
+  ],
+};
+const servicesData = {
+  headingTitle: 'Nossos',
+  headingAccent: 'Serviços',
+  description:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis...',
+  services: [
+    {
+      image: BgImage,
+      icon: '✦',
+      title: 'Implantes Dentários',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis.',
+    },
+    {
+      image: BgImage,
+      icon: '✦',
+      title: 'Ortodontia Estética',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis.',
+    },
+    {
+      image: BgImage,
+      icon: '✦',
+      title: 'Clareamento Dental',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis.',
+    },
+    {
+      image: BgImage,
+      icon: '✦',
+      title: 'Facetas de Porcelana',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis.',
+    },
+    {
+      image: BgImage,
+      icon: '✦',
+      title: 'Cirurgia Odontológica',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis.',
+    },
+    {
+      image: BgImage,
+      icon: '✦',
+      title: 'Odontologia Estética',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis.',
+    },
+  ],
+};
+
+const counterSectionStatus = [
+  { value: 3500, label: 'Pacientes Atendidos' },
+  { value: 12, label: 'Anos de Experiência' },
+  { value: 98, label: 'Avaliação de Satisfação' },
+  { value: 100, label: 'Tecnologia de Ponta' },
 ];
-const heroData = 
-  {
-    subtitle: 'BEM VINDO Á LUMINO CLÍNICA',
-    title: 'O sorriso perfeito que você merece',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-    firstButtonTitle: 'NOSSOS SERVIÇOS',
-    secondButtonTitle: 'AGENDAR CONSULTA',
-    firstButtonHref: '#services',
-    secondButtonHref: '#contacts',
-    bgImage: BgImage
-  }
+const galleryData = {
+  headingTitle: 'Nossa',
+  headingAccent: 'Galeria',
+  description:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis.',
+  items: [
+    {
+      image: BgImage,
+      alt: 'Recepção Moderna',
+      title: 'Recepção Moderna',
+      category: 'Ambiente Luxuoso',
+    },
+    {
+      image: BgImage,
+      alt: 'Consultório Premium',
+      title: 'Consultório Premium',
+      category: 'Tecnologia Avançada',
+    },
+    {
+      image: BgImage,
+      alt: 'Atendimento VIP',
+      title: 'Atendimento VIP',
+      category: 'Experiência Exclusiva',
+    },
+    {
+      image: BgImage,
+      alt: 'Transformação de Sorriso',
+      title: 'Transformação de Sorriso',
+      category: 'Antes e Depois',
+    },
+    {
+      image: BgImage,
+      alt: 'Equipamentos Modernos',
+      title: 'Equipamentos Modernos',
+      category: 'Tecnologia de Ponta',
+    },
+    {
+      image: BgImage,
+      alt: 'Sala de Espera',
+      title: 'Sala de Espera',
+      category: 'Conforto e Elegância',
+    },
+    {
+      image: BgImage,
+      alt: 'Equipamentos Modernos',
+      title: 'Equipamentos Modernos',
+      category: 'Tecnologia de Ponta',
+    },
+    {
+      image: BgImage,
+      alt: 'Sala de Espera',
+      title: 'Sala de Espera',
+      category: 'Conforto e Elegância',
+    },{
+      image: BgImage,
+      alt: 'Equipamentos Modernos',
+      title: 'Equipamentos Modernos',
+      category: 'Tecnologia de Ponta',
+    },
+    {
+      image: BgImage,
+      alt: 'Sala de Espera',
+      title: 'Sala de Espera',
+      category: 'Conforto e Elegância',
+    },
+    
+  ],
+};
+// src/data/locationData.ts
+const locationData = {
+  headingTitle: 'Nossa',
+  headingAccent: 'Localização',
+  description:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec.',
+  locationItems: [
+    {
+      icon: '📍',
+      title: 'Endereço',
+      info: 'Avenida Paulista, 1000, Jardim Paulista<br/>São Paulo - SP, 01310-100',
+    },
+    {
+      icon: '📞',
+      title: 'Telefone',
+      info: '+55 (11) 3000-0000',
+    },
+    {
+      icon: '✉️',
+      title: 'E-mail',
+      info: 'contato@luminoclinica.com.br',
+    },
+  ],
+  hours: [
+    { day: 'Segunda - Sexta', time: '8:00 - 20:00' },
+    { day: 'Sábado',         time: '9:00 - 17:00' },
+    { day: 'Domingo',        time: 'Fechado' },
+  ],
+  mapImage: 'https://placehold.co/800x500',
+  mapAlt: 'Mapa Lumino Clínica',
+};
+ const testimonialsData = {
+  headingTitle: 'O que nossos',
+  headingAccent: 'Pacientes',
+  description:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis.',
+  testimonials: [
+    {
+      text:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      authorName: 'Ana Oliveira',
+      authorRole: 'Empresária',
+      avatar: 'https://placehold.co/100x100',
+      rating: 5,
+    },
+    {
+      text:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      authorName: 'Carlos Santos',
+      authorRole: 'Advogado',
+      avatar: 'https://placehold.co/100x100',
+      rating: 5,
+    },
+    {
+      text:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      authorName: 'Mariana Lima',
+      authorRole: 'Médica',
+      avatar: 'https://placehold.co/100x100',
+      rating: 5,
+    },
+  ],
+};
+const contactCTAData = {
+  headingTitle: 'Agende sua',
+  headingAccent: 'Consulta',
+  text:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.',
+  buttons: [
+    { label: 'Agendar Agora', href: '#', variant: 'solid' },
+    { label: 'Entre em Contato', href: '#', variant: 'outline' },
+  ],
+};
+
 ---
+
 <MainLayout>
-  <HeroSection 
+  <HeroSection
     title={heroData.title}
     subtitle={heroData.subtitle}
     description={heroData.description}
@@ -50,9 +266,21 @@ const heroData =
     secondButtonHref={heroData.secondButtonHref}
     bgImage={heroData.bgImage}
   />
-  <AboutUs 
-   features={features}
-  /> 
-
+  <AboutUs
+    features={aboutUsData.features}
+    headingTitle={aboutUsData.headingTitle}
+    headingAccent={aboutUsData.headingAccent}
+    headingSubtitle={aboutUsData.headingSubtitle}
+    description={aboutUsData.description}
+    shapeImage={BgImage}
+  />
+  <CounterSection stats={counterSectionStatus} />
+  <ServicesSection
+    {...servicesData}
+  />
+<GallerySection {...galleryData} />
+  <LocationSection {...locationData} />
+<TestimonialSection {...testimonialsData} />
+   <CtaSection {...contactCTAData} />
   <ParticlesBackground />
 </MainLayout>

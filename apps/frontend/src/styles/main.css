@@ -1,4 +1,4 @@
-  @import 'tailwindcss';
+@import 'tailwindcss';
 
 /* ----------------------------------- FONTE ----------------------------------- */
 @font-face {
@@ -20,7 +20,7 @@
   --color-joquei-yellow: #ffa400;
   --color-joquei-orange: #ff7724;
   --color-joquei-lightblue: #00bdba;
-  
+
   /* Luxury header colors */
   --color-primary-dark: #131f2f;
   --color-primary-gold: #c9a874;
@@ -30,28 +30,25 @@
   --color-off-white: #f8f5f0;
   --color-gray-light: #f0f0f0;
   --color-gray-text: #777777;
-  
+
   /* Existing gradients */
   --gradient-primary: linear-gradient(180deg, #6f4bdb 30%, rgba(216, 121, 242, 1) 100%);
   --gradient-orange: linear-gradient(to right, #ff9800, #f57c00);
   --gradient-danger: linear-gradient(to right, #ef4444, #b91c1c);
   --gradient-success: linear-gradient(to bottom, #36d869, #cbffdb);
-  
+
   /* Luxury header gradients */
   --gradient-dark: linear-gradient(145deg, #131f2f 0%, #1e2d42 100%);
   --gradient-gold: linear-gradient(145deg, #c9a874 0%, #d9b88f 100%);
   --gradient-blend: linear-gradient(145deg, #131f2f 0%, #c9a874 100%);
-  
+
   /* Font families */
   --font-sans: 'Montserrat', system-ui, sans-serif;
   --font-serif: 'Cormorant', serif;
   --font-poetsen: 'Poetsen One', sans-serif;
 
-
   --animate-ease-out-expo: 'cubic-bezier(0.23, 1, 0.32, 1)';
 }
-
-
 
 /* Define utility classes for our custom font */
 .font-poetsen {
@@ -79,11 +76,10 @@
   background: var(--gradient-blend);
 }
 
-
-
 /* 🔥 Regra geral para celular (até 768px) */
 @media (max-width: 768px) {
-  html, body {
+  html,
+  body {
     scroll-behavior: smooth;
     scrollbar-color: var(--primary-gold) transparent;
   }
@@ -110,4 +106,3 @@
     background-clip: content-box;
   }
 }
-
