@@ -13,12 +13,7 @@ interface GalleryItem {
 }
 
 // Props tipadas
-const {
-  headingTitle,
-  headingAccent,
-  description,
-  items,
-} = Astro.props as {
+const { headingTitle, headingAccent, description, items } = Astro.props as {
   headingTitle: string;
   headingAccent: string;
   description: string;
@@ -41,27 +36,29 @@ const displayItems = items.slice(0, 8);
 
     <div class="gallery-container reveal-effect relative">
       <div class="gallery-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {displayItems.map((item) => (
-          <div class="gallery-item relative overflow-hidden">
-            <Image
-              src={item.image}
-              alt={item.alt}
-              class="gallery-image w-full h-auto block"
-              width={800}
-              height={600}
-            />
-            <div class="gallery-overlay absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity">
-              <div class="gallery-caption flex flex-col justify-center items-center h-full text-white p-4">
-                <h4 class="gallery-title text-lg font-semibold mb-1">{item.title}</h4>
-                <p class="gallery-category text-sm">{item.category}</p>
+        {
+          displayItems.map((item) => (
+            <div class="gallery-item relative overflow-hidden">
+              <Image
+                src={item.image}
+                alt={item.alt}
+                class="gallery-image w-full h-auto block"
+                width={800}
+                height={600}
+              />
+              <div class="gallery-overlay absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity">
+                <div class="gallery-caption flex flex-col justify-center items-center h-full text-white p-4">
+                  <h4 class="gallery-title text-lg font-semibold mb-1">{item.title}</h4>
+                  <p class="gallery-category text-sm">{item.category}</p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        }
       </div>
 
       <div class="gallery-nav flex justify-between mt-6">
-         <Button title="Ver Galeria" href="/" />
+        <Button title="Ver Galeria" href="/" />
       </div>
     </div>
   </div>

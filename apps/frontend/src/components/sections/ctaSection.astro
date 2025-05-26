@@ -5,12 +5,7 @@ interface Button {
   variant?: 'outline' | 'solid';
 }
 
-const {
-  headingTitle,
-  headingAccent,
-  text,
-  buttons,
-} = Astro.props as {
+const { headingTitle, headingAccent, text, buttons } = Astro.props as {
   headingTitle: string;
   headingAccent: string;
   text: string;
@@ -25,20 +20,20 @@ const {
   <div class="container">
     <div class="contact-cta-container">
       <h2 class="contact-cta-title">
-        {headingTitle} <span class="accent">{headingAccent}</span>
+        {headingTitle}
+        <span class="accent">{headingAccent}</span>
       </h2>
       <p class="contact-cta-text">
         {text}
       </p>
       <div class="contact-cta-buttons">
-        {buttons.map((btn) => (
-          <a
-            href={btn.href}
-            class={btn.variant === 'outline' ? 'btn btn-outline' : 'btn'}
-          >
-            {btn.label}
-          </a>
-        ))}
+        {
+          buttons.map((btn) => (
+            <a href={btn.href} class={btn.variant === 'outline' ? 'btn btn-outline' : 'btn'}>
+              {btn.label}
+            </a>
+          ))
+        }
       </div>
     </div>
   </div>

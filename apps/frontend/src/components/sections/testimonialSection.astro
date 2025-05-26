@@ -7,12 +7,7 @@ interface Testimonial {
   rating: number;
 }
 
-const {
-  headingTitle,
-  headingAccent,
-  description,
-  testimonials,
-} = Astro.props as {
+const { headingTitle, headingAccent, description, testimonials } = Astro.props as {
   headingTitle: string;
   headingAccent: string;
   description: string;
@@ -26,7 +21,8 @@ const {
   <div class="container">
     <div class="testimonials-header">
       <h2 class="section-title section-title-center">
-        {headingTitle} <span class="accent">{headingAccent}</span> dizem
+        {headingTitle}
+        <span class="accent">{headingAccent}</span> dizem
       </h2>
       <p class="section-subtitle section-subtitle-center">
         {description}
@@ -35,26 +31,28 @@ const {
     <div class="testimonials-wrapper">
       <div class="testimonials-container">
         <div class="testimonials-grid">
-          {testimonials.map((t) => (
-            <div class="testimonial-card reveal-effect">
-              <div class="testimonial-quote">"</div>
-              <p class="testimonial-text">{t.text}</p>
-              <div class="testimonial-author">
-                <div class="testimonial-avatar">
-                  <img src={t.avatar} alt={`Avatar de ${t.authorName}`} />
-                </div>
-                <div class="testimonial-info">
-                  <h4>{t.authorName}</h4>
-                  <p>{t.authorRole}</p>
-                  <div class="testimonial-rating">
-                    {Array.from({ length: t.rating }).map(() => (
-                      <span class="testimonial-star">★</span>
-                    ))}
+          {
+            testimonials.map((t) => (
+              <div class="testimonial-card reveal-effect">
+                <div class="testimonial-quote">"</div>
+                <p class="testimonial-text">{t.text}</p>
+                <div class="testimonial-author">
+                  <div class="testimonial-avatar">
+                    <img src={t.avatar} alt={`Avatar de ${t.authorName}`} />
+                  </div>
+                  <div class="testimonial-info">
+                    <h4>{t.authorName}</h4>
+                    <p>{t.authorRole}</p>
+                    <div class="testimonial-rating">
+                      {Array.from({ length: t.rating }).map(() => (
+                        <span class="testimonial-star">★</span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          }
         </div>
       </div>
     </div>

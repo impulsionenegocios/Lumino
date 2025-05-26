@@ -1,13 +1,6 @@
 @import 'tailwindcss';
 
 /* ----------------------------------- FONTE ----------------------------------- */
-@font-face {
-  font-family: 'Poetsen One';
-  src: url('/fonts/PoetsenOne-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
 
 /* Import Cormorant and Montserrat for the luxury header */
 @import url('https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;500;600;700&family=Montserrat:wght@200;300;400;500;600;700&display=swap');
@@ -45,15 +38,11 @@
   /* Font families */
   --font-sans: 'Montserrat', system-ui, sans-serif;
   --font-serif: 'Cormorant', serif;
-  --font-poetsen: 'Poetsen One', sans-serif;
 
   --animate-ease-out-expo: 'cubic-bezier(0.23, 1, 0.32, 1)';
 }
 
 /* Define utility classes for our custom font */
-.font-poetsen {
-  font-family: 'Poetsen One', sans-serif;
-}
 
 .font-serif {
   font-family: var(--font-serif);

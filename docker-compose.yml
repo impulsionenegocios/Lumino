@@ -11,6 +11,8 @@ services:
     command: sh -c "pnpm install && pnpm dev --host"
     depends_on:
       - directus
+    networks:
+      - directus-net
 
   directus:
     build:
@@ -20,24 +22,27 @@ services:
     ports:
       - "8055:8055"
     volumes:
-      - ./volumes/directus-data:/directus/data
       - ./volumes/directus-uploads:/directus/uploads
     env_file:
       - .env
     environment:
-      # Banco de dados
       - DB_CLIENT=${DB_CLIENT}
-      - DB_FILENAME=${DB_FILENAME}
-      # URL pública
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
       - PUBLIC_URL=${PUBLIC_URL}
-      # Usuário admin
       - ADMIN_EMAIL=${ADMIN_EMAIL}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
-      # Chave de tokens
       - SECRET=${SECRET}
-      # Configuração de arquivos
-      - STORAGE_LOCATIONS=local
-      - STORAGE_LOCAL_DRIVER=local
-      - STORAGE_LOCAL_ROOT=/directus/uploads
-      # Desativar telemetria
-      - TELEMETRY=false
+      - STORAGE_LOCATIONS=${STORAGE_LOCATIONS}
+      - STORAGE_LOCAL_DRIVER=${STORAGE_LOCAL_DRIVER}
+      - STORAGE_LOCAL_ROOT=${STORAGE_LOCAL_ROOT}
+      - TELEMETRY=${TELEMETRY}
+    networks:
+      - directus-net
+
+networks:
+  directus-net:
+    external: true

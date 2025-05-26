@@ -17,6 +17,7 @@
     "glider-js": "^1.7.9",
     "gsap": "^3.13.0",
     "particles.js": "^2.0.0",
+    "sharp": "^0.34.1",
     "tailwindcss": "^4.1.5",
     "tsparticles": "^3.8.1",
     "vue": "^3.5.13"

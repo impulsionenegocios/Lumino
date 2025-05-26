@@ -1,0 +1,16 @@
+---
+import ParticlesBackground from '../../components/animations/ParticlesBackground.astro';
+import MainLayout from '../../layouts/mainLayout.astro';
+import ServicesSection from '../../components/sections/servicesSection.astro';
+import { servicesData } from '../../data/servicesData';
+import CtaSection from '../../components/sections/ctaSection.astro';
+import { contactCTAData } from '../../data/contactCTAData';
+---
+
+<MainLayout>
+  <div class="mt-16">
+    <ServicesSection {...servicesData} />
+  </div>
+  <CtaSection {...contactCTAData} />
+  <ParticlesBackground />
+</MainLayout>

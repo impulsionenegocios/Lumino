@@ -6,6 +6,7 @@ import vue from '@astrojs/vue';
 
 export default defineConfig({
   site: 'https://joqueianapolis.com.br',
+  output: 'server',
   integrations: [
     vue(), // correto aqui!
   ],

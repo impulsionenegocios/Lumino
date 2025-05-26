@@ -1,0 +1,381 @@
+import { g as u } from './index.D3jsOSc0.js';
+import {
+  d as w,
+  c as i,
+  o as c,
+  t as h,
+  n as a,
+  a as t,
+  b as y,
+  F as x,
+  r as _,
+  e as b,
+  w as O,
+  f as B,
+  g as E,
+  h as v,
+} from './runtime-core.esm-bundler.CYLR8qJs.js';
+/* empty css                       */ const k = (n, l) => {
+    const o = n.__vccOpts || n;
+    for (const [e, d] of l) o[e] = d;
+    return o;
+  },
+  T =
+    'relative inline-block overflow-hidden px-[40px] py-[18px] no-underline font-medium uppercase tracking-[1px] transition-all duration-500 ease-out-expo rounded-[50px] cursor-pointer transform text-sm text-center 2xl:text-lg',
+  I =
+    "bg-gradient-to-r from-primary-gold to-gold-light text-white shadow-[0_10px_20px_rgba(201,168,116,0.2)] z-[1] before:content-[''] before:absolute before:top-0 before:left-0 before:w-0 before:h-full before:bg-primary-dark before:transition-all before:duration-500 before:ease-out-expo before:z-[-1] hover:shadow-[0_15px_30px_rgba(201,168,116,0.4)] hover:-translate-y-[3px] hover:before:w-full",
+  j =
+    "bg-transparent text-primary-gold border-2 border-primary-gold shadow-none z-[1] before:content-[''] before:absolute before:top-0 before:left-0 before:w-0 before:h-full before:bg-gradient-to-r before:from-primary-gold before:to-gold-light before:transition-all before:duration-500 before:ease-out-expo before:z-[-1] hover:text-white hover:shadow-[0_15px_30px_rgba(201,168,116,0.4)] hover:-translate-y-[3px] hover:before:w-full",
+  L = w({
+    __name: 'mainButton',
+    props: { title: {}, href: {}, variant: {} },
+    setup(n, { expose: l }) {
+      l();
+      const o = { base: T, defaultStyles: I, outlineStyles: j };
+      return Object.defineProperty(o, '__isScriptSetup', { enumerable: !1, value: !0 }), o;
+    },
+  }),
+  U = ['href'];
+function D(n, l, o, e, d, p) {
+  return (
+    c(),
+    i(
+      'a',
+      {
+        href: o.href,
+        class: a([e.base, o.variant === 'outline' ? e.outlineStyles : e.defaultStyles]),
+      },
+      h(o.title),
+      11,
+      U,
+    )
+  );
+}
+const F = k(L, [['render', D]]),
+  N = w({
+    __name: 'mainHeader',
+    props: {
+      logoUrl: {},
+      ctaText: { default: 'Agendar Consulta' },
+      menuItems: {
+        default: () => [
+          { label: 'Início', url: '#home' },
+          { label: 'Sobre Nós', url: '#about' },
+          { label: 'Serviços', url: '#services' },
+          { label: 'Galeria', url: '#gallery' },
+          { label: 'Localização', url: '#location' },
+          { label: 'Depoimentos', url: '#testimonials' },
+        ],
+      },
+    },
+    setup(n, { expose: l }) {
+      l();
+      const o = n,
+        { menuItems: e, logoUrl: d, ctaText: p } = o,
+        r = b(!1),
+        s = b(!1),
+        m = b(null),
+        M = b(null),
+        S = () => {
+          (r.value = !r.value),
+            r.value
+              ? (document.body.style.overflow = 'hidden')
+              : (document.body.style.overflow = 'auto');
+        },
+        z = () => {
+          (r.value = !1), (document.body.style.overflow = 'auto');
+        },
+        f = () => {
+          s.value = window.scrollY > 50;
+        };
+      O(r, (C) => {
+        C &&
+          (u.set('.mobile-menu-item', { y: 20, opacity: 0 }),
+          u.set('.mobile-cta', { y: 20, opacity: 0 }),
+          u.to('.mobile-menu-item', {
+            y: 0,
+            opacity: 1,
+            stagger: 0.1,
+            delay: 0.2,
+            duration: 0.6,
+            ease: 'power3.out',
+          }),
+          u.to('.mobile-cta', { y: 0, opacity: 1, delay: 0.6, duration: 0.6, ease: 'power3.out' }));
+      }),
+        B(() => {
+          window.addEventListener('scroll', f),
+            f(),
+            m.value &&
+              u.fromTo(
+                m.value,
+                { y: -100, opacity: 0 },
+                { y: 0, opacity: 1, duration: 1, ease: 'power3.out' },
+              );
+        }),
+        E(() => {
+          window.removeEventListener('scroll', f), (document.body.style.overflow = 'auto');
+        });
+      const g = {
+        props: o,
+        menuItems: e,
+        logoUrl: d,
+        ctaText: p,
+        isMenuOpen: r,
+        isScrolled: s,
+        headerRef: m,
+        sidebarRef: M,
+        toggleMenu: S,
+        closeMenu: z,
+        handleScroll: f,
+        MainButton: F,
+      };
+      return Object.defineProperty(g, '__isScriptSetup', { enumerable: !1, value: !0 }), g;
+    },
+  }),
+  R = { class: 'container mx-auto px-4 md:px-8 flex items-center justify-between' },
+  V = { class: 'relative z-10' },
+  H = { href: '/', class: 'flex items-center' },
+  P = ['src'],
+  A = { class: 'hidden lg:block' },
+  G = { class: 'flex gap-10' },
+  W = ['href'],
+  Y = { class: 'flex items-center justify-between px-6 py-4' },
+  q = ['src'],
+  J = { class: 'flex flex-col h-full pt-4 pb-8 px-8' },
+  K = { class: 'flex flex-col gap-6' },
+  Q = ['href'];
+function X(n, l, o, e, d, p) {
+  return (
+    c(),
+    i(
+      x,
+      null,
+      [
+        t(
+          'header',
+          {
+            class: a([
+              'fixed top-0 left-0 w-full py-4 z-50 transition-all duration-500',
+              [e.isScrolled ? 'bg-white shadow-lg' : 'bg-transparent'],
+            ]),
+            ref: 'headerRef',
+          },
+          [
+            t('div', R, [
+              t('div', V, [
+                t('a', H, [
+                  t('img', { class: 'h-[60px]', src: e.logoUrl, alt: 'Logo' }, null, 8, P),
+                ]),
+              ]),
+              t('nav', A, [
+                t('ul', G, [
+                  (c(!0),
+                  i(
+                    x,
+                    null,
+                    _(
+                      e.menuItems,
+                      (r, s) => (
+                        c(),
+                        i('li', { key: s }, [
+                          t(
+                            'a',
+                            {
+                              href: r.url,
+                              class: a([
+                                'relative font-medium text-base pb-1 transition-colors duration-500 group',
+                                {
+                                  'text-primary-dark hover:text-primary-gold': !e.isScrolled,
+                                  'hover:text-primary-gold': e.isScrolled,
+                                },
+                              ]),
+                            },
+                            [
+                              v(h(r.label) + ' ', 1),
+                              l[0] ||
+                                (l[0] = t(
+                                  'span',
+                                  {
+                                    class:
+                                      'absolute bottom-0 left-0 w-full h-px bg-primary-gold transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300',
+                                  },
+                                  null,
+                                  -1,
+                                )),
+                            ],
+                            10,
+                            W,
+                          ),
+                        ])
+                      ),
+                    ),
+                    128,
+                  )),
+                ]),
+              ]),
+              y(
+                e.MainButton,
+                {
+                  class: '2xl:!text-sm text-xs !hidden lg:!block',
+                  title: e.ctaText,
+                  href: '#contact',
+                },
+                null,
+                8,
+                ['title'],
+              ),
+              t(
+                'button',
+                {
+                  class:
+                    'relative z-50 lg:hidden flex flex-col justify-center items-center w-10 h-10',
+                  onClick: e.toggleMenu,
+                  'aria-label': 'Toggle Menu',
+                },
+                [
+                  t(
+                    'span',
+                    {
+                      class: a([
+                        'block w-7 h-0.5 transition-all duration-500 ease-in-out',
+                        e.isMenuOpen
+                          ? 'bg-primary-dark rotate-45 translate-y-2'
+                          : 'bg-primary-dark',
+                      ]),
+                    },
+                    null,
+                    2,
+                  ),
+                  t(
+                    'span',
+                    {
+                      class: a([
+                        'block w-7 h-0.5 transition-all duration-500 ease-in-out my-1.5',
+                        e.isMenuOpen ? 'bg-primary-dark opacity-0' : 'bg-primary-dark',
+                      ]),
+                    },
+                    null,
+                    2,
+                  ),
+                  t(
+                    'span',
+                    {
+                      class: a([
+                        'block w-7 h-0.5 transition-all duration-500 ease-in-out',
+                        e.isMenuOpen
+                          ? 'bg-primary-dark -rotate-45 -translate-y-2'
+                          : 'bg-primary-dark',
+                      ]),
+                    },
+                    null,
+                    2,
+                  ),
+                ],
+              ),
+            ]),
+          ],
+          2,
+        ),
+        t(
+          'div',
+          {
+            class: a([
+              'fixed top-0 right-0 w-80 h-screen bg-white shadow-2xl transform transition-transform duration-700 ease-in-out z-[99999]',
+              e.isMenuOpen ? 'translate-x-0' : 'translate-x-full',
+            ]),
+            ref: 'sidebarRef',
+          },
+          [
+            t('div', Y, [
+              t('img', { class: 'h-[60px]', src: e.logoUrl, alt: '' }, null, 8, q),
+              t(
+                'button',
+                {
+                  onClick: e.closeMenu,
+                  'aria-label': 'Fechar menu',
+                  class:
+                    'text-2xl font-bold cursor-pointer text-primary-dark hover:text-primary-gold transition-colors duration-300',
+                },
+                ' × ',
+              ),
+            ]),
+            t('div', J, [
+              t('ul', K, [
+                (c(!0),
+                i(
+                  x,
+                  null,
+                  _(
+                    e.menuItems,
+                    (r, s) => (
+                      c(),
+                      i('li', { key: s, class: 'mobile-menu-item' }, [
+                        t(
+                          'a',
+                          {
+                            href: r.url,
+                            class:
+                              'relative font-medium text-lg cursor-pointer pb-1 text-primary-dark hover:text-primary-gold transition-colors duration-300 inline-block group',
+                            onClick: e.closeMenu,
+                          },
+                          [
+                            v(h(r.label) + ' ', 1),
+                            l[1] ||
+                              (l[1] = t(
+                                'span',
+                                {
+                                  class:
+                                    'absolute bottom-0 left-0 w-0 h-px bg-primary-gold transition-all duration-300 group-hover:w-full',
+                                },
+                                null,
+                                -1,
+                              )),
+                          ],
+                          8,
+                          Q,
+                        ),
+                      ])
+                    ),
+                  ),
+                  128,
+                )),
+              ]),
+              y(
+                e.MainButton,
+                {
+                  onClick: e.closeMenu,
+                  ref: 'mobileCta',
+                  class: '2xl:!text-sm text-xs !block lg:!hidden mt-8 mobile-cta',
+                  title: e.ctaText,
+                  href: '#contact',
+                },
+                null,
+                8,
+                ['title'],
+              ),
+            ]),
+          ],
+          2,
+        ),
+        t(
+          'div',
+          {
+            class: a([
+              'fixed inset-0 bg-black/50 z-[9999] transition-opacity duration-500',
+              e.isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
+            ]),
+            onClick: e.closeMenu,
+          },
+          null,
+          2,
+        ),
+      ],
+      64,
+    )
+  );
+}
+const te = k(N, [
+  ['render', X],
+  ['__scopeId', 'data-v-910bd4dd'],
+]);
+export { te as default };
