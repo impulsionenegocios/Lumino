@@ -23,7 +23,6 @@ if (!slug) {
 
 // Busca os dados do serviço
 let service: ServiceData | null = null;
-
 try {
   console.log(`📡 SSR: Buscando dados para slug: ${slug}`);
   service = await getServiceBySlug(slug);
@@ -32,7 +31,6 @@ try {
   console.error('❌ SSR: Erro ao buscar serviço:', error);
 }
 
-// Se não encontrou o serviço, redireciona
 if (!service) {
   console.log(`❌ SSR: Serviço não encontrado para slug: ${slug}, redirecionando...`);
   return Astro.redirect('/servicos');
@@ -561,30 +559,10 @@ console.log(`✅ SSR: Página carregada com sucesso para: ${service.title}`);
       </div>
     </div>
   </section>
-
-  <!-- Debug Info (apenas em desenvolvimento) -->
-  {import.meta.env.DEV && (
-    <div class="bg-gray-100 p-4 text-sm text-gray-600">
-      <h3 class="font-bold mb-2">🐛 Debug Info (Development Only):</h3>
-      <p><strong>Slug:</strong> {slug}</p>
-      <p><strong>Service Title:</strong> {service?.title}</p>
-      <p><strong>Mode:</strong> SSR</p>
-      <p><strong>Benefits Count:</strong> {service?.benefits?.length || 0}</p>
-      <p><strong>Process Count:</strong> {service?.process?.length || 0}</p>
-      <p><strong>FAQ Count:</strong> {service?.faq?.length || 0}</p>
-      <p><strong>Testimonials Count:</strong> {service?.testimonials?.length || 0}</p>
-      <p><strong>Before/After Count:</strong> {service?.beforeAfter?.length || 0}</p>
-    </div>
-  )}
 </MainLayout>
 
 <!-- Scripts TypeScript -->
 <script>
-  // TypeScript para os scripts do cliente
-  interface FormData {
-    get(key: string): FormDataEntryValue | null;
-  }
-
   // Função para inicializar a página
   function initializePage() {
     console.log('🎯 SSR: Página carregada no cliente');
@@ -652,7 +630,7 @@ console.log(`✅ SSR: Página carregada com sucesso para: ${service.title}`);
         console.log('📝 Form submitted for service:', document.title);
         
         // Pega os dados do formulário
-        const formData = new FormData(this);
+        const formData = new FormData(contactForm);
         const nome = formData.get('nome') as string;
         const telefone = formData.get('telefone') as string;
         const email = formData.get('email') as string;
@@ -675,14 +653,14 @@ console.log(`✅ SSR: Página carregada com sucesso para: ${service.title}`);
 
 Vi a página no site e gostaria de mais informações.`;
 
-        // Pega o número do WhatsApp do elemento na página ou usa fallback
+        // Pega o número do WhatsApp do elemento na página
         const whatsappLinks = document.querySelectorAll('a[href*="wa.me"]');
-        let whatsappNumber = '62983265797'; // Fallback
+        let whatsappNumber = '5562999999999'; // Número padrão como fallback
         
         if (whatsappLinks.length > 0) {
           const firstLink = whatsappLinks[0] as HTMLAnchorElement;
           const urlMatch = firstLink.href.match(/wa\.me\/(\d+)/);
-          if (urlMatch) {
+          if (urlMatch && urlMatch[1]) {
             whatsappNumber = urlMatch[1];
           }
         }
@@ -722,8 +700,8 @@ Vi a página no site e gostaria de mais informações.`;
   // Analytics tracking
   function trackFormSubmission() {
     // Google Analytics tracking (se disponível)
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'form_submit', {
+    if (typeof (window as any).gtag !== 'undefined') {
+      (window as any).gtag('event', 'form_submit', {
         event_category: 'engagement',
         event_label: 'contact_form',
         value: 1
@@ -731,8 +709,8 @@ Vi a página no site e gostaria de mais informações.`;
     }
     
     // Facebook Pixel tracking (se disponível)
-    if (typeof fbq !== 'undefined') {
-      fbq('track', 'Lead', {
+    if (typeof (window as any).fbq !== 'undefined') {
+      (window as any).fbq('track', 'Lead', {
         content_name: document.title,
         content_category: 'Serviços'
       });
@@ -743,7 +721,7 @@ Vi a página no site e gostaria de mais informações.`;
 
   // Feedback visual de sucesso
   function showFormSuccess() {
-    const form = document.getElementById('contact-form');
+    const form = document.getElementById('contact-form') as HTMLFormElement;
     if (form) {
       const originalHTML = form.innerHTML;
       
@@ -834,36 +812,34 @@ Vi a página no site e gostaria de mais informações.`;
 </script>
 
 <!-- Schema.org Structured Data -->
-<script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "MedicalProcedure",
-    "name": service.title,
-    "description": service.description,
-    "provider": {
-      "@type": "MedicalOrganization",
-      "name": "Lumino Clínica",
-      "url": "https://joqueianapolis.com.br",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Anápolis",
-        "addressRegion": "GO",
-        "addressCountry": "BR"
-      }
-    },
-    "offers": {
-      "@type": "Offer",
-      "price": service.heroPrice !== 'Consulte' ? service.heroPrice.replace(/[^\d,]/g, '').replace(',', '.') : "0",
-      "priceCurrency": "BRL",
-      "availability": "https://schema.org/InStock"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": "500"
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "MedicalProcedure",
+  "name": service.title,
+  "description": service.description,
+  "provider": {
+    "@type": "MedicalOrganization",
+    "name": "Lumino Clínica",
+    "url": "https://joqueianapolis.com.br",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Anápolis",
+      "addressRegion": "GO",
+      "addressCountry": "BR"
     }
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": service.heroPrice !== 'Consulte' ? service.heroPrice.replace(/[^\d,]/g, '').replace(',', '.') : "0",
+    "priceCurrency": "BRL",
+    "availability": "https://schema.org/InStock"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "reviewCount": "500"
   }
-</script>
+})} />
 
 <!-- Facebook Pixel (descomente e adicione seu pixel ID) -->
 <!-- 

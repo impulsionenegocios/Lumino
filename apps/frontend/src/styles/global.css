@@ -197,6 +197,16 @@ header.scrolled {
 }
 
 /* Aplica-se à tag <Image> do Astro */
+.hero-bg-image {
+  position: absolute !important;
+  top: 0;
+  right: 0;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  z-index: 1;
+}
+/* Aplica-se à tag <Image> do Astro */
 .hero-dark-bg-image {
   position: absolute !important;
   top: 0;
@@ -236,7 +246,6 @@ header.scrolled {
   object-fit: cover;
   z-index: 1;
 }
-
 /* Scroll down indicator */
 .scroll-down {
   position: absolute;
