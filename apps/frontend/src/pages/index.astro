@@ -15,7 +15,7 @@ import AboutUs from '../components/sections/aboutUs.astro';
 
 import { heroData } from '../data/heroData';
 import { aboutUsData } from '../data/aboutUsData';
-import { servicesData } from '../data/servicesData';
+import { exampleServices } from '../data/servicesData';
 import { counterSectionStatus } from '../data/counterSectionData';
 import { galleryData } from '../data/galleryData';
 import { locationData } from '../data/locationData';
@@ -40,7 +40,7 @@ const blogData = {
   <AboutUs {...aboutUsData} />
   <TeamSection {...teamData} />
   <CounterSection stats={counterSectionStatus} />
-  <ServicesSection {...servicesData} />
+  <!-- <ServicesSection {...exampleServices} /> -->
   <CertificationSection {...certificationsData} />
   <GallerySection {...galleryData} />
   <LocationSection {...locationData} />

@@ -197,7 +197,37 @@ header.scrolled {
 }
 
 /* Aplica-se à tag <Image> do Astro */
-.hero-bg-image {
+.hero-dark-bg-image {
+  position: absolute !important;
+  top: 0;
+  right: 0;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.hero-dark-bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 55%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none; /* Evita interação com a imagem */
+}
+
+.hero-dark-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(19, 31, 47, 1) 0%, rgba(255, 255, 255, 0) 100%);
+  z-index: 2;
+}
+
+/* Aplica-se à tag <Image> do Astro */
+.hero-dark-bg-image {
   position: absolute !important;
   top: 0;
   right: 0;
