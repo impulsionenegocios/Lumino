@@ -11,6 +11,14 @@ services:
     command: sh -c "pnpm install && pnpm dev --host"
     depends_on:
       - directus
+    # ADICIONE ESTAS LINHAS ↓
+    env_file:
+      - .env
+    environment:
+      - PUBLIC_DIRECTUS_INTERNAL_URL=${PUBLIC_DIRECTUS_INTERNAL_URL}
+      - PUBLIC_DIRECTUS_EXTERNAL_URL=${PUBLIC_DIRECTUS_EXTERNAL_URL}
+      - NODE_ENV=${NODE_ENV}
+    # ADICIONE ESTAS LINHAS ↑
     networks:
       - directus-net
 
@@ -33,6 +41,8 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - PUBLIC_URL=${PUBLIC_URL}
+      - PUBLIC_DIRECTUS_INTERNAL_URL=${PUBLIC_DIRECTUS_INTERNAL_URL}
+      - PUBLIC_DIRECTUS_EXTERNAL_URL=${PUBLIC_DIRECTUS_EXTERNAL_URL}
       - ADMIN_EMAIL=${ADMIN_EMAIL}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - SECRET=${SECRET}

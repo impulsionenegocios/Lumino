@@ -1,15 +1,16 @@
 ---
-interface Button {
+import Button from '../../components/buttons/mainButton.astro';
+
+export interface ButtonProps {
   label: string;
   href: string;
-  variant?: 'outline' | 'solid';
+  variant?: 'solid' | 'outline';
 }
-
 const { headingTitle, headingAccent, text, buttons } = Astro.props as {
   headingTitle: string;
   headingAccent: string;
   text: string;
-  buttons: Button[];
+  buttons: ButtonProps[];
 };
 ---
 
@@ -29,9 +30,7 @@ const { headingTitle, headingAccent, text, buttons } = Astro.props as {
       <div class="contact-cta-buttons">
         {
           buttons.map((btn) => (
-            <a href={btn.href} class={btn.variant === 'outline' ? 'btn btn-outline' : 'btn'}>
-              {btn.label}
-            </a>
+            <Button title={btn.label} href={btn.href} variant={btn.variant ?? 'solid'} />
           ))
         }
       </div>

@@ -25,7 +25,11 @@
   --color-gray-text: #777777;
 
   /* Existing gradients */
-  --gradient-primary: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+  --gradient-primary: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
   --gradient-orange: linear-gradient(to right, #ff9800, #f57c00);
   --gradient-danger: linear-gradient(to right, #ef4444, #b91c1c);
   --gradient-success: linear-gradient(to bottom, #36d869, #cbffdb);

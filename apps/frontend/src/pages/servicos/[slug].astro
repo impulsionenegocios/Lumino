@@ -8,10 +8,6 @@ import Paragraph from '../../components/typograph/Paragraph.astro';
 import Button from '../../components/buttons/mainButton.astro';
 import { getServiceBySlug, type ServiceData } from '../../data/servicesData';
 
-// NO SSR, NÃO USE getStaticPaths()!
-// O Astro vai processar isso em tempo de execução
-
-// Pega o slug da URL
 const { slug } = Astro.params;
 console.log(`🔍 SSR: Processando página para slug: ${slug}`);
 
@@ -655,7 +651,7 @@ Vi a página no site e gostaria de mais informações.`;
 
         // Pega o número do WhatsApp do elemento na página
         const whatsappLinks = document.querySelectorAll('a[href*="wa.me"]');
-        let whatsappNumber = '5562999999999'; // Número padrão como fallback
+        let whatsappNumber = '5562999999999';
         
         if (whatsappLinks.length > 0) {
           const firstLink = whatsappLinks[0] as HTMLAnchorElement;

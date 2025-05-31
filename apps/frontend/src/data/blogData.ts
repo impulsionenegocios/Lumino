@@ -8,12 +8,15 @@ export interface blogData {
   excerpt: string;
   author: string;
   authorImage: string;
-  authorBio: string; // Adicionado campo do sobre do autor
+  authorBio: string;
   publishDate: string;
   readTime: string;
   slug: string;
   tags: string[];
   content?: string;
+  ctaTitle?: string;
+  ctaTitleAccent?: string;
+  ctaText?: string;
 }
 
 export interface CategoryData {
@@ -22,10 +25,14 @@ export interface CategoryData {
   slug?: string;
 }
 
+// Use apenas a variável PUBLIC_DIRECTUS_URL para ambos os casos
+const directusUrl = import.meta.env.PUBLIC_DIRECTUS_INTERNAL_URL;
+const directusPublicUrl = import.meta.env.PUBLIC_DIRECTUS_EXTERNAL_URL;
+
 // Função para buscar todas as categorias
 export async function getCategories(): Promise<CategoryData[]> {
   try {
-    const res = await fetch('http://directus:8055/items/categorias?fields=*');
+    const res = await fetch(`${directusUrl}/items/post_categoria?fields=*&limit=5`);
 
     if (!res.ok) {
       throw new Error(`Erro ao buscar categorias: ${res.statusText}`);
@@ -34,29 +41,22 @@ export async function getCategories(): Promise<CategoryData[]> {
     const json = await res.json();
 
     return json.data.map((category: any) => ({
-      id: category.id,
-      name: category.name,
-      slug: category.slug || category.name.toLowerCase().replace(/\s+/g, '-'),
+      id: String(category.id),
+      name: category.nome,
+      slug: category.slug || category.nome.toLowerCase().replace(/\s+/g, '-'),
     }));
   } catch (error) {
     console.error('Erro ao buscar categorias:', error);
-    // Retorna categorias padrão em caso de erro
-    return [
-      { id: '1', name: 'Cuidados com a Pele', slug: 'cuidados-com-a-pele' },
-      { id: '2', name: 'Tratamentos', slug: 'tratamentos' },
-      { id: '3', name: 'Bem-estar', slug: 'bem-estar' },
-      { id: '4', name: 'Tendências', slug: 'tendencias' },
-      { id: '5', name: 'Dicas', slug: 'dicas' }
-    ];
+    return [];
   }
 }
 
 // Função existente para buscar todos os posts
 export async function getBlogPosts(): Promise<blogData[]> {
   try {
-    const res = await fetch(
-      'http://directus:8055/items/posts?fields=*,categoria.name,autor.*,tags.nome,imagem_de_destaque.*',
-    );
+    const url = `${directusUrl}/items/post?fields=*,categoria.nome,autor.*`;
+
+    const res = await fetch(url);
 
     if (!res.ok) {
       throw new Error(`Erro ao buscar posts: ${res.statusText}`);
@@ -65,13 +65,15 @@ export async function getBlogPosts(): Promise<blogData[]> {
     const json = await res.json();
 
     return json.data.map((post: any) => ({
-      image: `http://localhost:8055/assets/${post.imagem_de_destaque.id}`,
-      category: post.categoria?.name || '',
+      image: `${directusPublicUrl}/assets/${post.imagem_de_destaque}?width=600&height=500&format=webp`,
+      category: post.categoria?.nome || '',
       title: post.titulo,
       excerpt: post.resumo,
       author: post.autor?.nome || '',
-      authorImage: post.autor?.foto ? `http://localhost:8055/assets/${post.autor.foto}` : '/images/default-avatar.jpg',
-      authorBio: post.autor?.sobre || 'Especialista em estética e bem-estar, compartilhando conhecimentos para uma vida mais saudável e bela.',
+      authorImage: post.autor?.imagem
+        ? `${directusPublicUrl}/assets/${post.autor.imagem}?width=40&height=40&format=webp&quality=80`
+        : '/images/default-avatar.jpg',
+      authorBio: post.autor?.bio || 'Especialista em estética e bem-estar.',
       publishDate: new Date(post.date_created).toLocaleDateString('pt-BR', {
         day: '2-digit',
         month: 'short',
@@ -79,7 +81,7 @@ export async function getBlogPosts(): Promise<blogData[]> {
       }),
       readTime: post.tempo_de_leitura || '5 min',
       slug: post.slug,
-      tags: Array.isArray(post.tags) ? post.tags.map((tag: any) => tag.nome || tag) : [],
+      tags: Array.isArray(post.tags) ? post.tags : [],
       content: post.conteudo || '',
     }));
   } catch (error) {
@@ -92,7 +94,7 @@ export async function getBlogPosts(): Promise<blogData[]> {
 export async function getBlogPostBySlug(slug: string): Promise<blogData | null> {
   try {
     const res = await fetch(
-      `http://directus:8055/items/posts?filter[slug][_eq]=${slug}&fields=*,categoria.name,autor.*,tags.nome,imagem_de_destaque.*&limit=1`,
+      `${directusUrl}/items/post?filter[slug][_eq]=${slug}&fields=*,categoria.nome,autor.*&limit=1`,
     );
 
     if (!res.ok) {
@@ -108,13 +110,15 @@ export async function getBlogPostBySlug(slug: string): Promise<blogData | null> 
     const post = json.data[0];
 
     return {
-      image: `http://localhost:8055/assets/${post.imagem_de_destaque.id}`,
-      category: post.categoria?.name || '',
+      image: `${directusPublicUrl}/assets/${post.imagem_de_destaque}?width=836&height=470&format=webp`,
+      category: post.categoria?.nome || '',
       title: post.titulo,
       excerpt: post.resumo,
       author: post.autor?.nome || '',
-      authorImage: post.autor?.foto ? `http://localhost:8055/assets/${post.autor.foto}` : '/images/default-avatar.jpg',
-      authorBio: post.autor?.sobre || 'Especialista em estética e bem-estar, compartilhando conhecimentos para uma vida mais saudável e bela.',
+      authorImage: post.autor?.imagem
+        ? `${directusPublicUrl}/assets/${post.autor.imagem}?width=80&height=80&format=webp`
+        : '/images/default-avatar.jpg',
+      authorBio: post.autor?.bio || 'Especialista em estética e bem-estar.',
       publishDate: new Date(post.date_created).toLocaleDateString('pt-BR', {
         day: '2-digit',
         month: 'short',
@@ -122,8 +126,11 @@ export async function getBlogPostBySlug(slug: string): Promise<blogData | null> 
       }),
       readTime: post.tempo_de_leitura || '5 min',
       slug: post.slug,
-      tags: Array.isArray(post.tags) ? post.tags.map((tag: any) => tag.nome || tag) : [],
+      tags: Array.isArray(post.tags) ? post.tags : [],
       content: post.conteudo || '',
+      ctaTitle: post.ctaTitle,
+      ctaTitleAccent: post.ctaTitleAccent,
+      ctaText: post.ctaText
     };
   } catch (error) {
     console.error('Erro ao buscar post:', error);
@@ -132,25 +139,30 @@ export async function getBlogPostBySlug(slug: string): Promise<blogData | null> 
 }
 
 // Função para buscar posts relacionados (mesmo categoria ou tags similares)
-export async function getRelatedPosts(currentSlug: string, category: string, tags: string[], limit: number = 3): Promise<blogData[]> {
+export async function getRelatedPosts(
+  currentSlug: string,
+  category: string,
+  tags: string[],
+  limit: number = 3,
+): Promise<blogData[]> {
   try {
     const allPosts = await getBlogPosts();
-    
+
     // Filtra posts que não sejam o atual
-    const otherPosts = allPosts.filter(post => post.slug !== currentSlug);
-    
+    const otherPosts = allPosts.filter((post) => post.slug !== currentSlug);
+
     // Prioriza posts da mesma categoria
-    const sameCategoryPosts = otherPosts.filter(post => post.category === category);
-    
+    const sameCategoryPosts = otherPosts.filter((post) => post.category === category);
+
     // Se não há posts suficientes da mesma categoria, pega outros posts
     if (sameCategoryPosts.length >= limit) {
       return sameCategoryPosts.slice(0, limit);
     }
-    
+
     // Completa com outros posts se necessário
-    const remainingPosts = otherPosts.filter(post => post.category !== category);
+    const remainingPosts = otherPosts.filter((post) => post.category !== category);
     const relatedPosts = [...sameCategoryPosts, ...remainingPosts];
-    
+
     return relatedPosts.slice(0, limit);
   } catch (error) {
     console.error('Erro ao buscar posts relacionados:', error);
@@ -163,14 +175,14 @@ export async function getBlogPostsByCategory(categorySlug: string): Promise<blog
   try {
     // Primeiro busca a categoria para obter o nome
     const categories = await getCategories();
-    const category = categories.find(cat => cat.slug === categorySlug);
-    
+    const category = categories.find((cat) => cat.slug === categorySlug);
+
     if (!category) {
       return [];
     }
 
     const allPosts = await getBlogPosts();
-    return allPosts.filter(post => post.category === category.name);
+    return allPosts.filter((post) => post.category === category.name);
   } catch (error) {
     console.error('Erro ao buscar posts por categoria:', error);
     return [];
@@ -181,8 +193,8 @@ export async function getBlogPostsByCategory(categorySlug: string): Promise<blog
 export async function getStaticPaths() {
   try {
     const posts = await getBlogPosts();
-    
-    return posts.map(post => ({
+
+    return posts.map((post) => ({
       params: { slug: post.slug },
       props: { post },
     }));
