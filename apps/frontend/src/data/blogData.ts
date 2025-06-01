@@ -130,7 +130,7 @@ export async function getBlogPostBySlug(slug: string): Promise<blogData | null> 
       content: post.conteudo || '',
       ctaTitle: post.ctaTitle,
       ctaTitleAccent: post.ctaTitleAccent,
-      ctaText: post.ctaText
+      ctaText: post.ctaText,
     };
   } catch (error) {
     console.error('Erro ao buscar post:', error);

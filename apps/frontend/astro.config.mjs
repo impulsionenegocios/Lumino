@@ -8,6 +8,7 @@ import vue from '@astrojs/vue';
 // Instale: npm install @astrojs/node
 import node from '@astrojs/node';
 
+
 export default defineConfig({
   site: 'https://joqueianapolis.com.br',
   
@@ -17,9 +18,7 @@ export default defineConfig({
     mode: 'standalone'
   }),
   
-  integrations: [
-    vue(),
-  ],
+  integrations: [vue()],
   
   server: {
     port: 4321,

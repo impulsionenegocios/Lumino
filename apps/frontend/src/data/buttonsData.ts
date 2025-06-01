@@ -10,7 +10,7 @@ const directusUrl = import.meta.env.PUBLIC_DIRECTUS_INTERNAL_URL;
 export async function getButtons(page_slug: string): Promise<buttonsData[]> {
   try {
     const res = await fetch(
-      `${directusUrl}/items/buttons?fields=*&filter[page_slug][_eq]=${page_slug}`
+      `${directusUrl}/items/buttons?fields=*&filter[page_slug][_eq]=${page_slug}`,
     );
 
     if (!res.ok) {
@@ -23,7 +23,7 @@ export async function getButtons(page_slug: string): Promise<buttonsData[]> {
       variant: button.variant,
       href: button.href,
       label: button.label,
-      page_slug: button.page_slug
+      page_slug: button.page_slug,
     }));
   } catch (error) {
     console.error('Erro ao buscar botões:', error);
