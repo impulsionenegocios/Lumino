@@ -20,16 +20,91 @@ interface BlogPost {
 }
 
 const {
-  headingTitle,
-  headingAccent,
-  description,
-  posts,
+  posts, 
+  showButton, 
+  sliceQtd,
+  currentPage = 1,
+  postsPerPage = 5,
+  enablePagination = true
 } = Astro.props as {
-  headingTitle: string;
-  headingAccent: string;
-  description: string;
+  sliceQtd: number;
+  showButton: boolean;
   posts: BlogPost[];
+  currentPage?: number;
+  postsPerPage?: number;
+  enablePagination?: boolean;
 };
+
+// Pegar a página atual da URL se não foi passada como prop
+const urlPage = Astro.url.searchParams.get('page');
+const actualCurrentPage = urlPage ? parseInt(urlPage) : currentPage;
+
+// Cálculos para paginação
+const totalPosts = posts.length;
+const totalPages = Math.ceil(totalPosts / postsPerPage);
+const showPagination = enablePagination && totalPosts > postsPerPage;
+
+// Posts para a página atual
+let postsToShow;
+if (enablePagination) {
+  // Se paginação está habilitada, usar lógica de paginação
+  const startIndex = (actualCurrentPage - 1) * postsPerPage;
+  const endIndex = startIndex + postsPerPage;
+  const currentPosts = posts.slice(startIndex, endIndex);
+  postsToShow = currentPosts;
+} else {
+  // Se paginação não está habilitada, usar sliceQtd para limitar
+  postsToShow = sliceQtd ? posts.slice(0, sliceQtd) : posts;
+}
+
+// Função para gerar URLs de paginação
+const getPageUrl = (page: number) => {
+  const url = new URL(Astro.url);
+  if (page === 1) {
+    url.searchParams.delete('page');
+  } else {
+    url.searchParams.set('page', page.toString());
+  }
+  return url.pathname + url.search;
+};
+
+// Gerar números de página para navegação
+const getPageNumbers = () => {
+  const pages = [];
+  const maxVisible = 5;
+  
+  if (totalPages <= maxVisible) {
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i);
+    }
+  } else {
+    if (actualCurrentPage <= 3) {
+      for (let i = 1; i <= 4; i++) {
+        pages.push(i);
+      }
+      pages.push('...');
+      pages.push(totalPages);
+    } else if (actualCurrentPage >= totalPages - 2) {
+      pages.push(1);
+      pages.push('...');
+      for (let i = totalPages - 3; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      pages.push(1);
+      pages.push('...');
+      for (let i = actualCurrentPage - 1; i <= actualCurrentPage + 1; i++) {
+        pages.push(i);
+      }
+      pages.push('...');
+      pages.push(totalPages);
+    }
+  }
+  
+  return pages;
+};
+
+const pageNumbers = getPageNumbers();
 ---
 
 <section class="section blog bg-white relative overflow-hidden" id="blog">
@@ -43,36 +118,38 @@ const {
 
   <div class="container relative z-10">
     <div class="text-center mb-16 reveal-effect">
-      <Heading text={headingTitle} accent={headingAccent} />
+      <Heading text="Nosso" accent="Blog" />
       <div class="mt-4 max-w-2xl mx-auto">
-        <Paragraph fontWeight="300" text={description} />
+        <Paragraph fontWeight="300" text="Conteúdos exclusivos sobre estética, bem-estar e as últimas tendências em cuidados com a saúde bucal."/>
       </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-      <!-- Post principal (primeiro post) -->
-      {posts.slice(0, 1).map((post) => (
+      <!-- Post principal (primeiro post da página atual) -->
+      {postsToShow.slice(0, 1).map((post) => (
         <div class="lg:col-span-2 blog-card-featured bg-white rounded-[25px] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-700 reveal-effect group">
           <div class="grid lg:grid-cols-2 gap-0">
-            <div class="relative h-64 lg:h-full overflow-hidden">
-              <Image
-                src={post.image}
-                alt={post.title}
-                width={600}
-                height={400}
-                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-              
-              {/* <!-- Badge de categoria --> */}
-              <div class="absolute top-4 left-4 bg-primary-gold text-white px-4 py-2 rounded-full text-sm font-medium">
-                {post.category}
+            <a href={`/blog/${post.slug}`}>
+              <div class="relative h-64 lg:h-full overflow-hidden">
+                <Image
+                  src={post.image}
+                  alt={post.title}
+                  width={600}
+                  height={400}
+                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                
+                {/* Badge de categoria */}
+                <div class="absolute top-4 left-4 bg-primary-gold text-white px-4 py-2 rounded-full text-sm font-medium">
+                  {post.category}
+                </div>
+                
+                {/* Overlay */}
+                <div class="absolute inset-0 bg-primary-dark/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
-              
-              {/* <!-- Overlay --> */}
-              <div class="absolute inset-0 bg-primary-dark/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            </div>
-
-            {/* <!-- Conteúdo --> */}
+            </a>
+            
+            {/* Conteúdo */}
             <div class="p-8 flex flex-col justify-center">
               <div class="flex items-center gap-4 mb-4 text-sm text-gray-text">
                 <span class="flex items-center gap-2">
@@ -84,59 +161,57 @@ const {
                   {post.readTime}
                 </span>
               </div>
+              
+              <a href={`/blog/${post.slug}`}>
+                <h3 class="font-cormorant text-3xl font-semibold text-primary-dark mb-4 leading-tight group-hover:text-primary-gold transition-colors duration-300">
+                  {post.title}
+                </h3>
 
-              <h3 class="font-cormorant text-3xl font-semibold text-primary-dark mb-4 leading-tight group-hover:text-primary-gold transition-colors duration-300">
-                {post.title}
-              </h3>
+                <p class="text-gray-text leading-relaxed mb-6 font-light">
+                  {post.excerpt}
+                </p>
 
-              <p class="text-gray-text leading-relaxed mb-6 font-light">
-                {post.excerpt}
-              </p>
+                {/* Tags */}
+                <div class="flex flex-wrap gap-2 mb-6">
+                  {post.tags.slice(0, 3).map((tag) => (
+                    <span class="bg-light-bg text-primary-dark px-3 py-1 rounded-full text-xs font-medium hover:bg-primary-gold hover:text-white transition-colors duration-300">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
 
-              {/* <!-- Tags --> */}
-              <div class="flex flex-wrap gap-2 mb-6">
-                {post.tags.slice(0, 3).map((tag) => (
-                  <span class="bg-light-bg text-primary-dark px-3 py-1 rounded-full text-xs font-medium hover:bg-primary-gold hover:text-white transition-colors duration-300">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              {/* <!-- Autor --> */}
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                  <Image
-                    src={post.authorImage}
-                    alt={post.author}
-                    width={40}
-                    height={40}
-                    class="w-10 h-10 rounded-full object-cover"
-                  />
-                  <div>
-                    <p class="font-medium text-primary-dark text-sm">{post.author}</p>
-                    <p class="text-xs text-gray-text">Autor</p>
+                {/* Autor */}
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <Image
+                      src={post.authorImage}
+                      alt={post.author}
+                      width={40}
+                      height={40}
+                      class="w-10 h-10 rounded-full object-cover"
+                    />
+                    <div>
+                      <p class="font-medium text-primary-dark text-sm">{post.author}</p>
+                      <p class="text-xs text-gray-text">Autor</p>
+                    </div>
+                  </div>
+                  <div class="inline-flex items-center text-primary-gold hover:text-primary-dark font-medium text-sm transition-colors duration-300 group/link">
+                    <span class="mr-2">Ler mais</span>
+                    <svg class="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
                   </div>
                 </div>
-                
-                <a 
-                  href={`/blog/${post.slug}`}
-                  class="inline-flex items-center text-primary-gold hover:text-primary-dark font-medium text-sm transition-colors duration-300 group/link"
-                >
-                  <span class="mr-2">Ler mais</span>
-                  <svg class="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                  </svg>
-                </a>
-              </div>
+              </a>
             </div>
           </div>
         </div>
       ))}
 
-      <!-- Posts secundários -->
-      {posts.slice(1, 3).map((post) => (
+      {/* Posts secundários */}
+      {postsToShow.slice(1).map((post) => (
         <div class="blog-card bg-white rounded-[20px] overflow-hidden shadow-lg hover:shadow-xl transition-all duration-500 hover:-translate-y-3 reveal-effect group">
-          <!-- Imagem -->
+          {/* Imagem */}
           <div class="relative h-48 overflow-hidden">
             <Image
               src={post.image}
@@ -146,28 +221,30 @@ const {
               class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
             
-            {/* <!-- Badge de categoria --> */}
+            {/* Badge de categoria */}
             <div class="absolute top-3 left-3 bg-primary-gold text-white px-3 py-1 rounded-full text-xs font-medium">
               {post.category}
             </div>
             
-            {/* <!-- Data --> */}
+            {/* Data */}
             <div class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-primary-dark px-3 py-1 rounded-full text-xs font-medium">
               {post.publishDate}
             </div>
           </div>
 
-          {/* <!-- Conteúdo --> */}
+          {/* Conteúdo */}
           <div class="p-6">
-            <h4 class="font-cormorant text-xl font-semibold text-primary-dark mb-3 leading-tight group-hover:text-primary-gold transition-colors duration-300">
-              {post.title}
-            </h4>
+            <a href={`/blog/${post.slug}`}>
+              <h4 class="font-cormorant text-xl font-semibold text-primary-dark mb-3 leading-tight group-hover:text-primary-gold transition-colors duration-300">
+                {post.title}
+              </h4>
 
-            <p class="text-gray-text text-sm leading-relaxed mb-4 font-light line-clamp-3">
-              {post.excerpt}
-            </p>
+              <p class="text-gray-text text-sm leading-relaxed mb-4 font-light line-clamp-3">
+                {post.excerpt}
+              </p>
+            </a>
 
-            {/* <!-- Autor e read time --> */}
+            {/* Autor e read time */}
             <div class="flex items-center justify-between pt-4 border-t border-gray-100">
               <div class="flex items-center gap-2">
                 <Image
@@ -195,38 +272,94 @@ const {
       ))}
     </div>
 
-    <!-- Newsletter signup -->
-    <div class="bg-light-bg rounded-3xl p-8 md:p-12 text-center reveal-effect">
-      <div class="max-w-2xl mx-auto">
-        <div class="w-16 h-16 bg-primary-gold/10 rounded-full flex items-center justify-center mx-auto mb-6">
-          <span class="text-3xl">📧</span>
+    {/* Paginação */}
+    {showPagination && (
+      <div class="flex flex-col items-center space-y-6 mt-16 reveal-effect">
+        {/* Informações da paginação */}
+        <div class="text-center">
+          <p class="text-sm text-gray-text font-light">
+            Mostrando <span class="font-medium text-primary-dark">{enablePagination ? (actualCurrentPage - 1) * postsPerPage + 1 : 1}</span> a <span class="font-medium text-primary-dark">{enablePagination ? Math.min(actualCurrentPage * postsPerPage, totalPosts) : Math.min(postsToShow.length, totalPosts)}</span> de <span class="font-medium text-primary-dark">{totalPosts}</span> posts
+          </p>
         </div>
-        
-        <h3 class="font-cormorant text-3xl font-semibold text-primary-dark mb-4">
-          Receba nossas <span class="text-primary-gold italic">novidades</span>
-        </h3>
-        
-        <p class="text-gray-text mb-8 font-light">
-          Fique por dentro das últimas tendências em estética e bem-estar. Assine nossa newsletter e receba conteúdo exclusivo.
-        </p>
 
-        <div class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-          <input 
-            type="email" 
-            placeholder="Seu melhor e-mail"
-            class="flex-1 px-6 py-3 rounded-full border border-gray-200 focus:border-primary-gold focus:outline-none transition-colors duration-300"
-          />
-          <button class="px-8 py-3 bg-primary-gold text-white rounded-full font-medium hover:bg-gold-dark transition-colors duration-300 hover:shadow-lg hover:shadow-primary-gold/25">
-            Assinar
-          </button>
-        </div>
+        {/* Navegação da paginação */}
+        <nav class="flex items-center justify-center space-x-2" aria-label="Paginação">
+          {/* Botão Anterior */}
+          {actualCurrentPage > 1 && (
+            <a
+              href={getPageUrl(actualCurrentPage - 1)}
+              class="pagination-btn pagination-nav group"
+              aria-label="Página anterior"
+            >
+              <svg class="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+              </svg>
+              <span class="ml-2 hidden sm:inline">Anterior</span>
+            </a>
+          )}
+
+          {/* Números das páginas */}
+          <div class="flex items-center space-x-1">
+            {pageNumbers.map((pageNum) => (
+              pageNum === '...' ? (
+                <span class="px-3 py-2 text-gray-text">...</span>
+              ) : (
+                <a
+                  href={getPageUrl(pageNum as number)}
+                  class={`pagination-btn ${pageNum === actualCurrentPage ? 'pagination-active' : 'pagination-inactive'}`}
+                  aria-label={`Página ${pageNum}`}
+                  aria-current={pageNum === actualCurrentPage ? 'page' : undefined}
+                >
+                  {pageNum}
+                </a>
+              )
+            ))}
+          </div>
+
+          {/* Botão Próximo */}
+          {actualCurrentPage < totalPages && (
+            <a
+              href={getPageUrl(actualCurrentPage + 1)}
+              class="pagination-btn pagination-nav group"
+              aria-label="Próxima página"
+            >
+              <span class="mr-2 hidden sm:inline">Próximo</span>
+              <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </a>
+          )}
+        </nav>
+
+        {/* Navegação rápida (opcional) */}
+        {totalPages > 5 && (
+          <div class="flex items-center space-x-4 text-sm">
+            <span class="text-gray-text font-light">Ir para página:</span>
+            <div class="relative">
+              <select 
+                class="pagination-select"
+                onchange="window.location.href = this.value"
+              >
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                  <option 
+                    value={getPageUrl(pageNum)} 
+                    selected={pageNum === currentPage}
+                  >
+                    {pageNum}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        )}
       </div>
-    </div>
+    )}
 
-    <!-- CTA para ver todos os posts -->
-    <div class="text-center mt-12 reveal-effect">
-      <Button title="Ver todos os artigos" href="/blog" />
-    </div>
+    {showButton && !showPagination && (
+      <div class="text-center mt-12 reveal-effect">
+        <Button title="Ver todos os posts" href="/blog" />
+      </div>
+    )}
   </div>
 </section>
 
@@ -261,4 +394,125 @@ const {
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  /* Estilos da Paginação */
+  .pagination-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 9999px;
+    transition: all 0.3s ease;
+    min-width: 40px;
+    height: 40px;
+    text-decoration: none;
+  }
+
+  .pagination-active {
+    background-color: var(--primary-gold, #c9a874);
+    color: white;
+    box-shadow: 0 10px 25px rgba(201, 168, 116, 0.4);
+    transform: scale(1.05);
+  }
+
+  .pagination-inactive {
+    background-color: white;
+    color: var(--primary-dark, #2c3e50);
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+  }
+
+  .pagination-inactive:hover {
+    background-color: var(--primary-gold, #c9a874);
+    color: white;
+    border-color: var(--primary-gold, #c9a874);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .pagination-nav {
+    background-color: white;
+    color: var(--primary-dark, #2c3e50);
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+  }
+
+  .pagination-nav:hover {
+    background-color: var(--primary-dark, #2c3e50);
+    color: white;
+    border-color: var(--primary-dark, #2c3e50);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .pagination-select {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 9999px;
+    padding: 8px 16px;
+    font-size: 14px;
+    color: var(--primary-dark, #2c3e50);
+    outline: none;
+    transition: all 0.3s ease;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    padding-right: 40px;
+    appearance: none;
+  }
+
+  .pagination-select:hover {
+    border-color: var(--primary-gold, #c9a874);
+    background-color: rgba(201, 168, 116, 0.05);
+  }
+
+  .pagination-select:focus {
+    border-color: var(--primary-gold, #c9a874);
+    box-shadow: 0 0 0 3px rgba(201, 168, 116, 0.1);
+  }
+
+  /* Responsividade da paginação */
+  @media (max-width: 640px) {
+    .pagination-btn {
+      padding: 6px 12px;
+      font-size: 12px;
+      min-width: 36px;
+      height: 36px;
+    }
+    
+    nav[aria-label="Paginação"] {
+      gap: 4px;
+    }
+    
+    nav[aria-label="Paginação"] > div {
+      gap: 4px;
+    }
+  }
+
+  #blog {
+    zoom: 0.9;
+  }
+
+  /* Animação de entrada para a paginação */
+  .reveal-effect {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: revealUp 0.8s ease-out forwards;
+  }
+
+  @keyframes revealUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Delay para elementos de paginação */
+  .pagination-btn:nth-child(1) { animation-delay: 0.1s; }
+  .pagination-btn:nth-child(2) { animation-delay: 0.15s; }
+  .pagination-btn:nth-child(3) { animation-delay: 0.2s; }
+  .pagination-btn:nth-child(4) { animation-delay: 0.25s; }
+  .pagination-btn:nth-child(5) { animation-delay: 0.3s; }
 </style>

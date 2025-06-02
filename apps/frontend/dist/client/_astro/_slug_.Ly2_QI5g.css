@@ -1,0 +1,15 @@
+.header-wrapper[data-v-625c45c6] {
+  position: relative;
+}
+header[data-v-625c45c6] {
+  isolation: isolate;
+}
+@media (max-width: 1024px) {
+  .translate-x-full[data-v-625c45c6] {
+    transform: translate(100%);
+  }
+}
+.fixed.inset-0[data-v-625c45c6] {
+  position: fixed;
+  inset: 0;
+}

@@ -31,6 +31,8 @@ services:
       - "8055:8055"
     volumes:
       - ./volumes/directus-uploads:/directus/uploads
+      - ./apps/cms/extensions:/directus/extensions
+
     env_file:
       - .env
     environment:

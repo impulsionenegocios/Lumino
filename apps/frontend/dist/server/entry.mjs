@@ -1,6 +1,6 @@
 import { renderers } from './renderers.mjs';
-import { c as createExports, s as serverEntrypointModule } from './chunks/_@astrojs-ssr-adapter_DGSZCP-z.mjs';
-import { manifest } from './manifest_Cq2p7H3n.mjs';
+import { c as createExports, s as serverEntrypointModule } from './chunks/_@astrojs-ssr-adapter_D8YVOP8m.mjs';
+import { manifest } from './manifest_Bo_ooquk.mjs';
 
 const serverIslandMap = new Map();;
 
@@ -15,7 +15,7 @@ const _page7 = () => import('./pages/servicos.astro.mjs');
 const _page8 = () => import('./pages/sobre-nos.astro.mjs');
 const _page9 = () => import('./pages/index.astro.mjs');
 const pageMap = new Map([
-    ["../../node_modules/.pnpm/astro@5.7.12_@azure+identity@4.9.1_@azure+storage-blob@12.26.0_@types+node@22.15.17_enc_5f67b7ca413d594ebbd4eb6a6cecbce5/node_modules/astro/dist/assets/endpoint/node.js", _page0],
+    ["../../node_modules/.pnpm/astro@5.8.1_@azure+identity@4.10.0_@azure+storage-blob@12.26.0_@types+node@22.15.29_enc_4e6cb1d54c9df16824f2224676e74c23/node_modules/astro/dist/assets/endpoint/node.js", _page0],
     ["src/pages/blog/[slug].astro", _page1],
     ["src/pages/blog/index.astro", _page2],
     ["src/pages/contato.astro", _page3],

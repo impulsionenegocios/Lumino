@@ -1,27 +1,4 @@
-import { a as createAstro, c as createComponent, m as maybeRenderHead, e as addAttribute, r as renderTemplate } from './astro/server_Hu3wlXJ5.mjs';
-
-const $$Astro$1 = createAstro("https://joqueianapolis.com.br");
-const $$Heading = createComponent(($$result, $$props, $$slots) => {
-  const Astro2 = $$result.createAstro($$Astro$1, $$props, $$slots);
-  Astro2.self = $$Heading;
-  const {
-    type = "title",
-    text,
-    accent = "",
-    color = "dark",
-    fontWeight = "bold"
-    // pode ser 'bold' ou 'light'
-  } = Astro2.props;
-  const isTitle = type === "title";
-  const headingTag = isTitle ? "h1" : "h2";
-  const fontSize = isTitle ? "text-5xl lg:text-6xl 2xl:text-7xl font-serif animate-title" : "text-[18px] font-sans animate-subtitle";
-  const weightClass = fontWeight === "bold" ? "font-bold" : "font-regular";
-  let textColor = "text-primary-dark";
-  if (color === "gold") textColor = "text-primary-gold";
-  else if (color === "gray") textColor = "text-gray-400";
-  else if (color === "white") textColor = "text-white";
-  return renderTemplate`${maybeRenderHead()}<component${addAttribute(headingTag, "this")}${addAttribute(`relative leading-none ${fontSize} ${textColor} ${weightClass}`, "class")}> ${text} ${accent && renderTemplate`<span class="text-primary-gold"> ${accent}</span>`} </component>`;
-}, "/home/zayit/projetos/lumino/apps/frontend/src/components/typograph/Heading.astro", void 0);
+import { c as createAstro, a as createComponent, m as maybeRenderHead, d as addAttribute, b as renderTemplate } from './astro/server_DwmPXTEX.mjs';
 
 const $$Astro = createAstro("https://joqueianapolis.com.br");
 const $$MainButton = createComponent(($$result, $$props, $$slots) => {
@@ -103,4 +80,4 @@ const $$MainButton = createComponent(($$result, $$props, $$slots) => {
   return renderTemplate`${maybeRenderHead()}<a${addAttribute(href, "href")}${addAttribute(`${base} ${isOutline ? outlineStyles : defaultStyles}`, "class")}> ${title} </a>`;
 }, "/home/zayit/projetos/lumino/apps/frontend/src/components/buttons/mainButton.astro", void 0);
 
-export { $$Heading as $, $$MainButton as a };
+export { $$MainButton as $ };

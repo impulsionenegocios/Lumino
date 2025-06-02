@@ -11,6 +11,8 @@
   "license": "ISC",
   "packageManager": "pnpm@10.10.0",
   "dependencies": {
-    "directus": "^11.7.2"
+    "directus": "^11.7.2",
+    "directus-extension-schema-management-module": "^2.0.1",
+    "directus-extension-wpslug-interface": "^1.1.0"
   }
 }

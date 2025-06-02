@@ -90,6 +90,44 @@ export async function getBlogPosts(): Promise<blogData[]> {
   }
 }
 
+export async function getBlogPostsInitial(): Promise<blogData[]> {
+  try {
+    const url = `${directusUrl}/items/post?fields=*,categoria.nome,autor.*&limit=3`;
+
+    const res = await fetch(url);
+
+    if (!res.ok) {
+      throw new Error(`Erro ao buscar posts: ${res.statusText}`);
+    }
+
+    const json = await res.json();
+
+    return json.data.map((post: any) => ({
+      image: `${directusPublicUrl}/assets/${post.imagem_de_destaque}?width=600&height=500&format=webp`,
+      category: post.categoria?.nome || '',
+      title: post.titulo,
+      excerpt: post.resumo,
+      author: post.autor?.nome || '',
+      authorImage: post.autor?.imagem
+        ? `${directusPublicUrl}/assets/${post.autor.imagem}?width=40&height=40&format=webp&quality=80`
+        : '/images/default-avatar.jpg',
+      authorBio: post.autor?.bio || 'Especialista em estética e bem-estar.',
+      publishDate: new Date(post.date_created).toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      }),
+      readTime: post.tempo_de_leitura || '5 min',
+      slug: post.slug,
+      tags: Array.isArray(post.tags) ? post.tags : [],
+      content: post.conteudo || '',
+    }));
+  } catch (error) {
+    console.error('Erro ao buscar posts:', error);
+    return [];
+  }
+}
+
 // Nova função para buscar um post específico pelo slug
 export async function getBlogPostBySlug(slug: string): Promise<blogData | null> {
   try {

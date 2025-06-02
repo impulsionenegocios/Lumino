@@ -1,9 +1,9 @@
-import { c as createComponent, m as maybeRenderHead, r as renderTemplate, d as renderComponent, h as renderSlot, f as renderHead } from './astro/server_Hu3wlXJ5.mjs';
+import { a as createComponent, m as maybeRenderHead, b as renderTemplate, r as renderComponent, p as renderSlot, f as renderHead } from './astro/server_DwmPXTEX.mjs';
 /* empty css                          */
 /* empty css                          */
 import { defineComponent, useSSRContext, mergeProps, ref, watch, onMounted, onBeforeUnmount } from 'vue';
 import { ssrRenderAttrs, ssrInterpolate, ssrRenderClass, ssrRenderAttr, ssrRenderList, ssrRenderComponent } from 'vue/server-renderer';
-import { $ as $$Animations } from './Animations_DJBdomHJ.mjs';
+import { $ as $$Animations } from './Animations_uEMQXEru.mjs';
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -6121,10 +6121,93 @@ _sfc_main$1.setup = (props, ctx) => {
 };
 const MainButton = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["ssrRender", _sfc_ssrRender$1]]);
 
+const apiUrl = "http://directus:8055";
+const assetsUrl = "http://localhost:8055";
+class DirectusError extends Error {
+  constructor(message, status, url) {
+    super(message);
+    this.status = status;
+    this.url = url;
+    this.name = "DirectusError";
+  }
+}
+async function getMainData() {
+  try {
+    const url = `${apiUrl}/items/clinicData`;
+    const res = await fetch(url, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      }
+    });
+    if (!res.ok) {
+      throw new DirectusError(
+        `Erro ao buscar os dados da clínica: ${res.statusText}`,
+        res.status,
+        url
+      );
+    }
+    const json = await res.json();
+    if (!json.data || json.data.length === 0) {
+      return null;
+    }
+    const item = json.data[0];
+    const mappedMainData = {
+      nome: item.nome,
+      numero_cro: item.numero_cro,
+      responsavel_tecnico: item.responsavel_tecnico,
+      telefone: item.telefone,
+      whatsapp: item.whatsapp,
+      email: item.email,
+      endereco: item.endereco,
+      descricao: item.descricao,
+      logo_escura: item.logo_escura ? `${assetsUrl}/assets/${item.logo_escura}` : "/images/placeholder-logo.jpg",
+      logo_clara: item.logo_clara ? `${assetsUrl}/assets/${item.logo_clara}` : "/images/placeholder-logo.jpg"
+    };
+    console.log("esses são os dados mapeados", mappedMainData);
+    return mappedMainData;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+async function getMainDataPublic() {
+  try {
+    const url = `${assetsUrl}/items/clinicData`;
+    const res = await fetch(url, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      }
+    });
+    if (!res.ok) {
+      throw new DirectusError(
+        `Erro ao buscar os dados da clínica: ${res.statusText}`,
+        res.status,
+        url
+      );
+    }
+    const json = await res.json();
+    if (!json.data || json.data.length === 0) {
+      return null;
+    }
+    const item = json.data[0];
+    const mappedMainData = {
+      logo_escura: item.logo_escura ? `${assetsUrl}/assets/${item.logo_escura}` : "/images/placeholder-logo.jpg",
+      logo_clara: item.logo_clara ? `${assetsUrl}/assets/${item.logo_clara}` : "/images/placeholder-logo.jpg"
+    };
+    console.log("esses são os dados mapeados", mappedMainData);
+    return mappedMainData;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 const _sfc_main = /* @__PURE__ */ defineComponent({
   __name: "mainHeader",
   props: {
-    logoUrl: {},
+    logoUrl: { default: "" },
     ctaText: { default: "Agendar Consulta" },
     menuItems: { default: () => [
       { label: "In\xEDcio", url: "#home" },
@@ -6137,8 +6220,11 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
   },
   setup(__props, { expose: __expose }) {
     __expose();
+    const mainData = ref();
+    const fetchMainData = async () => {
+      mainData.value = await getMainDataPublic();
+    };
     const props = __props;
-    const { menuItems, logoUrl, ctaText } = props;
     const isMenuOpen = ref(false);
     const isScrolled = ref(false);
     const headerRef = ref(null);
@@ -6179,9 +6265,11 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         });
       }
     });
-    onMounted(() => {
+    onMounted(async () => {
       window.addEventListener("scroll", handleScroll);
       handleScroll();
+      await fetchMainData();
+      console.log(mainData.value);
       if (headerRef.value) {
         gsapWithCSS.fromTo(
           headerRef.value,
@@ -6194,35 +6282,35 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       window.removeEventListener("scroll", handleScroll);
       document.body.style.overflow = "auto";
     });
-    const __returned__ = { props, menuItems, logoUrl, ctaText, isMenuOpen, isScrolled, headerRef, sidebarRef, toggleMenu, closeMenu, handleScroll, MainButton };
+    const __returned__ = { mainData, fetchMainData, props, isMenuOpen, isScrolled, headerRef, sidebarRef, toggleMenu, closeMenu, handleScroll, MainButton };
     Object.defineProperty(__returned__, "__isScriptSetup", { enumerable: false, value: true });
     return __returned__;
   }
 });
 function _sfc_ssrRender(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
-  _push(`<!--[--><header class="${ssrRenderClass([[$setup.isScrolled ? "bg-white shadow-lg" : "bg-transparent"], "fixed top-0 left-0 w-full py-4 z-50 transition-all duration-500"])}" data-v-910bd4dd><div class="container mx-auto px-4 md:px-8 flex items-center justify-between" data-v-910bd4dd><div class="relative z-10" data-v-910bd4dd><a href="/" class="flex items-center" data-v-910bd4dd><img class="h-[60px]"${ssrRenderAttr("src", $setup.logoUrl)} alt="Logo" data-v-910bd4dd></a></div><nav class="hidden lg:block" data-v-910bd4dd><ul class="flex gap-10" data-v-910bd4dd><!--[-->`);
-  ssrRenderList($setup.menuItems, (item, index) => {
-    _push(`<li data-v-910bd4dd><a${ssrRenderAttr("href", item.url)} class="${ssrRenderClass([{ "text-primary-dark hover:text-primary-gold": !$setup.isScrolled, "hover:text-primary-gold": $setup.isScrolled }, "relative font-medium text-base pb-1 transition-colors duration-500 group"])}" data-v-910bd4dd>${ssrInterpolate(item.label)} <span class="absolute bottom-0 left-0 w-full h-px bg-primary-gold transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300" data-v-910bd4dd></span></a></li>`);
+  _push(`<div${ssrRenderAttrs(mergeProps({ class: "header-wrapper" }, _attrs))} data-v-625c45c6><header class="${ssrRenderClass([[$setup.isScrolled ? "bg-white shadow-lg" : "bg-transparent"], "fixed top-0 left-0 w-full py-4 z-50 transition-all duration-500"])}" data-v-625c45c6><div class="container mx-auto px-4 md:px-8 flex items-center justify-between" data-v-625c45c6><div class="relative z-10" data-v-625c45c6><a href="/" class="flex items-center" data-v-625c45c6><img class="h-[60px]" width="120" height="100" format="webp"${ssrRenderAttr("src", $setup.mainData?.logo_escura)} alt="Logo" data-v-625c45c6></a></div><nav class="hidden lg:block" data-v-625c45c6><ul class="flex gap-10" data-v-625c45c6><!--[-->`);
+  ssrRenderList($props.menuItems, (item, index) => {
+    _push(`<li data-v-625c45c6><a${ssrRenderAttr("href", item.url)} class="${ssrRenderClass([{ "text-primary-dark hover:text-primary-gold": !$setup.isScrolled, "hover:text-primary-gold": $setup.isScrolled }, "relative font-medium text-base pb-1 transition-colors duration-500 group"])}" data-v-625c45c6>${ssrInterpolate(item.label)} <span class="absolute bottom-0 left-0 w-full h-px bg-primary-gold transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300" data-v-625c45c6></span></a></li>`);
   });
   _push(`<!--]--></ul></nav>`);
   _push(ssrRenderComponent($setup["MainButton"], {
     class: "2xl:!text-sm text-xs !hidden lg:!block",
-    title: $setup.ctaText,
+    title: $props.ctaText,
     href: "#contact"
   }, null, _parent));
-  _push(`<button class="relative z-50 lg:hidden flex flex-col justify-center items-center w-10 h-10" aria-label="Toggle Menu" data-v-910bd4dd><span class="${ssrRenderClass([$setup.isMenuOpen ? "bg-primary-dark rotate-45 translate-y-2" : "bg-primary-dark", "block w-7 h-0.5 transition-all duration-500 ease-in-out"])}" data-v-910bd4dd></span><span class="${ssrRenderClass([$setup.isMenuOpen ? "bg-primary-dark opacity-0" : "bg-primary-dark", "block w-7 h-0.5 transition-all duration-500 ease-in-out my-1.5"])}" data-v-910bd4dd></span><span class="${ssrRenderClass([$setup.isMenuOpen ? "bg-primary-dark -rotate-45 -translate-y-2" : "bg-primary-dark", "block w-7 h-0.5 transition-all duration-500 ease-in-out"])}" data-v-910bd4dd></span></button></div></header><div class="${ssrRenderClass([$setup.isMenuOpen ? "translate-x-0" : "translate-x-full", "fixed top-0 right-0 w-80 h-screen bg-white shadow-2xl transform transition-transform duration-700 ease-in-out z-[99999]"])}" data-v-910bd4dd><div class="flex items-center justify-between px-6 py-4" data-v-910bd4dd><img class="h-[60px]"${ssrRenderAttr("src", $setup.logoUrl)} alt="" data-v-910bd4dd><button aria-label="Fechar menu" class="text-2xl font-bold cursor-pointer text-primary-dark hover:text-primary-gold transition-colors duration-300" data-v-910bd4dd> \xD7 </button></div><div class="flex flex-col h-full pt-4 pb-8 px-8" data-v-910bd4dd><ul class="flex flex-col gap-6" data-v-910bd4dd><!--[-->`);
-  ssrRenderList($setup.menuItems, (item, index) => {
-    _push(`<li class="mobile-menu-item" data-v-910bd4dd><a${ssrRenderAttr("href", item.url)} class="relative font-medium text-lg cursor-pointer pb-1 text-primary-dark hover:text-primary-gold transition-colors duration-300 inline-block group" data-v-910bd4dd>${ssrInterpolate(item.label)} <span class="absolute bottom-0 left-0 w-0 h-px bg-primary-gold transition-all duration-300 group-hover:w-full" data-v-910bd4dd></span></a></li>`);
+  _push(`<button class="relative z-50 lg:hidden flex flex-col justify-center items-center w-10 h-10" aria-label="Toggle Menu" data-v-625c45c6><span class="${ssrRenderClass([$setup.isMenuOpen ? "bg-primary-dark rotate-45 translate-y-2" : "bg-primary-dark", "block w-7 h-0.5 transition-all duration-500 ease-in-out"])}" data-v-625c45c6></span><span class="${ssrRenderClass([$setup.isMenuOpen ? "bg-primary-dark opacity-0" : "bg-primary-dark", "block w-7 h-0.5 transition-all duration-500 ease-in-out my-1.5"])}" data-v-625c45c6></span><span class="${ssrRenderClass([$setup.isMenuOpen ? "bg-primary-dark -rotate-45 -translate-y-2" : "bg-primary-dark", "block w-7 h-0.5 transition-all duration-500 ease-in-out"])}" data-v-625c45c6></span></button></div></header><div class="${ssrRenderClass([$setup.isMenuOpen ? "translate-x-0" : "translate-x-full", "fixed top-0 right-0 w-80 h-screen bg-white shadow-2xl transform transition-transform duration-700 ease-in-out z-[99999]"])}" data-v-625c45c6><div class="flex items-center justify-between px-6 py-4" data-v-625c45c6><img class="h-[60px]"${ssrRenderAttr("src", $setup.mainData?.logo_escura)} alt="Logo" data-v-625c45c6><button aria-label="Fechar menu" class="text-2xl font-bold cursor-pointer text-primary-dark hover:text-primary-gold transition-colors duration-300" data-v-625c45c6> \xD7 </button></div><div class="flex flex-col h-full pt-4 pb-8 px-8" data-v-625c45c6><ul class="flex flex-col gap-6" data-v-625c45c6><!--[-->`);
+  ssrRenderList($props.menuItems, (item, index) => {
+    _push(`<li class="mobile-menu-item" data-v-625c45c6><a${ssrRenderAttr("href", item.url)} class="relative font-medium text-lg cursor-pointer pb-1 text-primary-dark hover:text-primary-gold transition-colors duration-300 inline-block group" data-v-625c45c6>${ssrInterpolate(item.label)} <span class="absolute bottom-0 left-0 w-0 h-px bg-primary-gold transition-all duration-300 group-hover:w-full" data-v-625c45c6></span></a></li>`);
   });
   _push(`<!--]--></ul>`);
   _push(ssrRenderComponent($setup["MainButton"], {
     onClick: $setup.closeMenu,
     ref: "mobileCta",
     class: "2xl:!text-sm text-xs !block lg:!hidden mt-8 mobile-cta",
-    title: $setup.ctaText,
+    title: $props.ctaText,
     href: "#contact"
   }, null, _parent));
-  _push(`</div></div><div class="${ssrRenderClass([$setup.isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none", "fixed inset-0 bg-black/50 z-[9999] transition-opacity duration-500"])}" data-v-910bd4dd></div><!--]-->`);
+  _push(`</div></div><div class="${ssrRenderClass([$setup.isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none", "fixed inset-0 bg-black/50 z-[9999] transition-opacity duration-500"])}" data-v-625c45c6></div></div>`);
 }
 const _sfc_setup = _sfc_main.setup;
 _sfc_main.setup = (props, ctx) => {
@@ -6230,7 +6318,7 @@ _sfc_main.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("src/components/headers/mainHeader.vue");
   return _sfc_setup ? _sfc_setup(props, ctx) : void 0;
 };
-const MainHeader = /* @__PURE__ */ _export_sfc(_sfc_main, [["ssrRender", _sfc_ssrRender], ["__scopeId", "data-v-910bd4dd"]]);
+const MainHeader = /* @__PURE__ */ _export_sfc(_sfc_main, [["ssrRender", _sfc_ssrRender], ["__scopeId", "data-v-625c45c6"]]);
 
 const $$MainFooter = createComponent(($$result, $$props, $$slots) => {
   return renderTemplate`${maybeRenderHead()}<footer> <div class="counter-particles"></div> <div class="footer-shape footer-shape-1"></div> <div class="footer-shape footer-shape-2"></div> <div class="container"> <div class="footer-top"> <div class="footer-column footer-about"> <a href="#" class="footer-logo">Lumino <span class="footer-logo-accent">Clínica</span></a> <p>
@@ -6270,4 +6358,4 @@ const $$MainLayout = createComponent(($$result, $$props, $$slots) => {
   return renderTemplate(_a || (_a = __template(['<html lang="pt-BR" data-astro-cid-gct5ngyh> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Lumino Cl\xEDnica - Odontologia de Luxo</title><script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"><\/script>', "</head> <body data-astro-cid-gct5ngyh> <!-- Hydrate assim que o JS carregar --> ", " ", " ", " ", "  </body></html>"])), renderHead(), renderComponent($$result, "MainHeader", MainHeader, { "client:load": true, "logoUrl": LogoUrl.src, "ctaText": "Agendar Consulta", ":menuItems": menuItems, "client:component-hydration": "load", "client:component-path": "/home/zayit/projetos/lumino/apps/frontend/src/components/headers/mainHeader.vue", "client:component-export": "default", "data-astro-cid-gct5ngyh": true }), renderSlot($$result, $$slots["default"]), renderComponent($$result, "Animations", $$Animations, { "data-astro-cid-gct5ngyh": true }), renderComponent($$result, "MainFooter", $$MainFooter, { "data-astro-cid-gct5ngyh": true }));
 }, "/home/zayit/projetos/lumino/apps/frontend/src/layouts/mainLayout.astro", void 0);
 
-export { $$MainLayout as $ };
+export { $$MainLayout as $, getMainData as g };

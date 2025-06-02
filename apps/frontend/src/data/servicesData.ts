@@ -43,27 +43,10 @@ export interface ServiceData {
   ctaTitle: string;
   ctaTitleAccent: string;
   ctaDescription: string;
-  CtaForm: FormData;
 }
 
-interface FormData {
-  id: number;
-  title: string;
-  description: string | null;
-  slug: string;
-  form_fields: FormField[];
-}
 
-interface FormField {
-  id: number;
-  form: number;
-  label: string;
-  field_name: string;
-  type: string;
-  required: boolean | null;
-  options: string[] | null;
-  order: number;
-}
+
 
 interface Benefit {
   id: number;
@@ -194,7 +177,7 @@ export async function getServiceBySlug(slug: string): Promise<ServiceData | null
         'CtaForm.form_fields.form_fields_id.type',
         'CtaForm.form_fields.form_fields_id.required',
         'CtaForm.form_fields.form_fields_id.options',
-        'CtaForm.form_fields.form_fields_id.order'
+        'CtaForm.form_fields.form_fields_id.order',
       ].join(',') +
       `&deep=*&limit=1`;
 
@@ -261,7 +244,8 @@ function transformServiceData(service: any): ServiceData {
     authItems = service.authItems.map((id: number, index: number) => ({
       id,
       value: index === 0 ? '500+' : index === 1 ? '98%' : '5★',
-      description: index === 0 ? 'Pacientes atendidos' : index === 1 ? 'Satisfação' : 'Avaliação média'
+      description:
+        index === 0 ? 'Pacientes atendidos' : index === 1 ? 'Satisfação' : 'Avaliação média',
     }));
   }
 
@@ -270,48 +254,16 @@ function transformServiceData(service: any): ServiceData {
 
   // Processa casesBeforeAfter - pode ser um array de relacionamentos ou apenas um ID
   let casesBeforeAfter: BeforeAfter[] = [];
-  if (Array.isArray(service.casesBeforeAfter)) {
-    // Se é um array de relacionamentos
-    casesBeforeAfter = processRelationship(service.casesBeforeAfter, 'services_before_after_id')
-      .map((item: any) => ({
-        ...item,
-        before: item.before ? `${directusPublicUrl}/assets/${item.before}` : '',
-        after: item.after ? `${directusPublicUrl}/assets/${item.after}` : '',
-      }));
-  } else if (service.casesBeforeAfter) {
-    // Se é apenas um ID, vamos criar dados mock por enquanto
-    casesBeforeAfter = [{
-      id: service.casesBeforeAfter,
-      before: '/images/caso-antes-1.jpg',
-      after: '/images/caso-depois-1.jpg',
-      title: 'Transformação Completa',
-      description: 'Resultado após tratamento com alinhador invisível'
-    }];
-  }
 
-  // Processa CtaForm
-  let ctaForm: FormData = {
-    id: 0,
-    title: 'Formulário Padrão',
-    description: null,
-    slug: 'contato',
-    form_fields: []
-  };
+    casesBeforeAfter = processRelationship(
+      service.casesBeforeAfter,
+      'services_before_after_id',
+    ).map((item: any) => ({
+      ...item,
+      before: item.before ? `${directusPublicUrl}/assets/${item.before}` : '',
+      after: item.after ? `${directusPublicUrl}/assets/${item.after}` : '',
+    }));
 
-  if (service.CtaForm && typeof service.CtaForm === 'object') {
-    ctaForm = {
-      id: service.CtaForm.id,
-      title: service.CtaForm.title || 'Formulário de Contato',
-      description: service.CtaForm.description,
-      slug: service.CtaForm.slug,
-      form_fields: Array.isArray(service.CtaForm.form_fields) 
-        ? service.CtaForm.form_fields
-            .map((item: any) => item.form_fields_id)
-            .filter(Boolean)
-            .sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
-        : []
-    };
-  }
 
   const transformedService: ServiceData = {
     // Campos básicos
@@ -322,9 +274,7 @@ function transformServiceData(service: any): ServiceData {
     date_updated: service.date_updated,
 
     // Hero Section
-    heroImage: service.heroImage 
-      ? `${directusPublicUrl}/assets/${service.heroImage}`
-      : '/images/placeholder-service.jpg',
+    heroImage: service.heroImage ? `${directusPublicUrl}/assets/${service.heroImage}?width=1920&height=1080&format=webp&quality=80`: '/images/placeholder-service.jpg',
     heroSubtitle: service.heroSubtitle || '',
     heroTitle: service.heroTitle || '',
     heroTitleAccent: service.heroTitleAccent || '',
@@ -352,9 +302,7 @@ function transformServiceData(service: any): ServiceData {
     authTitle: service.authTitle || '',
     authTitleAccent: service.authTitleAccent || '',
     authDescription: service.authDescription || '',
-    authFeaturedImage: service.authFeaturedImage 
-      ? `${directusPublicUrl}/assets/${service.authFeaturedImage}`
-      : '',
+    authFeaturedImage: service.authFeaturedImage ? `${directusPublicUrl}/assets/${service.authFeaturedImage}?width=580&height=420&format=webp&quality=80` : '',
     authBadgeTitleOne: service.authBadgeTitleOne || '',
     authBadgeTitleTwo: service.authBadgeTitleTwo || '',
     authItems,
@@ -368,10 +316,12 @@ function transformServiceData(service: any): ServiceData {
     ctaTitle: service.ctaTitle || '',
     ctaTitleAccent: service.ctaTitleAccent || '',
     ctaDescription: service.ctaDescription || '',
-    CtaForm: ctaForm,
+
   };
 
-  console.log(`✅ Serviço transformado: ${transformedService.slug} com ${benefits.length} benefícios`);
+  console.log(
+    `✅ Serviço transformado: ${transformedService.slug} com ${benefits.length} benefícios`,
+  );
   return transformedService;
 }
 
@@ -416,7 +366,7 @@ export async function getAllServices(): Promise<ServiceData[]> {
       const error = new DirectusError(
         `Erro ao buscar todos os serviços: ${res.statusText}`,
         res.status,
-        url
+        url,
       );
       console.error(`❌ Erro ao buscar todos os serviços: ${res.status}`);
       throw error;
@@ -439,16 +389,13 @@ export async function getAllServices(): Promise<ServiceData[]> {
       date_updated: service.date_updated,
 
       // Hero Section
-      heroImage: service.heroImage 
-        ? `${directusPublicUrl}/assets/${service.heroImage}`
-        : '/images/placeholder-service.jpg',
+      heroImage: service.heroImage ? `${directusPublicUrl}/assets/${service.heroImage}?width=570&height=410&format=webp&quality=80` : '/images/placeholder-service.jpg',
       heroSubtitle: service.heroSubtitle || '',
       heroTitle: service.heroTitle || '',
       heroTitleAccent: service.heroTitleAccent || '',
       heroDescription: service.heroDescription || '',
       heroPrimaryButton: service.heroPrimaryButton || 0,
       heroSecondaryButton: service.heroSecondaryButton || 0,
-
       // Campos vazios para compatibilidade (não carregados na listagem)
       benefitsTitle: '',
       benefitsTitleAccent: '',
@@ -478,7 +425,7 @@ export async function getAllServices(): Promise<ServiceData[]> {
         title: '',
         description: null,
         slug: '',
-        form_fields: []
+        form_fields: [],
       },
     }));
 
@@ -493,13 +440,13 @@ export async function getAllServices(): Promise<ServiceData[]> {
 // Função para obter caminhos estáticos (útil para getStaticPaths)
 export async function getServicePaths() {
   console.log(`🛤️ Gerando caminhos estáticos dos serviços`);
-  
+
   try {
     const services = await getAllServices();
     const paths = services.map((service) => ({
       params: { slug: service.slug },
     }));
-    
+
     console.log(`✅ ${paths.length} caminhos gerados`);
     return paths;
   } catch (error) {
@@ -511,9 +458,9 @@ export async function getServicePaths() {
 // Função utilitária para verificar se um serviço existe
 export async function serviceExists(slug: string): Promise<boolean> {
   console.log(`🔍 Verificando existência do serviço: ${slug}`);
-  
+
   try {
-    const url = 
+    const url =
       `${directusUrl}/items/services` +
       `?filter[slug][_eq]=${encodeURIComponent(slug)}` +
       `&filter[status][_eq]=published` +
@@ -534,99 +481,11 @@ export async function serviceExists(slug: string): Promise<boolean> {
 
     const json = await res.json();
     const exists = json.data && json.data.length > 0;
-    
+
     console.log(`${exists ? '✅' : '❌'} Serviço ${slug} ${exists ? 'existe' : 'não existe'}`);
     return exists;
   } catch (error) {
     console.error(`❌ Erro ao verificar existência do serviço ${slug}:`, error);
     return false;
-  }
-}
-
-// Função para buscar serviços relacionados (por exemplo, para sugestões)
-export async function getRelatedServices(currentSlug: string, limit: number = 3): Promise<ServiceData[]> {
-  console.log(`🔗 Buscando serviços relacionados para: ${currentSlug}`);
-  
-  try {
-    const url = 
-      `${directusUrl}/items/services` +
-      `?filter[slug][_neq]=${encodeURIComponent(currentSlug)}` +
-      `&filter[status][_eq]=published` +
-      `&fields=slug,heroTitle,heroTitleAccent,heroDescription,heroImage` +
-      `&limit=${limit}` +
-      `&sort=sort,date_created`;
-
-    const res = await fetch(url, {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!res.ok) {
-      console.error(`❌ Erro ao buscar serviços relacionados: ${res.status}`);
-      return [];
-    }
-
-    const json = await res.json();
-    
-    if (!json.data || json.data.length === 0) {
-      console.log(`⚠️ Nenhum serviço relacionado encontrado`);
-      return [];
-    }
-
-    const relatedServices = json.data.map((service: any) => ({
-      slug: service.slug,
-      status: 'published',
-      sort: null,
-      date_created: '',
-      date_updated: '',
-      heroImage: service.heroImage 
-        ? `${directusPublicUrl}/assets/${service.heroImage}`
-        : '/images/placeholder-service.jpg',
-      heroSubtitle: '',
-      heroTitle: service.heroTitle || '',
-      heroTitleAccent: service.heroTitleAccent || '',
-      heroDescription: service.heroDescription || '',
-      heroPrimaryButton: 0,
-      heroSecondaryButton: 0,
-      // Campos vazios para compatibilidade
-      benefitsTitle: '',
-      benefitsTitleAccent: '',
-      benefitsDescription: '',
-      benefits: [],
-      forWho: [],
-      casesTitle: '',
-      casesTitleAccent: '',
-      casesDescription: '',
-      casesBeforeAfter: [],
-      CasesButtonTitle: '',
-      authTitle: '',
-      authTitleAccent: '',
-      authDescription: '',
-      authFeaturedImage: '',
-      authBadgeTitleOne: '',
-      authBadgeTitleTwo: '',
-      authItems: [],
-      faqTitle: '',
-      faqTitleAccent: '',
-      faqItems: [],
-      ctaTitle: '',
-      ctaTitleAccent: '',
-      ctaDescription: '',
-      CtaForm: {
-        id: 0,
-        title: '',
-        description: null,
-        slug: '',
-        form_fields: []
-      },
-    }));
-
-    console.log(`✅ ${relatedServices.length} serviços relacionados encontrados`);
-    return relatedServices;
-  } catch (error) {
-    console.error('❌ Erro ao buscar serviços relacionados:', error);
-    return [];
   }
 }

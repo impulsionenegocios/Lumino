@@ -1,9 +1,9 @@
-import { z as decryptString, B as createSlotValueFromString, C as isAstroComponentFactory, d as renderComponent, r as renderTemplate, G as ROUTE_TYPE_HEADER, H as REROUTE_DIRECTIVE_HEADER, A as AstroError, J as i18nNoLocaleFoundInPath, K as ResponseSentError, O as bold, P as red, Q as yellow, S as dim, T as blue, V as MiddlewareNoDataOrNextCalled, W as MiddlewareNotAResponse, X as originPathnameSymbol, Y as RewriteWithBodyUsed, Z as GetStaticPathsRequired, _ as InvalidGetStaticPathsReturn, $ as InvalidGetStaticPathsEntry, a0 as GetStaticPathsExpectedParams, a1 as GetStaticPathsInvalidRouteParam, a2 as PageNumberParamNotFound, D as DEFAULT_404_COMPONENT, a3 as ActionNotFoundError, a4 as NoMatchingStaticPathFound, a5 as PrerenderDynamicEndpointPathCollide, a6 as ReservedSlotName, a7 as renderSlotToString, a8 as renderJSX, a9 as chunkToString, aa as isRenderInstruction, ab as ForbiddenRewrite, ac as SessionStorageSaveError, ad as SessionStorageInitError, ae as ASTRO_VERSION, af as green, ag as LocalsReassigned, ah as PrerenderClientAddressNotAvailable, ai as clientAddressSymbol, aj as ClientAddressNotAvailable, ak as StaticClientAddressNotAvailable, al as AstroResponseHeadersReassigned, am as responseSentSymbol$1, an as renderPage, ao as REWRITE_DIRECTIVE_HEADER_KEY, ap as REWRITE_DIRECTIVE_HEADER_VALUE, aq as renderEndpoint, ar as LocalsNotAnObject, as as REROUTABLE_STATUS_CODES, at as getDefaultExportFromCjs } from './astro/server_Hu3wlXJ5.mjs';
-import { d as distExports, A as ActionError, a as deserializeActionResult, s as serializeActionResult, b as ACTION_RPC_ROUTE_PATTERN, c as ACTION_QUERY_PARAMS, g as getActionQueryString, D as DEFAULT_404_ROUTE, e as default404Instance, N as NOOP_MIDDLEWARE_FN, u as unflatten$1, f as stringify$2, h as ensure404Route } from './astro-designed-error-pages_28MJRhDf.mjs';
+import { v as decryptString, w as createSlotValueFromString, x as isAstroComponentFactory, r as renderComponent, b as renderTemplate, R as ROUTE_TYPE_HEADER, y as REROUTE_DIRECTIVE_HEADER, A as AstroError, z as i18nNoLocaleFoundInPath, B as ResponseSentError, C as bold, D as red, G as yellow, H as dim, J as blue, K as MiddlewareNoDataOrNextCalled, O as MiddlewareNotAResponse, P as originPathnameSymbol, Q as RewriteWithBodyUsed, S as GetStaticPathsRequired, T as InvalidGetStaticPathsReturn, V as InvalidGetStaticPathsEntry, W as GetStaticPathsExpectedParams, X as GetStaticPathsInvalidRouteParam, Y as PageNumberParamNotFound, Z as DEFAULT_404_COMPONENT, _ as ActionNotFoundError, $ as NoMatchingStaticPathFound, a0 as PrerenderDynamicEndpointPathCollide, a1 as ReservedSlotName, a2 as renderSlotToString, a3 as renderJSX, a4 as chunkToString, a5 as isRenderInstruction, a6 as ForbiddenRewrite, a7 as SessionStorageSaveError, a8 as SessionStorageInitError, a9 as ASTRO_VERSION, aa as green, ab as LocalsReassigned, ac as PrerenderClientAddressNotAvailable, ad as clientAddressSymbol, ae as ClientAddressNotAvailable, af as StaticClientAddressNotAvailable, ag as AstroResponseHeadersReassigned, ah as responseSentSymbol$1, ai as renderPage, aj as REWRITE_DIRECTIVE_HEADER_KEY, ak as REWRITE_DIRECTIVE_HEADER_VALUE, al as renderEndpoint, am as LocalsNotAnObject, an as REROUTABLE_STATUS_CODES, ao as getDefaultExportFromCjs } from './astro/server_DwmPXTEX.mjs';
+import { d as distExports, A as ActionError, a as deserializeActionResult, s as serializeActionResult, b as ACTION_RPC_ROUTE_PATTERN, c as ACTION_QUERY_PARAMS, g as getActionQueryString, D as DEFAULT_404_ROUTE, e as default404Instance, N as NOOP_MIDDLEWARE_FN, u as unflatten$1, f as stringify$2, h as ensure404Route } from './astro-designed-error-pages_edVjYkl2.mjs';
 import buffer from 'node:buffer';
 import crypto$1 from 'node:crypto';
 import { Http2ServerResponse } from 'node:http2';
-import { a as appendForwardSlash$1, j as joinPaths, r as removeTrailingForwardSlash, p as prependForwardSlash$1, t as trimSlashes, f as fileExtension, s as slash, c as collapseDuplicateTrailingSlashes, h as hasFileExtension } from './internal_9jnW07Z7.mjs';
+import { a as appendForwardSlash$1, j as joinPaths, r as removeTrailingForwardSlash, p as prependForwardSlash$1, t as trimSlashes, f as fileExtension, s as slash, c as collapseDuplicateTrailingSlashes, h as hasFileExtension } from './path_BuZodYwm.mjs';
 import { AsyncLocalStorage } from 'node:async_hooks';
 import fs from 'node:fs';
 import http from 'node:http';
@@ -2827,12 +2827,14 @@ class AstroSession {
       });
     }
     let driver = null;
-    const driverPackage = await resolveSessionDriver(this.#config.driver);
     try {
       if (this.#config.driverModule) {
         driver = (await this.#config.driverModule()).default;
-      } else if (driverPackage) {
-        driver = (await import(driverPackage)).default;
+      } else if (this.#config.driver) {
+        const driverName = resolveSessionDriverName(this.#config.driver);
+        if (driverName) {
+          driver = (await import(driverName)).default;
+        }
       }
     } catch (err) {
       if (err.code === "ERR_MODULE_NOT_FOUND") {
@@ -2840,7 +2842,7 @@ class AstroSession {
           {
             ...SessionStorageInitError,
             message: SessionStorageInitError.message(
-              err.message.includes(`Cannot find package '${driverPackage}'`) ? "The driver module could not be found." : err.message,
+              err.message.includes(`Cannot find package`) ? "The driver module could not be found." : err.message,
               this.#config.driver
             )
           },
@@ -2875,16 +2877,16 @@ class AstroSession {
     }
   }
 }
-async function resolveSessionDriver(driver) {
+function resolveSessionDriverName(driver) {
   if (!driver) {
     return null;
   }
   try {
     if (driver === "fs") {
-      return await import.meta.resolve(builtinDrivers.fsLite);
+      return builtinDrivers.fsLite;
     }
     if (driver in builtinDrivers) {
-      return await import.meta.resolve(builtinDrivers[driver]);
+      return builtinDrivers[driver];
     }
   } catch {
     return null;
@@ -5905,7 +5907,7 @@ function requireCommon () {
 
 			const split = (typeof namespaces === 'string' ? namespaces : '')
 				.trim()
-				.replace(' ', ',')
+				.replace(/\s+/g, ',')
 				.split(',')
 				.filter(Boolean);
 
@@ -6257,7 +6259,7 @@ function requireBrowser () {
 		function load() {
 			let r;
 			try {
-				r = exports.storage.getItem('debug');
+				r = exports.storage.getItem('debug') || exports.storage.getItem('DEBUG') ;
 			} catch (error) {
 				// Swallow
 				// XXX (@Qix-) should we be logging these?

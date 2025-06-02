@@ -1,5 +1,5 @@
-import { j as joinPaths, i as isRemotePath } from './internal_9jnW07Z7.mjs';
-import { A as AstroError, E as ExpectedImage, L as LocalImageUsedWrongly, k as MissingImageDimension, U as UnsupportedImageFormat, I as IncompatibleDescriptorOptions, l as UnsupportedImageConversion, t as toStyleString, n as NoImageMetadata, o as FailedToFetchRemoteImageDimensions, p as ExpectedImageOptions, q as ExpectedNotESMImage, s as InvalidImageService, a as createAstro, c as createComponent, v as ImageMissingAlt, m as maybeRenderHead, e as addAttribute, w as spreadAttributes, r as renderTemplate, x as ExperimentalFontsNotEnabled, y as FontFamilyNotFound, u as unescapeHTML } from './astro/server_Hu3wlXJ5.mjs';
+import { j as joinPaths, i as isRemotePath } from './path_BuZodYwm.mjs';
+import { A as AstroError, E as ExpectedImage, L as LocalImageUsedWrongly, M as MissingImageDimension, U as UnsupportedImageFormat, I as IncompatibleDescriptorOptions, g as UnsupportedImageConversion, t as toStyleString, N as NoImageMetadata, h as FailedToFetchRemoteImageDimensions, i as ExpectedImageOptions, j as ExpectedNotESMImage, k as InvalidImageService, c as createAstro, a as createComponent, l as ImageMissingAlt, m as maybeRenderHead, d as addAttribute, s as spreadAttributes, b as renderTemplate, n as ExperimentalFontsNotEnabled, o as FontFamilyNotFound, u as unescapeHTML } from './astro/server_DwmPXTEX.mjs';
 
 const VALID_SUPPORTED_FORMATS = [
   "jpeg",
@@ -1252,7 +1252,7 @@ async function getConfiguredImageService() {
   if (!globalThis?.astroAsset?.imageService) {
     const { default: service } = await import(
       // @ts-expect-error
-      './sharp_BOmBepNp.mjs'
+      './sharp_FwQjwA_i.mjs'
     ).catch((e) => {
       const error = new AstroError(InvalidImageService);
       error.cause = e;
@@ -1424,7 +1424,7 @@ const $$Image = createComponent(async ($$result, $$props, $$slots) => {
   }
   const { class: className, ...attributes } = { ...additionalAttributes, ...image.attributes };
   return renderTemplate`${maybeRenderHead()}<img${addAttribute(image.src, "src")}${spreadAttributes(attributes)}${addAttribute(className, "class")}>`;
-}, "/home/zayit/projetos/lumino/node_modules/.pnpm/astro@5.7.12_@azure+identity@4.9.1_@azure+storage-blob@12.26.0_@types+node@22.15.17_enc_5f67b7ca413d594ebbd4eb6a6cecbce5/node_modules/astro/components/Image.astro", void 0);
+}, "/home/zayit/projetos/lumino/node_modules/.pnpm/astro@5.8.1_@azure+identity@4.10.0_@azure+storage-blob@12.26.0_@types+node@22.15.29_enc_4e6cb1d54c9df16824f2224676e74c23/node_modules/astro/components/Image.astro", void 0);
 
 const mimes = {
   "3g2": "video/3gpp2",
@@ -1942,15 +1942,20 @@ const $$Picture = createComponent(async ($$result, $$props, $$slots) => {
     const srcsetAttribute = props.densities || !props.densities && !props.widths && !useResponsive ? `${image.src}${image.srcSet.values.length > 0 ? ", " + image.srcSet.attribute : ""}` : image.srcSet.attribute;
     return renderTemplate`<source${addAttribute(srcsetAttribute, "srcset")}${addAttribute(lookup(image.options.format ?? image.src) ?? `image/${image.options.format}`, "type")}${spreadAttributes(sourceAdditionalAttributes)}>`;
   })}  <img${addAttribute(fallbackImage.src, "src")}${spreadAttributes(attributes)}${addAttribute(className, "class")}> </picture>`;
-}, "/home/zayit/projetos/lumino/node_modules/.pnpm/astro@5.7.12_@azure+identity@4.9.1_@azure+storage-blob@12.26.0_@types+node@22.15.17_enc_5f67b7ca413d594ebbd4eb6a6cecbce5/node_modules/astro/components/Picture.astro", void 0);
+}, "/home/zayit/projetos/lumino/node_modules/.pnpm/astro@5.8.1_@azure+identity@4.10.0_@azure+storage-blob@12.26.0_@types+node@22.15.29_enc_4e6cb1d54c9df16824f2224676e74c23/node_modules/astro/components/Picture.astro", void 0);
+
+const mod = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null
+}, Symbol.toStringTag, { value: 'Module' }));
 
 const $$Astro = createAstro("https://joqueianapolis.com.br");
-const $$Font = createComponent(async ($$result, $$props, $$slots) => {
+const $$Font = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
   Astro2.self = $$Font;
-  const { fontsData } = await import('./internal_9jnW07Z7.mjs').then(n => n.b).catch(() => {
+  const { fontsData } = mod;
+  if (!fontsData) {
     throw new AstroError(ExperimentalFontsNotEnabled);
-  });
+  }
   const { cssVariable, preload = false } = Astro2.props;
   const data = fontsData.get(cssVariable);
   if (!data) {
@@ -1960,9 +1965,9 @@ const $$Font = createComponent(async ($$result, $$props, $$slots) => {
     });
   }
   return renderTemplate`${preload && data.preloadData.map(({ url, type }) => renderTemplate`<link rel="preload"${addAttribute(url, "href")} as="font"${addAttribute(`font/${type}`, "type")} crossorigin>`)}<style>${unescapeHTML(data.css)}</style>`;
-}, "/home/zayit/projetos/lumino/node_modules/.pnpm/astro@5.7.12_@azure+identity@4.9.1_@azure+storage-blob@12.26.0_@types+node@22.15.17_enc_5f67b7ca413d594ebbd4eb6a6cecbce5/node_modules/astro/components/Font.astro", void 0);
+}, "/home/zayit/projetos/lumino/node_modules/.pnpm/astro@5.8.1_@azure+identity@4.10.0_@azure+storage-blob@12.26.0_@types+node@22.15.29_enc_4e6cb1d54c9df16824f2224676e74c23/node_modules/astro/components/Font.astro", void 0);
 
-const imageConfig = {"endpoint":{"route":"/_image","entrypoint":"astro/assets/endpoint/node"},"service":{"entrypoint":"astro/assets/services/sharp","config":{}},"domains":[],"remotePatterns":[],"experimentalResponsiveImages":false};
+const imageConfig = {"endpoint":{"route":"/_image","entrypoint":"astro/assets/endpoint/node"},"service":{"entrypoint":"astro/assets/services/sharp","config":{}},"domains":[],"remotePatterns":[],"experimentalDefaultStyles":true,"experimentalResponsiveImages":false};
 							// This is used by the @astrojs/node integration to locate images.
 							// It's unused on other platforms, but on some platforms like Netlify (and presumably also Vercel)
 							// new URL("dist/...") is interpreted by the bundler as a signal to include that directory
@@ -1973,4 +1978,4 @@ const imageConfig = {"endpoint":{"route":"/_image","entrypoint":"astro/assets/en
 							const assetsDir = /* #__PURE__ */ new URL("_astro", outDir);
 							const getImage = async (options) => await getImage$1(options, imageConfig);
 
-export { $$Image as $, isRemoteAllowed as a, baseService as b, assetsDir as c, getConfiguredImageService as g, imageConfig as i, lookup as l, outDir as o, parseQuality as p };
+export { $$Image as $, isRemoteAllowed as a, assetsDir as b, baseService as c, getConfiguredImageService as g, imageConfig as i, lookup as l, outDir as o, parseQuality as p };

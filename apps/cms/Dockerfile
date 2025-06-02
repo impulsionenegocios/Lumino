@@ -10,7 +10,7 @@ WORKDIR /app
 # 2. Copia apenas o workspace e o diretório CMS
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
 COPY apps/cms ./apps/cms
-
+COPY ./extensions /directus/extensions
 # 3. Ativa Corepack e instala dependências do CMS
 RUN corepack enable \
  && corepack prepare pnpm@latest --activate \

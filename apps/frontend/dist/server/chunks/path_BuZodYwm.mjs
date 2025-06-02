@@ -49,8 +49,4 @@ function hasFileExtension(path) {
   return WITH_FILE_EXT.test(path);
 }
 
-const internal = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
-  __proto__: null
-}, Symbol.toStringTag, { value: 'Module' }));
-
-export { appendForwardSlash as a, internal as b, collapseDuplicateTrailingSlashes as c, fileExtension as f, hasFileExtension as h, isRemotePath as i, joinPaths as j, prependForwardSlash as p, removeTrailingForwardSlash as r, slash as s, trimSlashes as t };
+export { appendForwardSlash as a, collapseDuplicateTrailingSlashes as c, fileExtension as f, hasFileExtension as h, isRemotePath as i, joinPaths as j, prependForwardSlash as p, removeTrailingForwardSlash as r, slash as s, trimSlashes as t };

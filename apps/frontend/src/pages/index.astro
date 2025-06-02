@@ -15,15 +15,15 @@ import AboutUs from '../components/sections/aboutUs.astro';
 
 import { heroData } from '../data/heroData';
 import { aboutUsData } from '../data/aboutUsData';
-import { exampleServices } from '../data/servicesData';
+
 import { counterSectionStatus } from '../data/counterSectionData';
 import { galleryData } from '../data/galleryData';
 import { locationData } from '../data/locationData';
 import { testimonialsData } from '../data/testimonialsData';
 import { contactCTAData } from '../data/contactCTAData';
 import { teamData } from '../data/teamData';
-import { getBlogPosts } from '../data/blogData';
-const blogPosts = await getBlogPosts();
+import { getBlogPostsInitial } from '../data/blogData';
+const blogPosts = await getBlogPostsInitial();
 
 import { certificationsData } from '../data/certificationsData';
 const blogData = {
@@ -40,12 +40,17 @@ const blogData = {
   <AboutUs {...aboutUsData} />
   <TeamSection {...teamData} />
   <CounterSection stats={counterSectionStatus} />
-  <!-- <ServicesSection {...exampleServices} /> -->
+  <ServicesSection sliceQtd="3" showButton="true"/>
   <CertificationSection {...certificationsData} />
   <GallerySection {...galleryData} />
   <LocationSection {...locationData} />
   <TestimonialSection {...testimonialsData} />
   <CtaSection {...contactCTAData} />
-  <BlogSection {...blogData} />
-  <ParticlesBackground />
+
+<BlogSection 
+  posts={blogPosts}
+  sliceQtd={3}
+  showButton={true}
+  enablePagination={false}
+/>  <ParticlesBackground />
 </MainLayout>

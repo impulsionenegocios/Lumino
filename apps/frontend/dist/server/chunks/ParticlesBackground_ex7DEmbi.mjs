@@ -1,4 +1,4 @@
-import { c as createComponent, r as renderTemplate } from './astro/server_Hu3wlXJ5.mjs';
+import { a as createComponent, b as renderTemplate } from './astro/server_DwmPXTEX.mjs';
 
 var __freeze = Object.freeze;
 var __defProp = Object.defineProperty;

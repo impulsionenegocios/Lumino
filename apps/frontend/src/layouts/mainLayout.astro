@@ -6,13 +6,14 @@ import MainFooter from '../components/footers/mainFooter.astro';
 import Animations from '../components/animations/Animations.astro';
 import LogoUrl from '../assets/images/logo-escuro.png';
 const menuItems = [
-  { label: 'Início', url: '#home' },
-  { label: 'Sobre Nós', url: '#about' },
-  { label: 'Serviços', url: '#services' },
-  { label: 'Galeria', url: '#gallery' },
-  { label: 'Localização', url: '#location' },
-  { label: 'Contato', url: '#contact' },
+  { label: 'Início', url: '/' },
+  { label: 'Sobre Nós', url: '/sobre-nos' },
+  { label: 'Serviços', url: '/servicos' },
+  { label: 'Posts', url: '/blog' },
+  { label: 'Contato', url: '/contato' },
 ];
+const { title, description } = Astro.props;
+
 ---
 
 <!doctype html>
@@ -20,10 +21,9 @@ const menuItems = [
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lumino Clínica - Odontologia de Luxo</title>
-    <script
-      src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"
-      is:inline></script>
+        <title>{title ? `${title} | Lumino Clínica` : 'Lumino Clínica - Odontologia de Luxo'}</title>
+        <meta name="description" content={description} />
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"is:inline></script>
   </head>
   <body>
     <!-- Hydrate assim que o JS carregar -->

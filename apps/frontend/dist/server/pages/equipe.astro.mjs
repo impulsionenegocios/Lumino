@@ -1,4 +1,4 @@
-import { c as createComponent, r as renderTemplate } from '../chunks/astro/server_Hu3wlXJ5.mjs';
+import { a as createComponent, b as renderTemplate } from '../chunks/astro/server_DwmPXTEX.mjs';
 export { renderers } from '../renderers.mjs';
 
 const $$Equipe = createComponent(($$result, $$props, $$slots) => {

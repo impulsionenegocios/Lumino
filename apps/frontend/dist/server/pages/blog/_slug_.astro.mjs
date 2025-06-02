@@ -1,12 +1,12 @@
-import { a as createAstro, c as createComponent, d as renderComponent, r as renderTemplate, m as maybeRenderHead, u as unescapeHTML, e as addAttribute } from '../../chunks/astro/server_Hu3wlXJ5.mjs';
-import { $ as $$Image } from '../../chunks/_astro_assets_DX1yZ3tI.mjs';
-import { $ as $$MainLayout } from '../../chunks/mainLayout_BTu3UJAR.mjs';
-import { $ as $$Heading } from '../../chunks/mainButton_BCt0-H_5.mjs';
-import { b as getBlogPostBySlug, c as getRelatedPosts, d as getCategories, $ as $$Paragraph, a as $$CtaSection } from '../../chunks/ctaSection_DsbFq6aF.mjs';
+import { c as createAstro, a as createComponent, r as renderComponent, b as renderTemplate, m as maybeRenderHead, u as unescapeHTML, d as addAttribute } from '../../chunks/astro/server_DwmPXTEX.mjs';
+import { $ as $$Image } from '../../chunks/_astro_assets_BhlrrdOx.mjs';
+import { $ as $$MainLayout } from '../../chunks/mainLayout_CzeWPJo_.mjs';
+import { $ as $$Heading, a as $$Paragraph } from '../../chunks/Paragraph_nAqocYGp.mjs';
+import { g as getBlogPostBySlug, a as getRelatedPosts, b as getCategories, $ as $$CtaSection } from '../../chunks/ctaSection_DoyuHjZj.mjs';
 /* empty css                                     */
 export { renderers } from '../../renderers.mjs';
 
-const directusUrl = undefined                                            ;
+const directusUrl = "http://directus:8055";
 async function getButtons(page_slug) {
   try {
     const res = await fetch(

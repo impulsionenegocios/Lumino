@@ -7,7 +7,7 @@ const features = Astro.props.features || [];
 const { headingTitle, headingAccent, headingSubtitle, description, shapeImage } = Astro.props;
 ---
 
-<section class="bg-white relative pt-18 overflow-hidden pb-4 2xl:pb-16" id="about">
+<section class="bg-white relative py-18 overflow-hidden pb-4" id="about">
   <!-- TOP - shape 1 -->
   <div class="absolute z-0 w-[300px] h-[300px] rounded-full bg-primary-gold/5 -top-36 -right-36">
   </div>
@@ -65,3 +65,8 @@ const { headingTitle, headingAccent, headingSubtitle, description, shapeImage } 
     </div>
   </div>
 </section>
+<style>
+  #about {
+  zoom: 0.8;
+}
+</style>

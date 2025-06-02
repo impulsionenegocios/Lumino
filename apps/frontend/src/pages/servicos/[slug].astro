@@ -1,6 +1,4 @@
 ---
-// pages/servicos/[slug].astro - Página Dinâmica com API do Directus
-
 import { Image } from 'astro:assets';
 import MainLayout from '../../layouts/mainLayout.astro';
 import Button from '../../components/buttons/mainButton.astro';
@@ -8,55 +6,36 @@ import DotsShape from '../../components/shapes/dotsShape.astro';
 import Heading from '../../components/typograph/Heading.astro';
 import Paragraph from '../../components/typograph/Paragraph.astro';
 import { getServiceBySlug, getServicePaths } from '../../data/servicesData';
+import { getMainData } from '../../data/mainData';
 
-// Função para getStaticPaths (necessária para rotas dinâmicas)
 export async function getStaticPaths() {
   try {
     const paths = await getServicePaths();
     return paths;
-  } catch (error) {
-    console.error('❌ Erro ao gerar caminhos estáticos:', error);
+  } catch {
     return [];
   }
 }
 
-// Obtém o slug da URL
 const { slug } = Astro.params;
 
-// Busca os dados do serviço
-let serviceData;
+let serviceData = null;
 try {
   serviceData = await getServiceBySlug(slug);
-} catch (error) {
-  console.error(`❌ Erro ao buscar serviço ${slug}:`, error);
+} catch {
   return Astro.redirect('/404');
 }
+if (!serviceData) return Astro.redirect('/404');
 
-// Se o serviço não for encontrado, redireciona para 404
-if (!serviceData) {
-  return Astro.redirect('/404');
+let mainData = null;
+try {
+  mainData = await getMainData();
+} catch {
+  throw new Error('Erro ao buscar dados da clínica');
 }
 
-// Dados da clínica (estáticos - você pode mover para um arquivo de configuração)
-const clinicData = {
-  nome: 'Lúmino Clínica Integrada',
-  croEpao: '12345',
-  responsavelTecnico: 'Dra. Ana Paula Silva',
-  croResponsavel: '54321',
-  telefone: '62 98326-5797',
-  whatsapp: '5562983265797',
-  email: 'contato@luminoclinica.com.br',
-  endereco: 'Anápolis - GO',
-};
-
-// Configuração do WhatsApp
-const whatsappMessage = encodeURIComponent(
-  `Olá! Vi o site e gostaria de agendar uma avaliação para ${serviceData.heroTitle}.`,
-);
-const whatsappLink = `https://wa.me/${clinicData.whatsapp}?text=${whatsappMessage}`;
-
-// SEO Meta tags
-const metaTitle = `${serviceData.heroTitle} | ${clinicData.nome}`;
+const whatsappLink = `https://wa.me/${mainData?.whatsapp}`;
+const metaTitle = `${serviceData.heroTitle} | ${mainData?.nome}`;
 const metaDescription = serviceData.heroDescription;
 ---
 
@@ -64,16 +43,21 @@ const metaDescription = serviceData.heroDescription;
   <!-- Hero Section -->
   <section class="h-[100vh] bg-white flex items-center overflow-hidden relative">
     <div class="hero-bg">
-      {serviceData.heroImage && (
-        <img
-          src={serviceData.heroImage}
-          alt={serviceData.heroTitle}
-          class="hero-bg-image"
-          loading="eager"
-          width="1920"
-          height="1080"
-        />
-      )}
+      {
+        serviceData.heroImage && (
+          <Image
+            src={serviceData.heroImage}
+            alt={serviceData.heroTitle}
+            class="hero-bg-image"
+            loading="eager"
+            width="1920"
+            height="1080"
+            decoding="async"
+            format="webp"
+            quality="90"
+          />
+        )
+      }
     </div>
     <div class="counter-particles"></div>
     <div class="mx-auto max-w-[1600px] lg:pl-40 w-full z-10">
@@ -101,250 +85,240 @@ const metaDescription = serviceData.heroDescription;
   </section>
 
   <!-- Para quem é -->
-  {serviceData.forWho && serviceData.forWho.length > 0 && (
-    <section class="px-8 lg:px-16 py-8 lg:py-16 bg-white" id="for-who">
-      <div class="shape shape-1"></div>
-      <div>
-        <div class="text-center mb-16">
-          <h2 class="section-title section-title-center">
-            É pra <span class="accent">você que...</span>
-          </h2>
-        </div>
+  {
+    serviceData.forWho && serviceData.forWho.length > 0 && (
+      <section class="px-8 lg:px-16 py-8 lg:py-16 bg-white" id="for-who">
+        <div>
+          <div class="text-center mb-16">
+            <h2 class="section-title section-title-center">
+              É pra <span class="accent">você que...</span>
+            </h2>
+          </div>
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {serviceData.forWho.map((item) => (
-            <div class="text-center reveal-effect">
-              <div class="w-24 h-24 mx-auto mb-6 bg-light-bg rounded-2xl flex items-center justify-center text-4xl hover:bg-primary-gold hover:text-white transition-all duration-500 transform hover:-translate-y-2">
-                {item.icon && (
-                  <span class="text-3xl">{item.icon}</span>
-                )}
+          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {serviceData.forWho.map((item) => (
+              <div class="text-center reveal-effect">
+                <div class="w-24 h-24 mx-auto mb-6 bg-light-bg rounded-2xl flex items-center justify-center text-4xl hover:bg-primary-gold hover:text-white transition-all duration-500 transform hover:-translate-y-2">
+                  {item.icon && <span class="text-3xl">{item.icon}</span>}
+                </div>
+                <p class="text-gray-700 font-medium">{item.text}</p>
               </div>
-              <p class="text-gray-700 font-medium">
-                {item.text}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
-  )}
+      </section>
+    )
+  }
 
   <!-- Benefícios -->
-  {serviceData.benefits && serviceData.benefits.length > 0 && (
-    <section class="bg-primary-dark text-white px-8 lg:px-16 py-8 lg:py-16">
-      <div class="shape shape-3"></div>
-      <div>
-        <div class="text-center mb-16">
-          <Heading 
-            text={serviceData.benefitsTitle} 
-            accent={serviceData.benefitsTitleAccent} 
-            color="white"
-          />
-          {serviceData.benefitsDescription && (
-            <p class="section-subtitle section-subtitle-center text-white/70">
-              {serviceData.benefitsDescription}
-            </p>
-          )}
-        </div>
+  {
+    serviceData.benefits && serviceData.benefits.length > 0 && (
+      <section class="bg-primary-dark text-white px-8 lg:px-16 py-8 lg:py-16">
+        <div class="shape shape-3" />
+        <div>
+          <div class="text-center mb-16">
+            <Heading
+              text={serviceData.benefitsTitle}
+              accent={serviceData.benefitsTitleAccent}
+              color="white"
+            />
+            {serviceData.benefitsDescription && (
+              <p class="section-subtitle section-subtitle-center text-white/70">
+                {serviceData.benefitsDescription}
+              </p>
+            )}
+          </div>
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {serviceData.benefits.map((benefit) => (
-            <div class="text-center reveal-effect group cursor-pointer">
-              <div class="w-20 h-20 mx-auto mb-6 bg-white/10 rounded-2xl flex items-center justify-center text-3xl group-hover:bg-primary-gold transition-all duration-500 transform group-hover:scale-110">
-                {benefit.icon && <span>{benefit.icon}</span>}
+          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {serviceData.benefits.map((benefit) => (
+              <div class="text-center reveal-effect group cursor-pointer">
+                <div class="w-20 h-20 mx-auto mb-6 bg-white/10 rounded-2xl flex items-center justify-center text-3xl group-hover:bg-primary-gold transition-all duration-500 transform group-hover:scale-110">
+                  {benefit.icon && <span>{benefit.icon}</span>}
+                </div>
+                <h3 class="text-xl font-bold mb-2 text-primary-gold">{benefit.title}</h3>
+                <p class="text-white/80">{benefit.text}</p>
               </div>
-              <h3 class="text-xl font-bold mb-2 text-primary-gold">{benefit.title}</h3>
-              <p class="text-white/80">{benefit.text}</p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
-  )}
+      </section>
+    )
+  }
 
   <!-- Casos Reais (Galeria) -->
-  {serviceData.casesBeforeAfter && serviceData.casesBeforeAfter.length > 0 && (
-    <section class="bg-light-bg px-8 lg:px-16 py-8 lg:py-16" id="casos">
-      <div class="shape shape-2"></div>
-      <div>
-        <div class="gallery-header text-center mb-12">
-          <Heading 
-            text={serviceData.casesTitle} 
-            accent={serviceData.casesTitleAccent}
-          />
-          {serviceData.casesDescription && (
-            <p class="section-subtitle section-subtitle-center">
-              {serviceData.casesDescription}
-            </p>
-          )}
-        </div>
-
-        <div class="gallery-container reveal-effect">
-          <div class="gallery-grid">
-            {serviceData.casesBeforeAfter.map((caseItem, index) => (
-              <div class="gallery-item">
-                <div class="grid grid-cols-2 h-full">
-                  <div class="relative">
-                    {caseItem.before && (
-                      <img
-                        src={caseItem.before}
-                        alt="Antes do tratamento"
-                        class="gallery-image"
-                        width="400"
-                        height="400"
-                      />
-                    )}
-                    <span class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                      ANTES
-                    </span>
-                  </div>
-                  <div class="relative">
-                    {caseItem.after && (
-                      <img
-                        src={caseItem.after}
-                        alt="Depois do tratamento"
-                        class="gallery-image"
-                        width="400"
-                        height="400"
-                      />
-                    )}
-                    <span class="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                      DEPOIS
-                    </span>
-                  </div>
-                </div>
-                <div class="gallery-overlay">
-                  <div class="gallery-caption">
-                    <h4 class="gallery-title">
-                      {caseItem.title}
-                    </h4>
-                    <p class="gallery-category">
-                      {caseItem.description}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
+  {
+    serviceData.casesBeforeAfter && serviceData.casesBeforeAfter.length > 0 && (
+      <section class="bg-light-bg px-8 lg:px-16 py-8 lg:py-16" id="casos">
+        <div class="shape shape-2" />
+        <div>
+          <div class="gallery-header text-center mb-12">
+            <Heading text={serviceData.casesTitle} accent={serviceData.casesTitleAccent} />
+            {serviceData.casesDescription && (
+              <p class="section-subtitle section-subtitle-center">{serviceData.casesDescription}</p>
+            )}
           </div>
 
-          <div class="text-center mt-12">
-            <Button 
-              title={serviceData.CasesButtonTitle} 
-              href={whatsappLink} 
-            />
+          <div class="gallery-container reveal-effect">
+            <div class="gallery-grid">
+              {serviceData.casesBeforeAfter.map((caseItem, index) => (
+                <div class="gallery-item">
+                  <div class="grid grid-cols-2 h-full">
+                    <div class="relative">
+                      {caseItem.before && (
+                        <Image
+                          src={caseItem.before}
+                          alt="Antes do tratamento"
+                          class="gallery-image"
+                          width="400"
+                          height="400"
+                          loading="lazy"
+                          decoding="async"
+                          format="webp"
+                          quality="80"
+                        />
+                      )}
+                      <span class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                        ANTES
+                      </span>
+                    </div>
+                    <div class="relative">
+                      {caseItem.after && (
+                        <Image
+                          src={caseItem.after}
+                          alt="Depois do tratamento"
+                          class="gallery-image"
+                          width="400"
+                          height="400"
+                          loading="lazy"
+                          decoding="async"
+                          format="webp"
+                          quality="80"
+                        />
+                      )}
+                      <span class="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                        DEPOIS
+                      </span>
+                    </div>
+                  </div>
+                  <div class="gallery-overlay">
+                    <div class="gallery-caption">
+                      <h4 class="gallery-title">{caseItem.title}</h4>
+                      <p class="gallery-category">{caseItem.description}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div class="text-center mt-12">
+              <Button title={serviceData.CasesButtonTitle} href={whatsappLink} />
+            </div>
           </div>
         </div>
-      </div>
-    </section>
-  )}
+      </section>
+    )
+  }
 
   <!-- Autoridade e Confiança -->
-  {serviceData.authTitle && serviceData.authTitleAccent && (
-    <section class="bg-white px-8 lg:px-16 py-8 lg:py-16">
-      <div class="shape shape-1"></div>
-      <div>
-        <div class="grid lg:grid-cols-2 gap-16 items-center">
-          <div class="reveal-effect">
-            <Heading 
-              text={serviceData.authTitle} 
-              accent={serviceData.authTitleAccent} 
-            />
-            <Paragraph 
-              text={serviceData.authDescription}
-            />
-            
-            {serviceData.authItems && serviceData.authItems.length > 0 && (
-              <div class="grid grid-cols-3 gap-8">
-                {serviceData.authItems.map((item) => (
-                  <div class="text-center">
-                    <div class="text-4xl font-bold text-primary-gold mb-2">
-                      {item.value}
+  {
+    serviceData.authTitle && serviceData.authTitleAccent && (
+      <section class="bg-white px-8 lg:px-16 py-8 lg:py-16">
+        <div>
+          <div class="grid lg:grid-cols-2 gap-16 items-center">
+            <div class="reveal-effect">
+              <Heading text={serviceData.authTitle} accent={serviceData.authTitleAccent} />
+              <Paragraph text={serviceData.authDescription} />
+
+              {serviceData.authItems && serviceData.authItems.length > 0 && (
+                <div class="grid grid-cols-3 gap-8">
+                  {serviceData.authItems.map((item) => (
+                    <div class="text-center">
+                      <div class="text-4xl font-bold text-primary-gold mb-2">{item.value}</div>
+                      <p class="text-sm text-gray-600">{item.description}</p>
                     </div>
-                    <p class="text-sm text-gray-600">
-                      {item.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+                  ))}
+                </div>
+              )}
+            </div>
 
-          <div class="relative reveal-effect">
-            {serviceData.authFeaturedImage && (
-              <img
-                src={serviceData.authFeaturedImage}
-                alt="Equipe Lúmino Clínica"
-                width="600"
-                height="400"
-                class="rounded-2xl shadow-2xl"
-              />
-            )}
-            {serviceData.authBadgeTitleOne && serviceData.authBadgeTitleTwo && (
-              <div class="absolute -bottom-6 -right-6 bg-primary-gold text-white px-8 py-4 rounded-2xl font-bold shadow-xl">
-                <div class="text-center">
-                  <div class="text-2xl">
-                    {serviceData.authBadgeTitleOne}
-                  </div>
-                  <div class="text-sm font-normal">
-                    {serviceData.authBadgeTitleTwo}
+            <div class="relative reveal-effect">
+              {serviceData.authFeaturedImage && (
+                <Image
+                  src={serviceData.authFeaturedImage}
+                  alt="Equipe Lúmino Clínica"
+                  width="400"
+                  height="400"
+                  loading="lazy"
+                  decoding="async"
+                  format="webp"
+                  quality="80"
+                  class="rounded-2xl shadow-2xl"
+                />
+              )}
+              {serviceData.authBadgeTitleOne && serviceData.authBadgeTitleTwo && (
+                <div class="absolute -bottom-6 -right-6 bg-primary-gold text-white px-8 py-4 rounded-2xl font-bold shadow-xl">
+                  <div class="text-center">
+                    <div class="text-2xl">{serviceData.authBadgeTitleOne}</div>
+                    <div class="text-sm font-normal">{serviceData.authBadgeTitleTwo}</div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </section>
-  )}
-
+      </section>
+    )
+  }
   <!-- FAQ -->
-  {serviceData.faqItems && serviceData.faqItems.length > 0 && (
-    <section class="bg-light-bg px-8 lg:px-16 py-8 lg:py-16">
-      <div class="shape shape-2"></div>
-      <div>
-        <div class="max-w-4xl mx-auto">
-          <div class="text-center mb-16">
-            <Heading 
-              text={serviceData.faqTitle} 
-              accent={serviceData.faqTitleAccent}
-            />
-          </div>
+  {
+    serviceData.faqItems && serviceData.faqItems.length > 0 && (
+      <section class="bg-light-bg px-8 lg:px-16 py-8 lg:py-16">
+        <div class="shape shape-2" />
+        <div>
+          <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-16">
+              <Heading text={serviceData.faqTitle} accent={serviceData.faqTitleAccent} />
+            </div>
 
-          <div class="space-y-4">
-            {serviceData.faqItems.map((faq, index) => (
-              <div class="bg-white rounded-2xl overflow-hidden reveal-effect">
-                <button
-                  class="w-full text-left p-6 font-bold text-primary-dark hover:bg-light-bg transition-colors duration-300 flex items-center justify-between faq-toggle"
-                  data-target={`faq-${index + 1}`}
-                >
-                  <span class="flex items-center">
-                    <span class="mr-4 text-2xl text-primary-gold">👉</span>
-                    {faq.question}
-                  </span>
-                  <svg
-                    class="w-5 h-5 transition-transform duration-300 faq-icon text-primary-gold"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+            <div class="space-y-4">
+              {serviceData.faqItems.map((faq, index) => (
+                <div class="bg-white rounded-2xl overflow-hidden reveal-effect">
+                  <button
+                    class="w-full text-left p-6 font-bold text-primary-dark hover:bg-light-bg transition-colors duration-300 flex items-center justify-between faq-toggle"
+                    data-target={`faq-${index + 1}`}
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M19 9l-7 7-7-7"
-                    ></path>
-                  </svg>
-                </button>
-                <div id={`faq-${index + 1}`} class="hidden p-6 pt-0 text-gray-700 leading-relaxed faq-content">
-                  {faq.answer}
+                    <span class="flex items-center">
+                      <span class="mr-4 text-2xl text-primary-gold">👉</span>
+                      {faq.question}
+                    </span>
+                    <svg
+                      class="w-5 h-5 transition-transform duration-300 faq-icon text-primary-gold"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </button>
+                  <div
+                    id={`faq-${index + 1}`}
+                    class="hidden p-6 pt-0 text-gray-700 leading-relaxed faq-content"
+                  >
+                    {faq.answer}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    </section>
-  )}
+      </section>
+    )
+  }
 
   <!-- CTA Final / Formulário -->
   <section class="contact-cta !px-8 lg:!px-16 !py-8 lg:!py-16" id="form-section">
@@ -352,115 +326,40 @@ const metaDescription = serviceData.heroDescription;
     <div class="contact-cta-shape contact-cta-shape-2"></div>
 
     <div class="text-center">
-      <Heading 
-        text={serviceData.ctaTitle} 
-        accent={serviceData.ctaTitleAccent} 
-        color="white"
-      />
-      <Paragraph 
-        text={serviceData.ctaDescription} 
-      />
-      <div class="max-w-2xl mx-auto mt-12">
-        <form class="bg-white/10 backdrop-blur-sm rounded-3xl p-8 md:p-12" id="contact-form">
-          {serviceData.CtaForm && serviceData.CtaForm.form_fields && serviceData.CtaForm.form_fields.length > 0 && (
-            <>
-              {/* Renderiza campos dinâmicos do formulário */}
-              <div class="grid md:grid-cols-2 gap-6 mb-6">
-                {serviceData.CtaForm.form_fields
-                  .filter(field => field.type !== 'button')
-                  .slice(0, 2)
-                  .map((field) => (
-                    field.type === 'select' ? (
-                      <select
-                        name={field.field_name}
-                        required={field.required || false}
-                        class="w-full px-6 py-4 rounded-2xl bg-white/20 border border-white/30 text-white focus:outline-none focus:border-primary-gold focus:bg-white/30 transition-all duration-300"
-                      >
-                        <option value="" class="text-primary-dark">{field.label}</option>
-                        {field.options && field.options.map((option) => (
-                          <option value={option.toLowerCase()} class="text-primary-dark">{option}</option>
-                        ))}
-                      </select>
-                    ) : (
-                      <input
-                        type={field.type === 'number' ? 'tel' : field.type}
-                        name={field.field_name}
-                        placeholder={field.label}
-                        required={field.required || false}
-                        class="w-full px-6 py-4 rounded-2xl bg-white/20 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:border-primary-gold focus:bg-white/30 transition-all duration-300"
-                      />
-                    )
-                  ))}
-              </div>
+      <Heading text={serviceData.ctaTitle} accent={serviceData.ctaTitleAccent} color="white" />
+      <div class="mt-4">
+        <Paragraph text={serviceData.ctaDescription} />
+      </div>
 
-              {/* Campos restantes em linha separada */}
-              {serviceData.CtaForm.form_fields
-                .filter(field => field.type !== 'button')
-                .slice(2)
-                .map((field) => (
-                  field.type === 'select' ? (
-                    <select
-                      name={field.field_name}
-                      required={field.required || false}
-                      class="w-full px-6 py-4 rounded-2xl bg-white/20 border border-white/30 text-white focus:outline-none focus:border-primary-gold focus:bg-white/30 transition-all duration-300 mb-8"
-                    >
-                      <option value="" class="text-primary-dark">{field.label}</option>
-                      {field.options && field.options.map((option) => (
-                        <option value={option.toLowerCase()} class="text-primary-dark">{option}</option>
-                      ))}
-                    </select>
-                  ) : (
-                    <input
-                      type={field.type === 'number' ? 'tel' : field.type}
-                      name={field.field_name}
-                      placeholder={field.label}
-                      required={field.required || false}
-                      class="w-full px-6 py-4 rounded-2xl bg-white/20 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:border-primary-gold focus:bg-white/30 transition-all duration-300 mb-8"
-                    />
-                  )
-                ))}
-
-              {/* Botão dinâmico do formulário */}
-              {serviceData.CtaForm.form_fields
-                .filter(field => field.type === 'button')
-                .map((field) => (
-                  <button
-                    type="submit"
-                    class="w-full bg-primary-gold text-primary-dark px-8 py-4 rounded-full font-bold text-lg hover:bg-gold-dark transition-all duration-300 transform hover:scale-105 shadow-xl"
-                  >
-                    {field.label}
-                  </button>
-                ))}
-            </>
-          )}
-        </form>
+      <div class="mt-8">
+        <Button title="Quero agendar minha avaliação" href={whatsappLink} />
+        <Button title="Saber Mais" href="#for-who" variant="outline" />
       </div>
     </div>
   </section>
-
   <!-- Footer -->
   <section class="bg-primary-dark text-white px-8 lg:px-16 py-8 lg:py-16">
     <div>
       <div class="text-center">
         <h3 class="font-cormorant text-3xl font-bold mb-6">
-          {clinicData.nome}
+          {mainData?.nome || ''}
         </h3>
         <p class="text-sm text-white/60 mb-8">
-          CRO-EPAO: {clinicData.croEpao} | Responsável Técnico: {clinicData.responsavelTecnico} | CRO: {clinicData.croResponsavel}
+          CRO: {mainData?.numero_cro} | Responsável Técnico: {mainData?.responsavel_tecnico}
         </p>
 
         <div class="flex flex-wrap justify-center items-center gap-8 text-sm text-white/70">
           <div class="flex items-center gap-2">
             <span>📍</span>
-            <span>Atendemos na região de {clinicData.endereco}</span>
+            <span>Atendemos na região de {mainData?.endereco}</span>
           </div>
           <div class="flex items-center gap-2">
             <span>📞</span>
-            <span>{clinicData.telefone}</span>
+            <span>{mainData?.telefone}</span>
           </div>
           <div class="flex items-center gap-2">
             <span>📧</span>
-            <span>{clinicData.email}</span>
+            <span>{mainData?.email}</span>
           </div>
         </div>
 
@@ -474,31 +373,23 @@ const metaDescription = serviceData.heroDescription;
     </div>
   </section>
 </MainLayout>
-
-<!-- <script>
-  // Inicialização das funcionalidades
-  document.addEventListener('DOMContentLoaded', function() {
-    // FAQ Toggle
-    const faqToggles = document.querySelectorAll('.faq-toggle');
-    faqToggles.forEach(toggle => {
-      toggle.addEventListener('click', function() {
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function () {
+    // FAQ toggle
+    document.querySelectorAll('.faq-toggle').forEach((toggle) => {
+      toggle.addEventListener('click', function () {
         const targetId = this.getAttribute('data-target');
         const faqContent = document.getElementById(targetId);
         const icon = this.querySelector('.faq-icon');
-        
-        // Fecha todos os outros
-        document.querySelectorAll('.faq-content').forEach(content => {
-          if (content.id !== targetId) {
-            content.classList.add('hidden');
-          }
+        if (!faqContent || !icon) return;
+
+        document.querySelectorAll('.faq-content').forEach((content) => {
+          if (content.id !== targetId) content.classList.add('hidden');
         });
-        document.querySelectorAll('.faq-icon').forEach(faqIcon => {
-          if (faqIcon !== icon) {
-            faqIcon.style.transform = 'rotate(0deg)';
-          }
+        document.querySelectorAll('.faq-icon').forEach((faqIcon) => {
+          if (faqIcon !== icon) faqIcon.style.transform = 'rotate(0deg)';
         });
-        
-        // Toggle atual
+
         if (faqContent.classList.contains('hidden')) {
           faqContent.classList.remove('hidden');
           icon.style.transform = 'rotate(180deg)';
@@ -508,93 +399,5 @@ const metaDescription = serviceData.heroDescription;
         }
       });
     });
-
-    // Form Handler
-    const contactForm = document.getElementById('contact-form');
-    if (contactForm) {
-      contactForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(contactForm);
-        
-        // Coleta dados dinamicamente dos campos do formulário
-        const formFields = {};
-        for (let [key, value] of formData.entries()) {
-          formFields[key] = value;
-        }
-        
-        // Monta mensagem dinâmica baseada nos campos preenchidos
-        let message = `Olá! Gostaria de agendar uma avaliação para ${document.querySelector('h1').textContent}.\n\n`;
-        
-        // Adiciona campos do formulário à mensagem
-        for (let [key, value] of Object.entries(formFields)) {
-          if (value) {
-            const label = key === 'name' ? 'Nome' : 
-                         key === 'phone' ? 'Telefone' :
-                         key === 'bestHour' ? 'Melhor horário' :
-                         key === 'nome' ? 'Nome' :
-                         key === 'telefone' ? 'Telefone' :
-                         key === 'periodo' ? 'Melhor horário' :
-                         key.charAt(0).toUpperCase() + key.slice(1);
-            
-            const emoji = key.includes('name') || key === 'nome' ? '👤' :
-                         key.includes('phone') || key === 'telefone' ? '📱' :
-                         key.includes('Hour') || key === 'periodo' ? '⏰' :
-                         '📝';
-            
-            message += emoji + ' ' + label + ': ' + value + '\n';
-          }
-        }
-        
-        message += '\nVi o site e tenho interesse no tratamento.';
-
-        const whatsappUrl = `https://wa.me/5562983265797?text=${encodeURIComponent(message)}`;
-        window.open(whatsappUrl, '_blank');
-        
-        // Feedback visual
-        contactForm.innerHTML = `
-          <div class="text-center py-12">
-            <div class="text-6xl mb-4">✅</div>
-            <h3 class="text-2xl font-bold text-white mb-4">Formulário Enviado!</h3>
-            <p class="text-white/90">Você será redirecionado para o WhatsApp.</p>
-          </div>
-        `;
-      });
-    }}
-⏰ Melhor horário: ${periodo}
-
-Vi o site e tenho interesse no tratamento.`;
-
-        const whatsappUrl = `https://wa.me/5562983265797?text=${encodeURIComponent(message)}`;
-        window.open(whatsappUrl, '_blank');
-        
-        // Feedback visual
-        contactForm.innerHTML = `
-          <div class="text-center py-12">
-            <div class="text-6xl mb-4">✅</div>
-            <h3 class="text-2xl font-bold text-white mb-4">Formulário Enviado!</h3>
-            <p class="text-white/90">Você será redirecionado para o WhatsApp.</p>
-          </div>
-        `;
-      });
-    }
-
-    // Reveal effects on scroll
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -100px 0px'
-    };
-
-    const observer = new IntersectionObserver(function(entries) {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-        }
-      });
-    }, observerOptions);
-
-    document.querySelectorAll('.reveal-effect').forEach(el => {
-      observer.observe(el);
-    });
   });
-</script> -->
+</script>

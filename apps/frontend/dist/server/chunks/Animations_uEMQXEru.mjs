@@ -1,4 +1,4 @@
-import { a as createAstro, c as createComponent, b as renderScript, r as renderTemplate } from './astro/server_Hu3wlXJ5.mjs';
+import { c as createAstro, a as createComponent, e as renderScript, b as renderTemplate } from './astro/server_DwmPXTEX.mjs';
 
 const $$Astro = createAstro("https://joqueianapolis.com.br");
 const $$Animations = createComponent(($$result, $$props, $$slots) => {

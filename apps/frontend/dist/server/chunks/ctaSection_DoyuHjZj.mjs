@@ -1,26 +1,8 @@
-import { a as createAstro, c as createComponent, m as maybeRenderHead, e as addAttribute, r as renderTemplate, d as renderComponent } from './astro/server_Hu3wlXJ5.mjs';
-import { a as $$MainButton } from './mainButton_BCt0-H_5.mjs';
+import { c as createAstro, a as createComponent, m as maybeRenderHead, r as renderComponent, b as renderTemplate } from './astro/server_DwmPXTEX.mjs';
+import { $ as $$MainButton } from './mainButton_DxiZMp03.mjs';
 
-const $$Astro$1 = createAstro("https://joqueianapolis.com.br");
-const $$Paragraph = createComponent(($$result, $$props, $$slots) => {
-  const Astro2 = $$result.createAstro($$Astro$1, $$props, $$slots);
-  Astro2.self = $$Paragraph;
-  const {
-    text,
-    fontWeight = 400,
-    // qualquer valor de 100 a 900
-    color = "text-gray-400",
-    // classe tailwind
-    size = "text-regular"
-    // opcional: text-sm, text-lg etc
-  } = Astro2.props;
-  const validWeights = [100, 200, 300, 400, 500, 600, 700, 800, 900];
-  const weightClass = validWeights.includes(fontWeight) ? `font-[${fontWeight}]` : "font-normal";
-  return renderTemplate`${maybeRenderHead()}<p${addAttribute(`${weightClass} ${color} ${size} leading-[1.6]`, "class")}> ${text} </p>`;
-}, "/home/zayit/projetos/lumino/apps/frontend/src/components/typograph/Paragraph.astro", void 0);
-
-const directusUrl = undefined                                            ;
-const directusPublicUrl = undefined                                            ;
+const directusUrl = "http://directus:8055";
+const directusPublicUrl = "http://localhost:8055";
 async function getCategories() {
   try {
     const res = await fetch(`${directusUrl}/items/post_categoria?fields=*&limit=5`);
@@ -133,4 +115,4 @@ const $$CtaSection = createComponent(($$result, $$props, $$slots) => {
   return renderTemplate`${maybeRenderHead()}<section class="contact-cta" id="contact"> <div class="counter-particles"></div> <div class="contact-cta-shape contact-cta-shape-1"></div> <div class="contact-cta-shape contact-cta-shape-2"></div> <div class="container"> <div class="contact-cta-container"> <h2 class="contact-cta-title"> ${headingTitle} <span class="accent">${headingAccent}</span> </h2> <p class="contact-cta-text"> ${text} </p> <div class="contact-cta-buttons"> ${buttons.map((btn) => renderTemplate`${renderComponent($$result, "Button", $$MainButton, { "title": btn.label, "href": btn.href, "variant": btn.variant ?? "solid" })}`)} </div> </div> </div> </section>`;
 }, "/home/zayit/projetos/lumino/apps/frontend/src/components/sections/ctaSection.astro", void 0);
 
-export { $$Paragraph as $, $$CtaSection as a, getBlogPostBySlug as b, getRelatedPosts as c, getCategories as d, getBlogPosts as g };
+export { $$CtaSection as $, getRelatedPosts as a, getCategories as b, getBlogPosts as c, getBlogPostBySlug as g };

@@ -1,4 +1,4 @@
-const ASTRO_VERSION = "5.7.12";
+const ASTRO_VERSION = "5.8.1";
 const REROUTE_DIRECTIVE_HEADER = "X-Astro-Reroute";
 const REWRITE_DIRECTIVE_HEADER_KEY = "X-Astro-Rewrite";
 const REWRITE_DIRECTIVE_HEADER_VALUE = "yes";
@@ -658,6 +658,17 @@ function isVNode(vnode) {
   return vnode && typeof vnode === "object" && vnode[AstroJSX];
 }
 
+function isAstroComponentFactory(obj) {
+  return obj == null ? false : obj.isAstroComponentFactory === true;
+}
+function isAPropagatingComponent(result, factory) {
+  let hint = factory.propagation || "none";
+  if (factory.moduleId && result.componentMetadata.has(factory.moduleId) && hint === "none") {
+    hint = result.componentMetadata.get(factory.moduleId).propagation;
+  }
+  return hint === "in-tree" || hint === "self";
+}
+
 const RenderInstructionSymbol = Symbol.for("astro:render");
 function createRenderInstruction(instruction) {
   return Object.defineProperty(instruction, RenderInstructionSymbol, {
@@ -948,17 +959,6 @@ function shorthash(text) {
   return sign + result;
 }
 
-function isAstroComponentFactory(obj) {
-  return obj == null ? false : obj.isAstroComponentFactory === true;
-}
-function isAPropagatingComponent(result, factory) {
-  let hint = factory.propagation || "none";
-  if (factory.moduleId && result.componentMetadata.has(factory.moduleId) && hint === "none") {
-    hint = result.componentMetadata.get(factory.moduleId).propagation;
-  }
-  return hint === "in-tree" || hint === "self";
-}
-
 const headAndContentSym = Symbol.for("astro.headAndContent");
 function isHeadAndContent(obj) {
   return typeof obj === "object" && obj !== null && !!obj[headAndContentSym];
@@ -1068,6 +1068,9 @@ Make sure to use the static attribute syntax (\`${key}={value}\`) instead of the
   }
   if (value === "") {
     return markHTMLString(` ${key}`);
+  }
+  if (key === "popover" && typeof value === "boolean") {
+    return markHTMLString(value ? ` popover` : "");
   }
   return markHTMLString(` ${key}="${toAttributeString(value, shouldEscape)}"`);
 }
@@ -1913,10 +1916,11 @@ class AstroComponentInstance {
     }
   }
 }
-function validateComponentProps(props, displayName) {
+function validateComponentProps(props, clientDirectives, displayName) {
   if (props != null) {
+    const directives = [...clientDirectives.keys()].map((directive) => `client:${directive}`);
     for (const prop of Object.keys(props)) {
-      if (prop.startsWith("client:")) {
+      if (directives.includes(prop)) {
         console.warn(
           `You are attempting to render <${displayName} ${prop} />, but ${displayName} is an Astro component. Astro components do not render in the client and should not have a hydration directive. Please use a framework component for client rendering.`
         );
@@ -1925,7 +1929,7 @@ function validateComponentProps(props, displayName) {
   }
 }
 function createAstroComponentInstance(result, displayName, factory, props, slots = {}) {
-  validateComponentProps(props, displayName);
+  validateComponentProps(props, result.clientDirectives, displayName);
   const instance = new AstroComponentInstance(result, props, slots, factory);
   if (isAPropagatingComponent(result, factory)) {
     result._metadata.propagators.add(instance);
@@ -2615,7 +2619,7 @@ Did you forget to import the component or is it possible there is a typo?`);
       }
       case vnode.type === Symbol.for("astro:fragment"):
         return renderJSX(result, vnode.props.children);
-      case vnode.type.isAstroComponentFactory: {
+      case isAstroComponentFactory(vnode.type): {
         let props = {};
         let slots = {};
         for (const [key, value] of Object.entries(vnode.props ?? {})) {
@@ -2625,10 +2629,13 @@ Did you forget to import the component or is it possible there is a typo?`);
             props[key] = value;
           }
         }
-        const str = await renderToString(result, vnode.type, props, slots);
-        if (str instanceof Response) {
-          throw str;
-        }
+        const str = await renderComponentToString(
+          result,
+          vnode.type.name,
+          vnode.type,
+          props,
+          slots
+        );
         const html = markHTMLString(str);
         return html;
       }
@@ -2958,4 +2965,4 @@ function spreadAttributes(values = {}, _name, { class: scopedClassName } = {}) {
   return markHTMLString(output);
 }
 
-export { InvalidGetStaticPathsEntry as $, AstroError as A, createSlotValueFromString as B, isAstroComponentFactory as C, DEFAULT_404_COMPONENT as D, ExpectedImage as E, Fragment as F, ROUTE_TYPE_HEADER as G, REROUTE_DIRECTIVE_HEADER as H, IncompatibleDescriptorOptions as I, i18nNoLocaleFoundInPath as J, ResponseSentError as K, LocalImageUsedWrongly as L, MissingSharp as M, NOOP_MIDDLEWARE_HEADER as N, bold as O, red as P, yellow as Q, REDIRECT_STATUS_CODES as R, dim as S, blue as T, UnsupportedImageFormat as U, MiddlewareNoDataOrNextCalled as V, MiddlewareNotAResponse as W, originPathnameSymbol as X, RewriteWithBodyUsed as Y, GetStaticPathsRequired as Z, InvalidGetStaticPathsReturn as _, createAstro as a, GetStaticPathsExpectedParams as a0, GetStaticPathsInvalidRouteParam as a1, PageNumberParamNotFound as a2, ActionNotFoundError as a3, NoMatchingStaticPathFound as a4, PrerenderDynamicEndpointPathCollide as a5, ReservedSlotName as a6, renderSlotToString as a7, renderJSX as a8, chunkToString as a9, isRenderInstruction as aa, ForbiddenRewrite as ab, SessionStorageSaveError as ac, SessionStorageInitError as ad, ASTRO_VERSION as ae, green as af, LocalsReassigned as ag, PrerenderClientAddressNotAvailable as ah, clientAddressSymbol as ai, ClientAddressNotAvailable as aj, StaticClientAddressNotAvailable as ak, AstroResponseHeadersReassigned as al, responseSentSymbol as am, renderPage as an, REWRITE_DIRECTIVE_HEADER_KEY as ao, REWRITE_DIRECTIVE_HEADER_VALUE as ap, renderEndpoint as aq, LocalsNotAnObject as ar, REROUTABLE_STATUS_CODES as as, getDefaultExportFromCjs as at, renderScript as b, createComponent as c, renderComponent as d, addAttribute as e, renderHead as f, decodeKey as g, renderSlot as h, ActionsReturnedInvalidDataError as i, escape as j, MissingImageDimension as k, UnsupportedImageConversion as l, maybeRenderHead as m, NoImageMetadata as n, FailedToFetchRemoteImageDimensions as o, ExpectedImageOptions as p, ExpectedNotESMImage as q, renderTemplate as r, InvalidImageService as s, toStyleString as t, unescapeHTML as u, ImageMissingAlt as v, spreadAttributes as w, ExperimentalFontsNotEnabled as x, FontFamilyNotFound as y, decryptString as z };
+export { NoMatchingStaticPathFound as $, AstroError as A, ResponseSentError as B, bold as C, red as D, ExpectedImage as E, Fragment as F, yellow as G, dim as H, IncompatibleDescriptorOptions as I, blue as J, MiddlewareNoDataOrNextCalled as K, LocalImageUsedWrongly as L, MissingImageDimension as M, NoImageMetadata as N, MiddlewareNotAResponse as O, originPathnameSymbol as P, RewriteWithBodyUsed as Q, ROUTE_TYPE_HEADER as R, GetStaticPathsRequired as S, InvalidGetStaticPathsReturn as T, UnsupportedImageFormat as U, InvalidGetStaticPathsEntry as V, GetStaticPathsExpectedParams as W, GetStaticPathsInvalidRouteParam as X, PageNumberParamNotFound as Y, DEFAULT_404_COMPONENT as Z, ActionNotFoundError as _, createComponent as a, PrerenderDynamicEndpointPathCollide as a0, ReservedSlotName as a1, renderSlotToString as a2, renderJSX as a3, chunkToString as a4, isRenderInstruction as a5, ForbiddenRewrite as a6, SessionStorageSaveError as a7, SessionStorageInitError as a8, ASTRO_VERSION as a9, green as aa, LocalsReassigned as ab, PrerenderClientAddressNotAvailable as ac, clientAddressSymbol as ad, ClientAddressNotAvailable as ae, StaticClientAddressNotAvailable as af, AstroResponseHeadersReassigned as ag, responseSentSymbol as ah, renderPage as ai, REWRITE_DIRECTIVE_HEADER_KEY as aj, REWRITE_DIRECTIVE_HEADER_VALUE as ak, renderEndpoint as al, LocalsNotAnObject as am, REROUTABLE_STATUS_CODES as an, getDefaultExportFromCjs as ao, NOOP_MIDDLEWARE_HEADER as ap, REDIRECT_STATUS_CODES as aq, ActionsReturnedInvalidDataError as ar, escape as as, MissingSharp as at, renderTemplate as b, createAstro as c, addAttribute as d, renderScript as e, renderHead as f, UnsupportedImageConversion as g, FailedToFetchRemoteImageDimensions as h, ExpectedImageOptions as i, ExpectedNotESMImage as j, InvalidImageService as k, ImageMissingAlt as l, maybeRenderHead as m, ExperimentalFontsNotEnabled as n, FontFamilyNotFound as o, renderSlot as p, decodeKey as q, renderComponent as r, spreadAttributes as s, toStyleString as t, unescapeHTML as u, decryptString as v, createSlotValueFromString as w, isAstroComponentFactory as x, REROUTE_DIRECTIVE_HEADER as y, i18nNoLocaleFoundInPath as z };
