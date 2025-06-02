@@ -13,7 +13,6 @@ const menuItems = [
   { label: 'Contato', url: '/contato' },
 ];
 const { title, description } = Astro.props;
-
 ---
 
 <!doctype html>
@@ -21,9 +20,11 @@ const { title, description } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{title ? `${title} | Lumino Clínica` : 'Lumino Clínica - Odontologia de Luxo'}</title>
-        <meta name="description" content={description} />
-    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"is:inline></script>
+    <title>{title ? `${title} | Lumino Clínica` : 'Lumino Clínica - Odontologia de Luxo'}</title>
+    <meta name="description" content={description} />
+    <script
+      src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"
+      is:inline></script>
   </head>
   <body>
     <!-- Hydrate assim que o JS carregar -->

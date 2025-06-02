@@ -9,6 +9,8 @@ import Button from '../../components/buttons/mainButton.astro';
 import { getBlogPostBySlug, getRelatedPosts, getCategories, type blogData } from '../../data/blogData';
 import {getButtons} from '../../data/buttonsData';
 import CtaSection from '../../components/sections/ctaSection.astro';
+import MdiIcon from '../../components/utils/MdiIcon.astro';
+
 export async function getStaticPaths() {
   // Deixe em branco para usar SSR ou implemente para SSG
   return [];
@@ -38,7 +40,7 @@ const pageDescription = post.excerpt;
 
 <MainLayout title={pageTitle} description={pageDescription}>
   <!-- Breadcrumb Section -->
-  <section class="bg-light-bg pt-32 pb-8 relative overflow-hidden">
+  <section class="bg-light-bg pt-32 pb-8 relative overflow-hidden" id="postHeader">
     <!-- Shapes decorativas -->
     <div class="absolute z-0 w-[200px] h-[200px] rounded-full bg-primary-gold/5 -top-24 -right-24"></div>
     
@@ -99,7 +101,7 @@ const pageDescription = post.excerpt;
   </section>
 
   <!-- Post Content -->
-  <section class="py-16 relative overflow-hidden">
+  <section class="py-16 relative overflow-hidden" id="postContent">
     <!-- Linha decorativa -->
     <div class="absolute top-[10%] left-[5%] w-[1px] h-[80%] bg-gradient-to-b from-transparent via-primary-gold to-transparent"></div>
     <div class="absolute bottom-[20%] right-[8%] w-[1px] h-[40%] bg-gradient-to-b from-transparent via-primary-gold/20 to-transparent"></div>
@@ -166,7 +168,7 @@ const pageDescription = post.excerpt;
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span>📱</span>
+                <span><MdiIcon name='mdi:whatsapp' size={32}  className="mx-auto" /></span>
                 WhatsApp
               </a>
               <a 
@@ -175,7 +177,7 @@ const pageDescription = post.excerpt;
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span>📘</span>
+                  <span><MdiIcon name='mdi:facebook' size={32}  className="mx-auto" /></span>
                 Facebook
               </a>
               <a 
@@ -184,14 +186,14 @@ const pageDescription = post.excerpt;
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span>🐦</span>
+                 <span><MdiIcon name='mdi:twitter' size={32}  className="mx-auto" /></span>
                 Twitter
               </a>
               <button 
                 onclick={`navigator.clipboard.writeText('${Astro.url.href}'); this.innerHTML='<span>✅</span>Copiado!'; setTimeout(() => this.innerHTML='<span>🔗</span>Copiar Link', 2000)`}
                 class="flex items-center gap-2 bg-gray-600 text-white px-4 py-2 rounded-full hover:bg-gray-700 transition-colors duration-300"
               >
-                <span>🔗</span>
+                 <span><MdiIcon name='mdi:content-copy' size={32}  className="mx-auto" /></span>
                 Copiar Link
               </button>
             </div>
@@ -252,7 +254,7 @@ const pageDescription = post.excerpt;
 
   <!-- Posts Relacionados -->
   {relatedPosts.length > 0 && (
-    <section class="bg-light-bg py-16 relative overflow-hidden">
+    <section class="bg-light-bg py-16 relative overflow-hidden" id="relationatedPosts">
       <!-- Shapes decorativas -->
       <div class="absolute z-0 w-[300px] h-[300px] rounded-full bg-primary-dark/5 -top-36 -right-36"></div>
       
@@ -312,11 +314,21 @@ const pageDescription = post.excerpt;
   headingAccent={post.ctaTitleAccent}
   text={post.ctaText}
   buttons={buttons}
+  id="ctaSection"
 />
 
 </MainLayout>
 
 <style is:global>
+  #relationatedPosts {
+    zoom: 0.9
+  }
+  #postHeader {
+    zoom: 0.9
+  }
+  #postContent {
+    zoom: 0.9
+  }
   .blog-content {
     font-family: 'Montserrat', sans-serif;
   }

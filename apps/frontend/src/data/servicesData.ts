@@ -1,4 +1,4 @@
-// data/servicesData.ts - Versão Production Ready Completa
+// data/servicesData.ts - Versão Corrigida
 
 export interface ServiceData {
   slug: string;
@@ -6,7 +6,7 @@ export interface ServiceData {
   sort: number | null;
   date_created: string;
   date_updated: string;
-
+  service_name: string;
   heroImage: string;
   heroSubtitle: string;
   heroTitle: string;
@@ -44,9 +44,6 @@ export interface ServiceData {
   ctaTitleAccent: string;
   ctaDescription: string;
 }
-
-
-
 
 interface Benefit {
   id: number;
@@ -98,12 +95,8 @@ const directusPublicUrl = import.meta.env.PUBLIC_DIRECTUS_EXTERNAL_URL;
 
 // Função principal para buscar serviço por slug
 export async function getServiceBySlug(slug: string): Promise<ServiceData | null> {
-  console.log(`🔍 SSR: Buscando serviço com slug: ${slug}`);
-
   try {
-    console.log(`🌐 Base URL: ${directusUrl}`);
-
-    // URL completa com todos os campos e relacionamentos
+    // URL completa com todos os campos e relacionamentos - CORRIGIDA
     const url =
       `${directusUrl}/items/services` +
       `?filter[slug][_eq]=${encodeURIComponent(slug)}` +
@@ -116,6 +109,7 @@ export async function getServiceBySlug(slug: string): Promise<ServiceData | null
         'sort',
         'date_created',
         'date_updated',
+        'service_name',
         // Hero
         'heroImage',
         'heroSubtitle',
@@ -136,16 +130,17 @@ export async function getServiceBySlug(slug: string): Promise<ServiceData | null
         'forWho.services_for_who_id.id',
         'forWho.services_for_who_id.icon',
         'forWho.services_for_who_id.text',
-        // Cases
+        // Cases - CORRIGIDO: especificando campos do relacionamento
         'casesTitle',
         'casesTitleAccent',
         'casesDescription',
         'CasesButtonTitle',
+        'casesBeforeAfter.id',
         'casesBeforeAfter.services_before_after_id.id',
-        'casesBeforeAfter.services_before_after_id.before',
-        'casesBeforeAfter.services_before_after_id.after',
         'casesBeforeAfter.services_before_after_id.title',
         'casesBeforeAfter.services_before_after_id.description',
+        'casesBeforeAfter.services_before_after_id.before',
+        'casesBeforeAfter.services_before_after_id.after',
         // Auth
         'authTitle',
         'authTitleAccent',
@@ -166,22 +161,9 @@ export async function getServiceBySlug(slug: string): Promise<ServiceData | null
         'ctaTitle',
         'ctaTitleAccent',
         'ctaDescription',
-        'CtaForm.id',
-        'CtaForm.title',
-        'CtaForm.description',
-        'CtaForm.slug',
-        'CtaForm.form_fields.form_fields_id.id',
-        'CtaForm.form_fields.form_fields_id.form',
-        'CtaForm.form_fields.form_fields_id.label',
-        'CtaForm.form_fields.form_fields_id.field_name',
-        'CtaForm.form_fields.form_fields_id.type',
-        'CtaForm.form_fields.form_fields_id.required',
-        'CtaForm.form_fields.form_fields_id.options',
-        'CtaForm.form_fields.form_fields_id.order',
       ].join(',') +
-      `&deep=*&limit=1`;
-
-    console.log(`📡 URL: ${url}`);
+      `&deep[casesBeforeAfter][_limit]=-1` +
+      `&limit=1`;
 
     const res = await fetch(url, {
       method: 'GET',
@@ -191,8 +173,6 @@ export async function getServiceBySlug(slug: string): Promise<ServiceData | null
       },
     });
 
-    console.log(`📡 Status: ${res.status}`);
-
     if (!res.ok) {
       const error = new DirectusError(`Erro ao buscar serviço: ${res.statusText}`, res.status, url);
       console.error(`❌ Erro HTTP ${res.status}: ${res.statusText}`);
@@ -200,7 +180,6 @@ export async function getServiceBySlug(slug: string): Promise<ServiceData | null
     }
 
     const json = await res.json();
-    console.log(`📦 Dados recebidos: ${json.data?.length || 0} registros`);
 
     if (!json.data || json.data.length === 0) {
       console.warn(`⚠️ Serviço '${slug}' não encontrado`);
@@ -208,7 +187,6 @@ export async function getServiceBySlug(slug: string): Promise<ServiceData | null
     }
 
     const service = json.data[0];
-    console.log(`🏗️ Processando dados do serviço: ${service.slug}`);
 
     return transformServiceData(service);
   } catch (error) {
@@ -219,22 +197,29 @@ export async function getServiceBySlug(slug: string): Promise<ServiceData | null
 
 // Função para transformar dados do Directus para o formato ServiceData
 function transformServiceData(service: any): ServiceData {
-  console.log(`🔄 Transformando dados do serviço: ${service.slug}`);
-
   // Helper para processar relacionamentos many-to-many
   const processRelationship = (items: any[], idField: string) => {
-    if (!Array.isArray(items)) return [];
+    if (!Array.isArray(items)) {
+      return [];
+    }
     return items
-      .map((item: any) => item[idField])
+      .map((item: any) => {
+        const relatedItem = item[idField];
+        if (!relatedItem) {
+          console.warn(`⚠️ Item sem ${idField}:`, item);
+          return null;
+        }
+        return relatedItem;
+      })
       .filter(Boolean)
       .sort((a: any, b: any) => (a.sort || a.id) - (b.sort || b.id));
   };
 
   // Processa benefits
-  const benefits: Benefit[] = processRelationship(service.benefits, 'services_benefits_id');
+  const benefits: Benefit[] = processRelationship(service.benefits || [], 'services_benefits_id');
 
   // Processa forWho
-  const forWho: ForWho[] = processRelationship(service.forWho, 'services_for_who_id');
+  const forWho: ForWho[] = processRelationship(service.forWho || [], 'services_for_who_id');
 
   // Processa authItems - agora são apenas IDs, precisamos buscar separadamente
   let authItems: AuthItem[] = [];
@@ -250,20 +235,43 @@ function transformServiceData(service: any): ServiceData {
   }
 
   // Processa faqItems
-  const faqItems: FaqItem[] = processRelationship(service.faqItems, 'services_faq_id');
+  const faqItems: FaqItem[] = processRelationship(service.faqItems || [], 'services_faq_id');
 
-  // Processa casesBeforeAfter - pode ser um array de relacionamentos ou apenas um ID
+  // Processa casesBeforeAfter - TOTALMENTE CORRIGIDO
   let casesBeforeAfter: BeforeAfter[] = [];
 
-    casesBeforeAfter = processRelationship(
-      service.casesBeforeAfter,
-      'services_before_after_id',
-    ).map((item: any) => ({
-      ...item,
-      before: item.before ? `${directusPublicUrl}/assets/${item.before}` : '',
-      after: item.after ? `${directusPublicUrl}/assets/${item.after}` : '',
-    }));
+  if (Array.isArray(service.casesBeforeAfter) && service.casesBeforeAfter.length > 0) {
+    casesBeforeAfter = service.casesBeforeAfter
+      .map((item: any, index: number) => {
+        // Verifica se existe o relacionamento correto
+        const caseData = item.services_before_after_id;
+        if (!caseData) {
+          console.warn(`⚠️ Caso ${index} sem dados válidos:`, item);
+          return null;
+        }
 
+        const processedCase = {
+          id: caseData.id,
+          title: caseData.title || `Caso ${caseData.id}`,
+          description: caseData.description || '',
+          before: caseData.before
+            ? `${directusPublicUrl}/assets/${caseData.before}?width=300&height=300&format=webp&quality=80`
+            : '',
+          after: caseData.after
+            ? `${directusPublicUrl}/assets/${caseData.after}?width=300&height=300&format=webp&quality=80`
+            : '',
+        };
+
+        return processedCase;
+      })
+      .filter(Boolean) // Remove itens null/undefined
+      .sort((a: any, b: any) => a.id - b.id); // Ordena por ID
+  } else {
+    console.warn(
+      '⚠️ casesBeforeAfter não é um array válido ou está vazio:',
+      service.casesBeforeAfter,
+    );
+  }
 
   const transformedService: ServiceData = {
     // Campos básicos
@@ -272,9 +280,11 @@ function transformServiceData(service: any): ServiceData {
     sort: service.sort,
     date_created: service.date_created,
     date_updated: service.date_updated,
-
+    service_name: service.service_name,
     // Hero Section
-    heroImage: service.heroImage ? `${directusPublicUrl}/assets/${service.heroImage}?width=1920&height=1080&format=webp&quality=80`: '/images/placeholder-service.jpg',
+    heroImage: service.heroImage
+      ? `${directusPublicUrl}/assets/${service.heroImage}?width=1920&height=1080&format=webp&quality=80`
+      : '/images/placeholder-service.jpg',
     heroSubtitle: service.heroSubtitle || '',
     heroTitle: service.heroTitle || '',
     heroTitleAccent: service.heroTitleAccent || '',
@@ -302,7 +312,9 @@ function transformServiceData(service: any): ServiceData {
     authTitle: service.authTitle || '',
     authTitleAccent: service.authTitleAccent || '',
     authDescription: service.authDescription || '',
-    authFeaturedImage: service.authFeaturedImage ? `${directusPublicUrl}/assets/${service.authFeaturedImage}?width=580&height=420&format=webp&quality=80` : '',
+    authFeaturedImage: service.authFeaturedImage
+      ? `${directusPublicUrl}/assets/${service.authFeaturedImage}?width=580&height=420&format=webp&quality=80`
+      : '',
     authBadgeTitleOne: service.authBadgeTitleOne || '',
     authBadgeTitleTwo: service.authBadgeTitleTwo || '',
     authItems,
@@ -316,19 +328,12 @@ function transformServiceData(service: any): ServiceData {
     ctaTitle: service.ctaTitle || '',
     ctaTitleAccent: service.ctaTitleAccent || '',
     ctaDescription: service.ctaDescription || '',
-
   };
-
-  console.log(
-    `✅ Serviço transformado: ${transformedService.slug} com ${benefits.length} benefícios`,
-  );
   return transformedService;
 }
 
-// Função para buscar todos os serviços (apenas campos básicos para listagem)
+// Resto do código permanece igual...
 export async function getAllServices(): Promise<ServiceData[]> {
-  console.log(`📋 SSR: Buscando todos os serviços`);
-
   try {
     // Monta a URL solicitando apenas campos básicos para performance
     const url =
@@ -360,8 +365,6 @@ export async function getAllServices(): Promise<ServiceData[]> {
       },
     });
 
-    console.log(`📡 Status getAllServices: ${res.status}`);
-
     if (!res.ok) {
       const error = new DirectusError(
         `Erro ao buscar todos os serviços: ${res.statusText}`,
@@ -373,8 +376,6 @@ export async function getAllServices(): Promise<ServiceData[]> {
     }
 
     const json = await res.json();
-    console.log(`📦 Todos os serviços: ${json.data?.length || 0} encontrados`);
-
     if (!json.data || json.data.length === 0) {
       return [];
     }
@@ -389,7 +390,9 @@ export async function getAllServices(): Promise<ServiceData[]> {
       date_updated: service.date_updated,
 
       // Hero Section
-      heroImage: service.heroImage ? `${directusPublicUrl}/assets/${service.heroImage}?width=570&height=410&format=webp&quality=80` : '/images/placeholder-service.jpg',
+      heroImage: service.heroImage
+        ? `${directusPublicUrl}/assets/${service.heroImage}?width=570&height=410&format=webp&quality=80`
+        : '/images/placeholder-service.jpg',
       heroSubtitle: service.heroSubtitle || '',
       heroTitle: service.heroTitle || '',
       heroTitleAccent: service.heroTitleAccent || '',
@@ -420,16 +423,8 @@ export async function getAllServices(): Promise<ServiceData[]> {
       ctaTitle: '',
       ctaTitleAccent: '',
       ctaDescription: '',
-      CtaForm: {
-        id: 0,
-        title: '',
-        description: null,
-        slug: '',
-        form_fields: [],
-      },
     }));
 
-    console.log(`✅ ${mappedServices.length} serviços processados`);
     return mappedServices;
   } catch (error) {
     console.error('❌ Erro ao buscar todos os serviços:', error);
@@ -439,15 +434,12 @@ export async function getAllServices(): Promise<ServiceData[]> {
 
 // Função para obter caminhos estáticos (útil para getStaticPaths)
 export async function getServicePaths() {
-  console.log(`🛤️ Gerando caminhos estáticos dos serviços`);
-
   try {
     const services = await getAllServices();
     const paths = services.map((service) => ({
       params: { slug: service.slug },
     }));
 
-    console.log(`✅ ${paths.length} caminhos gerados`);
     return paths;
   } catch (error) {
     console.error('❌ Erro ao obter caminhos dos serviços:', error);
@@ -457,8 +449,6 @@ export async function getServicePaths() {
 
 // Função utilitária para verificar se um serviço existe
 export async function serviceExists(slug: string): Promise<boolean> {
-  console.log(`🔍 Verificando existência do serviço: ${slug}`);
-
   try {
     const url =
       `${directusUrl}/items/services` +
@@ -482,7 +472,6 @@ export async function serviceExists(slug: string): Promise<boolean> {
     const json = await res.json();
     const exists = json.data && json.data.length > 0;
 
-    console.log(`${exists ? '✅' : '❌'} Serviço ${slug} ${exists ? 'existe' : 'não existe'}`);
     return exists;
   } catch (error) {
     console.error(`❌ Erro ao verificar existência do serviço ${slug}:`, error);

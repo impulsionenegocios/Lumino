@@ -12,7 +12,6 @@ import TeamSection from '../components/sections/teamSection.astro';
 import BlogSection from '../components/sections/blogSection.astro';
 import CtaSection from '../components/sections/ctaSection.astro';
 import AboutUs from '../components/sections/aboutUs.astro';
-
 import { heroData } from '../data/heroData';
 import { aboutUsData } from '../data/aboutUsData';
 
@@ -26,13 +25,6 @@ import { getBlogPostsInitial } from '../data/blogData';
 const blogPosts = await getBlogPostsInitial();
 
 import { certificationsData } from '../data/certificationsData';
-const blogData = {
-  headingTitle: 'Nosso',
-  headingAccent: 'Blog',
-  description:
-    'Conteúdos exclusivos sobre estética, bem-estar e as últimas tendências em cuidados com a saúde bucal.',
-  posts: blogPosts,
-};
 ---
 
 <MainLayout>
@@ -40,17 +32,13 @@ const blogData = {
   <AboutUs {...aboutUsData} />
   <TeamSection {...teamData} />
   <CounterSection stats={counterSectionStatus} />
-  <ServicesSection sliceQtd="3" showButton="true"/>
+  <ServicesSection sliceQtd="3" showButton="true" />
   <CertificationSection {...certificationsData} />
   <GallerySection {...galleryData} />
   <LocationSection {...locationData} />
   <TestimonialSection {...testimonialsData} />
   <CtaSection {...contactCTAData} />
 
-<BlogSection 
-  posts={blogPosts}
-  sliceQtd={3}
-  showButton={true}
-  enablePagination={false}
-/>  <ParticlesBackground />
+  <BlogSection posts={blogPosts} sliceQtd={3} showButton={true} enablePagination={false} />
+  <ParticlesBackground />
 </MainLayout>
