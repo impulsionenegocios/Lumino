@@ -6,12 +6,34 @@ export interface ButtonProps {
   href: string;
   variant?: 'solid' | 'outline';
 }
-const { headingTitle, headingAccent, text, buttons } = Astro.props as {
-  headingTitle: string;
-  headingAccent: string;
+
+interface CTAItem {
+  id: number;
+  icon: string;
   text: string;
-  buttons: ButtonProps[];
-};
+}
+
+interface CTASectionData {
+  title: string;
+  description: string;
+  items: CTAItem[];
+}
+
+const { title, description, items } = Astro.props as CTASectionData;
+
+// Botões mantidos estáticos por enquanto
+const buttons: ButtonProps[] = [
+  {
+    label: "Entre em Contato",
+    href: "#contact",
+    variant: "solid"
+  },
+  {
+    label: "Nossos Serviços",
+    href: "#services",
+    variant: "outline"
+  }
+];
 ---
 
 <section class="contact-cta" id="contact">
@@ -21,11 +43,10 @@ const { headingTitle, headingAccent, text, buttons } = Astro.props as {
   <div class="container">
     <div class="contact-cta-container">
       <h2 class="contact-cta-title">
-        {headingTitle}
-        <span class="accent">{headingAccent}</span>
+        {title}
       </h2>
       <p class="contact-cta-text">
-        {text}
+        {description}
       </p>
       <div class="contact-cta-buttons">
         {
@@ -35,7 +56,14 @@ const { headingTitle, headingAccent, text, buttons } = Astro.props as {
         }
       </div>
       <div class="text-white pt-8">
-        💎 Consulta de avaliação 100% gratuita • 📞 Resposta em até 30 minutos
+        {
+          items.map((item, index) => (
+            <span>
+              {item.icon} {item.text}
+              {index < items.length - 1 && <span class="mx-2">•</span>}
+            </span>
+          ))
+        }
       </div>
     </div>
   </div>

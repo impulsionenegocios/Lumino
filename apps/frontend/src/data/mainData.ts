@@ -7,7 +7,7 @@ export interface mainData {
   telefone?: string;
   whatsapp?: string;
   endereco?: string;
-  numero_cro?: number;
+  numero_cro?: number | string;
   responsavel_tecnico?: string;
 }
 
@@ -18,7 +18,7 @@ export class DirectusError extends Error {
   constructor(
     message: string,
     public status?: number,
-    public url?: string,
+    public url?: string
   ) {
     super(message);
     this.name = 'DirectusError';
@@ -27,7 +27,7 @@ export class DirectusError extends Error {
 
 export async function getMainData(): Promise<mainData | null> {
   try {
-    const url = `${apiUrl}/items/clinicData`;
+    const url = `${apiUrl}/items/clinicData/1`;
     const res = await fetch(url, {
       headers: {
         Accept: 'application/json',
@@ -39,17 +39,14 @@ export async function getMainData(): Promise<mainData | null> {
       throw new DirectusError(
         `Erro ao buscar os dados da clínica: ${res.statusText}`,
         res.status,
-        url,
+        url
       );
     }
 
     const json = await res.json();
+    const item = json.data;
 
-    if (!json.data || json.data.length === 0) {
-      return null;
-    }
-
-    const item = json.data[0];
+    if (!item) return null;
 
     const mappedMainData: mainData = {
       nome: item.nome,
@@ -60,13 +57,10 @@ export async function getMainData(): Promise<mainData | null> {
       email: item.email,
       endereco: item.endereco,
       descricao: item.descricao,
-      logo_escura: item.logo_escura
-        ? `${assetsUrl}/assets/${item.logo_escura}`
-        : '/images/placeholder-logo.jpg',
-      logo_clara: item.logo_clara
-        ? `${assetsUrl}/assets/${item.logo_clara}`
-        : '/images/placeholder-logo.jpg',
+      logo_escura: item.logo_escura? `${assetsUrl}/assets/${item.logo_escura}?width=160&height=80&format=webp&quality=80`: '/images/placeholder-logo.jpg',
+      logo_clara: item.logo_clara ? `${assetsUrl}/assets/${item.logo_clara}?width=160&height=80&format=webp&quality=80` : '/images/placeholder-logo.jpg',
     };
+
     return mappedMainData;
   } catch (err) {
     console.error(err);
@@ -76,7 +70,7 @@ export async function getMainData(): Promise<mainData | null> {
 
 export async function getMainDataPublic(): Promise<mainData | null> {
   try {
-    const url = `${assetsUrl}/items/clinicData`;
+    const url = `${assetsUrl}/items/clinicData/1`;
     const res = await fetch(url, {
       headers: {
         Accept: 'application/json',
@@ -88,26 +82,24 @@ export async function getMainDataPublic(): Promise<mainData | null> {
       throw new DirectusError(
         `Erro ao buscar os dados da clínica: ${res.statusText}`,
         res.status,
-        url,
+        url
       );
     }
 
     const json = await res.json();
+    const item = json.data;
 
-    if (!json.data || json.data.length === 0) {
-      return null;
-    }
-
-    const item = json.data[0];
+    if (!item) return null;
 
     const mappedMainData: mainData = {
       logo_escura: item.logo_escura
-        ? `${assetsUrl}/assets/${item.logo_escura}`
+        ? `${assetsUrl}/assets/${item.logo_escura}?width=160&height=80&format=webp&quality=80`
         : '/images/placeholder-logo.jpg',
       logo_clara: item.logo_clara
-        ? `${assetsUrl}/assets/${item.logo_clara}`
+        ? `${assetsUrl}/assets/${item.logo_clara}?width=160&height=80&format=webp&quality=80`
         : '/images/placeholder-logo.jpg',
     };
+
     return mappedMainData;
   } catch (err) {
     console.error(err);

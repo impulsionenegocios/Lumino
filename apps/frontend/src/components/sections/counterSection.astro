@@ -1,7 +1,7 @@
 ---
-interface StatItem {
+interface CounterItem {
   value: number;
-  label: string;
+  description: string;
 }
 
 const { stats } = Astro.props;
@@ -12,7 +12,7 @@ const { stats } = Astro.props;
   <div class="mx-auto max-w-[1600px] w-full z-10">
     <div class="lg:grid lg:grid-cols-4 relative z-2 gap-4 mx-auto">
       {
-        stats.map((item: StatItem) => (
+        stats.map((item: CounterItem) => (
           <div class="text-center p-8">
             <div
               class="font-serif text-white text-5xl relative inline-block mb-4 after:content-['+'] after:absolute after:-top-4 after:right-[-20px] after:text-primary-gold"
@@ -21,7 +21,7 @@ const { stats } = Astro.props;
             >
               0
             </div>
-            <div class="uppercase text-gray-300 text-[16px]">{item.label}</div>
+            <div class="uppercase text-gray-300 text-[16px]">{item.description}</div>
           </div>
         ))
       }

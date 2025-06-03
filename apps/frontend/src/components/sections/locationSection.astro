@@ -12,24 +12,50 @@ interface HoursItem {
   time: string;
 }
 
-const { headingTitle, headingAccent, description, locationItems, hours, mapImage, mapAlt } =
-  Astro.props as {
-    headingTitle: string;
-    headingAccent: string;
-    description: string;
-    locationItems: LocationItem[];
-    hours: HoursItem[];
-    mapImage: string;
-    mapAlt: string;
-  };
+// Props vindos do Directus (apenas title e description por enquanto)
+const { title, description } = Astro.props as {
+  title: string;
+  description: string;
+};
+
+// Dados estáticos mantidos por enquanto
+const locationItems: LocationItem[] = [
+  {
+    icon: "📍",
+    title: "Endereço",
+    info: "Rua das Flores, 123<br>Centro - Sua Cidade/SP<br>CEP: 12345-678"
+  },
+  {
+    icon: "📞",
+    title: "Telefone",
+    info: "(11) 1234-5678<br>(11) 9 8765-4321"
+  },
+  {
+    icon: "✉️",
+    title: "E-mail",
+    info: "contato@empresa.com.br<br>vendas@empresa.com.br"
+  }
+];
+
+const hours: HoursItem[] = [
+  { day: "Segunda-feira", time: "08:00 - 18:00" },
+  { day: "Terça-feira", time: "08:00 - 18:00" },
+  { day: "Quarta-feira", time: "08:00 - 18:00" },
+  { day: "Quinta-feira", time: "08:00 - 18:00" },
+  { day: "Sexta-feira", time: "08:00 - 18:00" },
+  { day: "Sábado", time: "08:00 - 12:00" },
+  { day: "Domingo", time: "Fechado" }
+];
+
+const mapImage = "/images/map-placeholder.jpg";
+const mapAlt = "Localização da empresa no mapa";
 ---
 
 <section class="lg:px-16 px-8 lg:py-16 py-8 max-w-full" id="location">
   <div class="location-container">
     <div class="location-content reveal-effect">
       <h2 class="section-title">
-        {headingTitle}
-        <span class="accent">{headingAccent}</span>
+        {title}
       </h2>
       <p class="section-subtitle">
         {description}
@@ -69,6 +95,7 @@ const { headingTitle, headingAccent, description, locationItems, hours, mapImage
     </div>
   </div>
 </section>
+
 <style>
   #location {
     zoom: 0.9;

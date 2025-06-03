@@ -1,18 +1,22 @@
 ---
-interface Testimonial {
+interface TestimonialItem {
+  id: number;
+  name: string;
   text: string;
-  authorName: string;
-  authorRole: string;
-  avatar: string;
-  rating: number;
+  title?: string;
+  image?: string;
 }
 
-const { headingTitle, headingAccent, description, testimonials } = Astro.props as {
-  headingTitle: string;
-  headingAccent: string;
+interface TestimonialSectionData {
+  title: string;
   description: string;
-  testimonials: Testimonial[];
-};
+  items: TestimonialItem[];
+}
+
+const { title, description, items } = Astro.props as TestimonialSectionData;
+
+// Função para gerar rating aleatório (já que não vem do Directus)
+const generateRating = () => Math.floor(Math.random() * 2) + 4; // Rating entre 4 e 5
 ---
 
 <section class="section testimonials" id="testimonials">
@@ -21,8 +25,7 @@ const { headingTitle, headingAccent, description, testimonials } = Astro.props a
   <div class="container">
     <div class="testimonials-header">
       <h2 class="section-title section-title-center">
-        {headingTitle}
-        <span class="accent">{headingAccent}</span> dizem
+        {title}
       </h2>
       <p class="section-subtitle section-subtitle-center">
         {description}
@@ -32,19 +35,22 @@ const { headingTitle, headingAccent, description, testimonials } = Astro.props a
       <div class="testimonials-container">
         <div class="testimonials-grid">
           {
-            testimonials.map((t) => (
+            items.map((testimonial) => (
               <div class="testimonial-card reveal-effect">
                 <div class="testimonial-quote">"</div>
-                <p class="testimonial-text">{t.text}</p>
+                <p class="testimonial-text">{testimonial.text}</p>
                 <div class="testimonial-author">
                   <div class="testimonial-avatar">
-                    <img src={t.avatar} alt={`Avatar de ${t.authorName}`} />
+                    <img 
+                      src={testimonial.image || '/images/placeholder-avatar.jpg'} 
+                      alt={`Avatar de ${testimonial.name}`} 
+                    />
                   </div>
                   <div class="testimonial-info">
-                    <h4>{t.authorName}</h4>
-                    <p>{t.authorRole}</p>
+                    <h4>{testimonial.name}</h4>
+                    <p>{testimonial.title || 'Cliente'}</p>
                     <div class="testimonial-rating">
-                      {Array.from({ length: t.rating }).map(() => (
+                      {Array.from({ length: generateRating() }).map(() => (
                         <span class="testimonial-star">★</span>
                       ))}
                     </div>
@@ -58,6 +64,7 @@ const { headingTitle, headingAccent, description, testimonials } = Astro.props a
     </div>
   </div>
 </section>
+
 <style>
   #testimonials {
     zoom: 0.9;

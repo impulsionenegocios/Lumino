@@ -7,38 +7,35 @@ import ServicesSection from '../components/sections/servicesSection.astro';
 import GallerySection from '../components/sections/gallerySection.astro';
 import LocationSection from '../components/sections/locationSection.astro';
 import TestimonialSection from '../components/sections/testimonialSection.astro';
-import CertificationSection from '../components/sections/certificationSection.astro';
-import TeamSection from '../components/sections/teamSection.astro';
 import BlogSection from '../components/sections/blogSection.astro';
 import CtaSection from '../components/sections/ctaSection.astro';
 import AboutUs from '../components/sections/aboutUs.astro';
-import { heroData } from '../data/heroData';
-import { aboutUsData } from '../data/aboutUsData';
 
-import { counterSectionStatus } from '../data/counterSectionData';
-import { galleryData } from '../data/galleryData';
-import { locationData } from '../data/locationData';
-import { testimonialsData } from '../data/testimonialsData';
-import { contactCTAData } from '../data/contactCTAData';
-import { teamData } from '../data/teamData';
-import { getBlogPostsInitial } from '../data/blogData';
-const blogPosts = await getBlogPostsInitial();
+// Importando apenas a função centralizada
+import { getHomePageData } from '../data/sections/getHomePageData';
 
-import { certificationsData } from '../data/certificationsData';
+// Buscando todos os dados de uma vez
+const {
+  heroData,
+  aboutUsData,
+  counterSection,
+  galleryData,
+  locationData,
+  testimonialsData,
+  contactCTAData,
+  blogPosts,
+} = await getHomePageData();
 ---
 
 <MainLayout>
   <HeroSection {...heroData} />
   <AboutUs {...aboutUsData} />
-  <TeamSection {...teamData} />
-  <CounterSection stats={counterSectionStatus} />
+  <CounterSection stats={counterSection} />
   <ServicesSection sliceQtd="3" showButton="true" />
-  <CertificationSection {...certificationsData} />
   <GallerySection {...galleryData} />
   <LocationSection {...locationData} />
   <TestimonialSection {...testimonialsData} />
   <CtaSection {...contactCTAData} />
-
   <BlogSection posts={blogPosts} sliceQtd={3} showButton={true} enablePagination={false} />
   <ParticlesBackground />
 </MainLayout>
