@@ -14,6 +14,10 @@ import AboutUs from '../components/sections/aboutUs.astro';
 // Importando apenas a função centralizada
 import { getHomePageData } from '../data/sections/getHomePageData';
 
+
+import { getSeoPagesData } from '../data/seoPagesData';
+const allData = await getSeoPagesData('/');
+
 // Buscando todos os dados de uma vez
 const {
   heroData,
@@ -27,7 +31,7 @@ const {
 } = await getHomePageData();
 ---
 
-<MainLayout>
+<MainLayout {...allData}>
   <HeroSection {...heroData} />
   <AboutUs {...aboutUsData} />
   <CounterSection stats={counterSection} />
