@@ -8,6 +8,7 @@ import Paragraph from '../../components/typograph/Paragraph.astro';
 import { getServiceBySlug, getServicePaths } from '../../data/servicesData';
 import { getMainData } from '../../data/mainData';
 import MdiIcon from '../../components/utils/MdiIcon.astro';
+import DynamicForm from '../../components/utils/DynamicForm.astro';
 
 export async function getStaticPaths() {
   try {
@@ -339,7 +340,7 @@ const metaDescription = serviceData.heroDescription;
     )
   }
 
-  <!-- CTA Final / Formulário -->
+  <!-- CTA Final / -->
   <section class="contact-cta !px-8 lg:!px-16 !py-8 lg:!py-16" id="cta">
     <div class="contact-cta-shape contact-cta-shape-1"></div>
     <div class="contact-cta-shape contact-cta-shape-2"></div>
@@ -392,6 +393,13 @@ const metaDescription = serviceData.heroDescription;
       </div>
     </div>
   </section>
+  <DynamicForm 
+  slug="teste"
+  className="my-8"
+  submitButtonText="Enviar Agora"
+  successMessage="Obrigado! Entraremos em contato em breve."
+  errorMessage="Ops! Algo deu errado. Tente novamente."
+/>
 </MainLayout>
 <style>
 #tecnical {

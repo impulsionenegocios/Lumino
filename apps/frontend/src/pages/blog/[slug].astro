@@ -5,10 +5,8 @@ import { Image } from 'astro:assets';
 import MainLayout from '../../layouts/mainLayout.astro';
 import Heading from '../../components/typograph/Heading.astro';
 import Paragraph from '../../components/typograph/Paragraph.astro';
-import Button from '../../components/buttons/mainButton.astro';
 import { getBlogPostBySlug, getRelatedPosts, getCategories, type blogData } from '../../data/blogData';
 import {getButtons} from '../../data/buttonsData';
-import CtaSection from '../../components/sections/ctaSection.astro';
 import MdiIcon from '../../components/utils/MdiIcon.astro';
 
 export async function getStaticPaths() {
@@ -23,7 +21,6 @@ if (!slug) {
 }
 
 const post = await getBlogPostBySlug(slug);
-
 const buttons = await getButtons('post');
 
 if (!post) {
@@ -308,15 +305,6 @@ const pageDescription = post.excerpt;
       </div>
     </section>
   )}
-  <!-- CTA Section -->
-<CtaSection
-  headingTitle={post.ctaTitle}
-  headingAccent={post.ctaTitleAccent}
-  text={post.ctaText}
-  buttons={buttons}
-  id="ctaSection"
-/>
-
 </MainLayout>
 
 <style is:global>
