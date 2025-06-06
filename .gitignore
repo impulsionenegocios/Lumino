@@ -1,4 +1,4 @@
 node_modules
 .pnpm-store.env.production
 .env.local
-volumes/
+.env.production
