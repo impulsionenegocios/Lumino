@@ -3,7 +3,7 @@
 import * as mdi from '@mdi/js';
 
 interface Props {
-  name: string; // Ex: 'mdi:account' ou 'mdi:smiley'
+  name: string; // Ex: 'account-box' ou 'smiley'
   size?: number; // Tamanho em pixels (default: 24)
   color?: string; // Cor SVG (default: currentColor)
   className?: string; // Tailwind ou outra classe extra
@@ -16,13 +16,15 @@ const {
   className = '',
 } = Astro.props;
 
-// Transforma 'mdi:smiley' → 'mdiSmiley'
-const iconKey = name.replace('mdi:', 'mdi-')
-                    .split('-')
-                    .map((segment, i) =>
-                      i === 0 ? segment : segment.charAt(0).toUpperCase() + segment.slice(1)
-                    )
-                    .join('');
+// Transforma 'account-box' → 'mdiAccountBox'
+const iconKey = 'mdi' + name
+  .split('-')
+  .map((segment, i) =>
+    i === 0 ? segment.charAt(0).toUpperCase() + segment.slice(1)
+            : segment.charAt(0).toUpperCase() + segment.slice(1)
+  )
+  .join('');
+
 // @ts-ignore
 const pathData = mdi[iconKey];
 
@@ -30,6 +32,7 @@ if (!pathData) {
   console.warn(`Ícone "${iconKey}" não encontrado em @mdi/js`);
 }
 ---
+
 {pathData && (
   <svg
     xmlns="http://www.w3.org/2000/svg"

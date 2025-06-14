@@ -1,4 +1,5 @@
-BASE_URL=https://cms.luminoclinica.com.br
+BASE_URL=http://localhost:4321
+
 # Configuração do DB para o Directus
 DB_CLIENT=pg
 DB_HOST=147.93.71.14 
@@ -7,7 +8,7 @@ DB_DATABASE=lumino_db
 DB_USER=luminoadmin
 DB_PASSWORD=Sa!1101996
 # URL pública
-PUBLIC_URL=https://cms.luminoclinica.com.br
+PUBLIC_URL=http://localhost:8055
 
 # Admin
 ADMIN_EMAIL=impulsionenegocios@gmail.com
@@ -29,8 +30,8 @@ CORS_ORIGIN=*
 CACHE_ENABLED=false
 CACHE_AUTO_PURGE=true
 
-PUBLIC_DIRECTUS_INTERNAL_URL=https://cms.luminoclinica.com.br
-PUBLIC_DIRECTUS_EXTERNAL_URL=https://cms.luminoclinica.com.br
+PUBLIC_DIRECTUS_INTERNAL_URL=http://directus:8055
+PUBLIC_DIRECTUS_EXTERNAL_URL=http://localhost:8055
 NODE_ENV=development
 DEBUG=true
 
