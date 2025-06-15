@@ -1,4 +1,4 @@
-// data/servicesData.ts - Versão Corrigida
+// data/servicesData.ts - Versão Corrigida com YayForms
 
 export interface ServiceData {
   slug: string;
@@ -43,6 +43,8 @@ export interface ServiceData {
   ctaTitle: string;
   ctaTitleAccent: string;
   ctaDescription: string;
+  YayFormsSlug: string;
+  YayFormsId: string;
 }
 
 interface Benefit {
@@ -96,7 +98,7 @@ const directusPublicUrl = import.meta.env.PUBLIC_DIRECTUS_EXTERNAL_URL;
 // Função principal para buscar serviço por slug
 export async function getServiceBySlug(slug: string): Promise<ServiceData | null> {
   try {
-    // URL completa com todos os campos e relacionamentos - CORRIGIDA
+    // URL completa com todos os campos e relacionamentos
     const url =
       `${directusUrl}/items/services` +
       `?filter[slug][_eq]=${encodeURIComponent(slug)}` +
@@ -130,7 +132,7 @@ export async function getServiceBySlug(slug: string): Promise<ServiceData | null
         'forWho.services_for_who_id.id',
         'forWho.services_for_who_id.icon',
         'forWho.services_for_who_id.text',
-        // Cases - CORRIGIDO: especificando campos do relacionamento
+        // Cases
         'casesTitle',
         'casesTitleAccent',
         'casesDescription',
@@ -161,10 +163,14 @@ export async function getServiceBySlug(slug: string): Promise<ServiceData | null
         'ctaTitle',
         'ctaTitleAccent',
         'ctaDescription',
+        // YAY FORMS - CORRIGIDO
+        'yay_forms.id',
+        'yay_forms.slug',
+        'yay_forms.form_id',
       ].join(',') +
       `&deep[casesBeforeAfter][_limit]=-1` +
       `&limit=1`;
-
+      
     const res = await fetch(url, {
       method: 'GET',
       headers: {
@@ -221,29 +227,33 @@ function transformServiceData(service: any): ServiceData {
   // Processa forWho
   const forWho: ForWho[] = processRelationship(service.forWho || [], 'services_for_who_id');
 
-  // Processa authItems - agora são apenas IDs, precisamos buscar separadamente
+  // Processa authItems - CORRIGIDO
   let authItems: AuthItem[] = [];
   if (Array.isArray(service.authItems) && service.authItems.length > 0) {
-    // Se authItems contém apenas IDs, vamos criar dados mock por enquanto
-    // Você pode implementar uma busca separada aqui se necessário
-    authItems = service.authItems.map((id: number, index: number) => ({
-      id,
-      value: index === 0 ? '500+' : index === 1 ? '98%' : '5★',
-      description:
-        index === 0 ? 'Pacientes atendidos' : index === 1 ? 'Satisfação' : 'Avaliação média',
-    }));
+    // Se authItems contém apenas IDs, vamos processar
+    if (typeof service.authItems[0] === 'number') {
+      // Mock data temporário - você pode implementar uma busca separada aqui
+      authItems = service.authItems.map((id: number, index: number) => ({
+        id,
+        value: index === 0 ? '500+' : index === 1 ? '98%' : '5★',
+        description:
+          index === 0 ? 'Pacientes atendidos' : index === 1 ? 'Satisfação' : 'Avaliação média',
+      }));
+    } else {
+      // Se já vem com os dados completos
+      authItems = processRelationship(service.authItems, 'services_auth_items_id');
+    }
   }
 
   // Processa faqItems
   const faqItems: FaqItem[] = processRelationship(service.faqItems || [], 'services_faq_id');
 
-  // Processa casesBeforeAfter - TOTALMENTE CORRIGIDO
+  // Processa casesBeforeAfter
   let casesBeforeAfter: BeforeAfter[] = [];
 
   if (Array.isArray(service.casesBeforeAfter) && service.casesBeforeAfter.length > 0) {
     casesBeforeAfter = service.casesBeforeAfter
       .map((item: any, index: number) => {
-        // Verifica se existe o relacionamento correto
         const caseData = item.services_before_after_id;
         if (!caseData) {
           console.warn(`⚠️ Caso ${index} sem dados válidos:`, item);
@@ -264,8 +274,8 @@ function transformServiceData(service: any): ServiceData {
 
         return processedCase;
       })
-      .filter(Boolean) // Remove itens null/undefined
-      .sort((a: any, b: any) => a.id - b.id); // Ordena por ID
+      .filter(Boolean)
+      .sort((a: any, b: any) => a.id - b.id);
   } else {
     console.warn(
       '⚠️ casesBeforeAfter não é um array válido ou está vazio:',
@@ -281,6 +291,7 @@ function transformServiceData(service: any): ServiceData {
     date_created: service.date_created,
     date_updated: service.date_updated,
     service_name: service.service_name,
+    
     // Hero Section
     heroImage: service.heroImage
       ? `${directusPublicUrl}/assets/${service.heroImage}?width=1920&height=1080&format=webp&quality=80`
@@ -328,14 +339,18 @@ function transformServiceData(service: any): ServiceData {
     ctaTitle: service.ctaTitle || '',
     ctaTitleAccent: service.ctaTitleAccent || '',
     ctaDescription: service.ctaDescription || '',
+
+    // YAY FORMS - CORRIGIDO: acessando os campos corretos
+    YayFormsSlug: service.yay_forms?.slug || '',
+    YayFormsId: service.yay_forms?.form_id || ''
   };
+  
   return transformedService;
 }
 
-// Resto do código permanece igual...
+// Função para obter todos os serviços
 export async function getAllServices(): Promise<ServiceData[]> {
   try {
-    // Monta a URL solicitando apenas campos básicos para performance
     const url =
       `${directusUrl}/items/services` +
       `?filter[status][_eq]=published` +
@@ -347,6 +362,7 @@ export async function getAllServices(): Promise<ServiceData[]> {
         'sort',
         'date_created',
         'date_updated',
+        'service_name',
         // Hero básico
         'heroImage',
         'heroSubtitle',
@@ -355,6 +371,9 @@ export async function getAllServices(): Promise<ServiceData[]> {
         'heroDescription',
         'heroPrimaryButton',
         'heroSecondaryButton',
+        // YAY FORMS também na listagem, se necessário
+        'yay_forms.slug',
+        'yay_forms.form_id',
       ].join(',') +
       `&sort=sort,date_created`;
 
@@ -388,6 +407,7 @@ export async function getAllServices(): Promise<ServiceData[]> {
       sort: service.sort,
       date_created: service.date_created,
       date_updated: service.date_updated,
+      service_name: service.service_name,
 
       // Hero Section
       heroImage: service.heroImage
@@ -399,6 +419,11 @@ export async function getAllServices(): Promise<ServiceData[]> {
       heroDescription: service.heroDescription || '',
       heroPrimaryButton: service.heroPrimaryButton || 0,
       heroSecondaryButton: service.heroSecondaryButton || 0,
+      
+      // YAY FORMS
+      YayFormsSlug: service.yay_forms?.slug || '',
+      YayFormsId: service.yay_forms?.form_id || '',
+      
       // Campos vazios para compatibilidade (não carregados na listagem)
       benefitsTitle: '',
       benefitsTitleAccent: '',

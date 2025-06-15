@@ -27,6 +27,7 @@ try {
 } catch {
   return Astro.redirect('/404');
 }
+
 if (!serviceData) return Astro.redirect('/404');
 
 let mainData = null;
@@ -35,11 +36,14 @@ try {
 } catch {
   throw new Error('Erro ao buscar dados da clínica');
 }
+
 const serviceName = serviceData.service_name
 const message = `Olá, tudo bem? Vim do site e queria saber mais sobre ${serviceData.service_name}`;
 const encodedMessage = encodeURIComponent(message);
 
 const whatsappLink = `https://wa.me/${mainData?.whatsapp}?text=${encodedMessage}`;
+const contactLink = serviceData.YayFormsId ? "#contact" : whatsappLink;
+
 const metaTitle = `${serviceData.heroTitle} | ${mainData?.nome}`;
 const metaDescription = serviceData.heroDescription;
 
@@ -78,7 +82,7 @@ const metaDescription = serviceData.heroDescription;
           {serviceData.heroDescription}
         </p>
         <div class="flex flex-col lg:flex-row gap-4 animate-buttons mt-8">
-          <Button title="Quero agendar minha avaliação" href={whatsappLink} />
+          <Button title="Quero agendar minha avaliação" href={contactLink} />
           <Button title="Saber Mais" href="#for-who" variant="outline" />
         </div>
       </div>
@@ -220,7 +224,7 @@ const metaDescription = serviceData.heroDescription;
             </div>
 
             <div class="text-center mt-12">
-              <Button title={serviceData.CasesButtonTitle} href={whatsappLink} />
+              <Button title={serviceData.CasesButtonTitle} href={contactLink} />
             </div>
           </div>
         </div>
@@ -232,7 +236,7 @@ const metaDescription = serviceData.heroDescription;
           <p class="text-gray-600 mb-8">
             Estamos preparando uma galeria incrível com nossos casos de sucesso.
           </p>
-          <Button title="Entre em contato para ver casos" href={whatsappLink} />
+          <Button title="Entre em contato para ver casos" href={contactLink} />
         </div>
       </section>
     )
@@ -340,7 +344,7 @@ const metaDescription = serviceData.heroDescription;
     )
   }
 
-  <!-- CTA Final / -->
+  <!-- CTA Final -->
   <section class="contact-cta !px-8 lg:!px-16 !py-8 lg:!py-16" id="cta">
     <div class="contact-cta-shape contact-cta-shape-1"></div>
     <div class="contact-cta-shape contact-cta-shape-2"></div>
@@ -352,12 +356,19 @@ const metaDescription = serviceData.heroDescription;
       </div>
 
       <div class="mt-8">
-        <Button title="Quero agendar minha avaliação" href={whatsappLink} />
+        <Button title="Quero agendar minha avaliação" href={contactLink} />
         <Button title="Saber Mais" href="#for-who" variant="outline" />
       </div>
     </div>
   </section>
-
+  <!-- Contact Form Section - Only shows if YayFormsId exists -->
+  {
+    serviceData.YayFormsId && (
+      <section class="h-[80svh]" id="contact">
+        <div id="yay-container" data-yf-widget={serviceData.YayFormsId} data-form-id={serviceData.YayFormsId} style="width:100%;height:100%;"></div>
+      </section>
+    )
+  }
   <!-- Footer -->
   <section class="bg-primary-dark text-white px-8 lg:px-16 py-8 lg:py-16" id="tecnical">
     <div>
@@ -393,37 +404,35 @@ const metaDescription = serviceData.heroDescription;
       </div>
     </div>
   </section>
-  <DynamicForm 
-  slug="teste"
-  className="my-8"
-  submitButtonText="Enviar Agora"
-  successMessage="Obrigado! Entraremos em contato em breve."
-  errorMessage="Ops! Algo deu errado. Tente novamente."
-/>
-</MainLayout>
-<style>
-#tecnical {
-  zoom: 0.9
-}
-#cta {
-  zoom: 0.9
-}
-#faq {
-  zoom: 0.9
-}
-#sobre-nos {
-  zoom: 0.9
-}
 
-#casos {
-  zoom: 0.9
-}
-#for-who {
-  zoom: 0.9
-}#beneficios {
-  zoom: 0.9
-}
-</style>
+
+  
+</MainLayout>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Coleta os parâmetros da URL
+    const queryParams = new URLSearchParams(window.location.search);
+    const paramString = queryParams.toString();
+
+    // Pega o ID do formulário do atributo
+    const yayContainer = document.getElementById('yay-container');
+    if (!yayContainer) return; // Se não há container, não há formulário
+    
+    const formId = yayContainer.getAttribute('data-form-id');
+    
+    if (!formId) return; // Proteção extra
+
+    // Cria o iframe
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://yayforms.link/${formId}` + (paramString ? `?${paramString}` : '');
+    iframe.style.width = "100%";
+    iframe.style.height = "100%";
+    iframe.style.border = "none";
+    yayContainer.appendChild(iframe);
+  });
+</script>
+
 <script is:inline>
   document.addEventListener('DOMContentLoaded', function () {
     // FAQ toggle
@@ -452,3 +461,27 @@ const metaDescription = serviceData.heroDescription;
     });
   });
 </script>
+
+<style>
+#tecnical {
+  zoom: 0.9
+}
+#cta {
+  zoom: 0.9
+}
+#faq {
+  zoom: 0.9
+}
+#sobre-nos {
+  zoom: 0.9
+}
+#casos {
+  zoom: 0.9
+}
+#for-who {
+  zoom: 0.9
+}
+#beneficios {
+  zoom: 0.9
+}
+</style>
