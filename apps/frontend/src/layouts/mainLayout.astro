@@ -1,10 +1,12 @@
 ---
+// layouts/mainLayout.astro
 import '../styles/global.css';
 import '../styles/main.css';
-import MainHeader from '../components/headers/mainHeader.vue';
+import MainHeader from '../components/headers/mainHeader.astro';
 import MainFooter from '../components/footers/mainFooter.astro';
 import Animations from '../components/animations/Animations.astro';
 import LogoUrl from '../assets/images/logo-escuro.png';
+
 const menuItems = [
   { label: 'Início', url: '/' },
   { label: 'Sobre Nós', url: '/sobre-nos' },
@@ -12,6 +14,7 @@ const menuItems = [
   { label: 'Posts', url: '/blog' },
   { label: 'Contato', url: '/contato' },
 ];
+
 const {
   title,
   description,
@@ -24,6 +27,7 @@ const {
   twitter_card,
   structured_data,
 } = Astro.props;
+
 const defaultUrl = import.meta.env.BASE_URL;
 ---
 
@@ -59,12 +63,13 @@ const defaultUrl = import.meta.env.BASE_URL;
       client:load
       logoUrl={LogoUrl.src}
       ctaText="Agendar Consulta"
-      :menuItems={menuItems}
+      menuItems={menuItems}
     />
 
     <slot />
     <Animations />
-    <MainFooter />
+    <!-- Correção: Passar props corretamente no Astro -->
+    <MainFooter MenuItems={menuItems} />
   </body>
   <style>
     html {
