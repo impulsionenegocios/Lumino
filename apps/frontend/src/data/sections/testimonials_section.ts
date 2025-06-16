@@ -16,7 +16,11 @@ const apiUrl = import.meta.env.PUBLIC_DIRECTUS_INTERNAL_URL;
 const assetsUrl = import.meta.env.PUBLIC_DIRECTUS_EXTERNAL_URL;
 
 export class DirectusError extends Error {
-  constructor(message: string, public status?: number, public url?: string) {
+  constructor(
+    message: string,
+    public status?: number,
+    public url?: string,
+  ) {
     super(message);
     this.name = 'DirectusError';
   }
@@ -44,18 +48,19 @@ export async function getTestimonialsData(): Promise<TestimonialSectionData | nu
     const mapped: TestimonialSectionData = {
       title: item.title,
       description: item.description,
-      items: item.item?.map((rel: any) => {
-        const t = rel.testimonial_section_item_id;
-        return {
-          id: t.id,
-          name: t.name,
-          text: t.text,
-          title: t.title,
-          image: t.image
-            ? `${assetsUrl}/assets/${t.image}?width=100&height=100&format=webp&quality=80`
-            : '/images/placeholder-avatar.jpg',
-        };
-      }) || [],
+      items:
+        item.item?.map((rel: any) => {
+          const t = rel.testimonial_section_item_id;
+          return {
+            id: t.id,
+            name: t.name,
+            text: t.text,
+            title: t.title,
+            image: t.image
+              ? `${assetsUrl}/assets/${t.image}?width=100&height=100&format=webp&quality=80`
+              : '/images/placeholder-avatar.jpg',
+          };
+        }) || [],
     };
 
     return mapped;

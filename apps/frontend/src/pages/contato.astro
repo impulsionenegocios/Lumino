@@ -37,8 +37,9 @@ const pageData = {
       cidade: 'Anápolis - GO',
       cep: '75113-570',
     },
-  
-    googleMapsLink: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2901.7214473232084!2d-48.95167139895283!3d-16.330912023569!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935ea50d24a5cd03%3A0x92225bc9fa3e86e4!2sLumino%20-%20Cl%C3%ADnica%20Integrada%20%7C%20Dentista%20%7C%20Implante%20Dent%C3%A1rio%20%7C%20Aparelho%20Invis%C3%ADvel%20%7C%20An%C3%A1polis%20-%20GO!5e0!3m2!1sen!2sbr!4v1748830306338!5m2!1sen!2sbr',
+
+    googleMapsLink:
+      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2901.7214473232084!2d-48.95167139895283!3d-16.330912023569!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935ea50d24a5cd03%3A0x92225bc9fa3e86e4!2sLumino%20-%20Cl%C3%ADnica%20Integrada%20%7C%20Dentista%20%7C%20Implante%20Dent%C3%A1rio%20%7C%20Aparelho%20Invis%C3%ADvel%20%7C%20An%C3%A1polis%20-%20GO!5e0!3m2!1sen!2sbr!4v1748830306338!5m2!1sen!2sbr',
     instagramLink: 'https://instagram.com/luminoclinica',
     facebookLink: 'https://facebook.com/luminoclinica',
   },
@@ -80,6 +81,7 @@ import heroImage from '../assets/images/bg.jpg';
 const whatsappMessage = encodeURIComponent(`Olá! Vim pelo site e gostaria de mais informações.`);
 const whatsappLink = `https://wa.me/${pageData.contato.whatsappLink}?text=${whatsappMessage}`;
 ---
+
 <MainLayout title={pageData.metaTitle} description={pageData.metaDescription}>
   <!-- Hero Section -->
   <section class="h-[70vh] bg-white flex items-center overflow-hidden relative mt-28">
@@ -129,7 +131,7 @@ const whatsappLink = `https://wa.me/${pageData.contato.whatsappLink}?text=${what
             <div
               class="w-24 h-24 mx-auto mb-6 bg-white/10 rounded-full flex items-center justify-center text-4xl group-hover:bg-primary-gold transition-all duration-500"
             >
-              <MdiIcon name='mdi:whatsapp' size={32}  className="mx-auto" />
+              <MdiIcon name="mdi:whatsapp" size={32} className="mx-auto" />
             </div>
             <h3 class="text-2xl font-bold mb-2 text-primary-gold">WhatsApp</h3>
             <p class="text-xl text-white/90">{pageData.contato.whatsapp}</p>
@@ -147,7 +149,7 @@ const whatsappLink = `https://wa.me/${pageData.contato.whatsappLink}?text=${what
             <div
               class="w-24 h-24 mx-auto mb-6 bg-white/10 rounded-full flex items-center justify-center text-4xl group-hover:bg-primary-gold transition-all duration-500"
             >
-               <MdiIcon name='mdi:phone-outline' size={32}  className="mx-auto" />
+              <MdiIcon name="mdi:phone-outline" size={32} className="mx-auto" />
             </div>
             <h3 class="text-2xl font-bold mb-2 text-primary-gold">Telefone</h3>
             <p class="text-xl text-white/90">{pageData.contato.telefone}</p>
@@ -162,7 +164,7 @@ const whatsappLink = `https://wa.me/${pageData.contato.whatsappLink}?text=${what
             <div
               class="w-24 h-24 mx-auto mb-6 bg-white/10 rounded-full flex items-center justify-center text-4xl group-hover:bg-primary-gold transition-all duration-500"
             >
-              <MdiIcon name='mdi:email-outline' size={32}  className="mx-auto" />
+              <MdiIcon name="mdi:email-outline" size={32} className="mx-auto" />
             </div>
             <h3 class="text-2xl font-bold mb-2 text-primary-gold">E-mail</h3>
             <p class="text-lg text-white/90">{pageData.contato.email}</p>
@@ -184,95 +186,94 @@ const whatsappLink = `https://wa.me/${pageData.contato.whatsappLink}?text=${what
             Informações de <span class="accent">atendimento</span>
           </h2>
           <div class="grid lg:grid-cols-3 gap-4 lg:gap-16">
-             <!-- Endereço -->
-          <div class="mb-8">
-            <div class="flex items-start gap-4 mb-6">
-              <div
-                class="w-14 h-14 bg-light-bg rounded-2xl flex items-center justify-center text-2xl flex-shrink-0"
-              >
-                 <MdiIcon name='mdi:map-marker' size={32}  className="mx-auto" />
-              </div>
-              <div>
-                <h3 class="text-xl font-bold text-primary-dark mb-2">Endereço</h3>
-                <p class="text-gray-600">
-                  {pageData.contato.endereco.rua}<br />
-                  {pageData.contato.endereco.bairro}<br />
-                  {pageData.contato.endereco.cidade}<br />
-                  CEP: {pageData.contato.endereco.cep}
-                </p>
-                <a
-                  href={pageData.contato.googleMapsLink}
-                  target="_blank"
-                  class="text-primary-gold hover:text-gold-dark transition-colors mt-2 inline-block"
+            <!-- Endereço -->
+            <div class="mb-8">
+              <div class="flex items-start gap-4 mb-6">
+                <div
+                  class="w-14 h-14 bg-light-bg rounded-2xl flex items-center justify-center text-2xl flex-shrink-0"
                 >
-                  Ver no Google Maps →
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Horários -->
-          <div class="mb-8">
-            <div class="flex items-start gap-4 mb-6">
-              <div
-                class="w-14 h-14 bg-light-bg rounded-2xl flex items-center justify-center text-2xl flex-shrink-0"
-              >
-                <MdiIcon name='mdi:clock-time-four' size={32}  className="mx-auto" />
-              </div>
-              <div class="w-full">
-                <h3 class="text-xl font-bold text-primary-dark mb-4">Horário de Atendimento</h3>
-                <div class="space-y-3">
-                  {
-                    pageData.horarios.map((horario) => (
-                      <div class="flex justify-between items-center py-2 border-b border-gray-100">
-                        <span class="font-medium text-gray-700">{horario.dia}</span>
-                        <span class="text-primary-gold font-medium">{horario.horario}</span>
-                      </div>
-                    ))
-                  }
+                  <MdiIcon name="mdi:map-marker" size={32} className="mx-auto" />
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Redes Sociais -->
-          <div>
-            <div class="flex items-start gap-4">
-              <div
-                class="w-14 h-14 bg-light-bg rounded-2xl flex items-center justify-center text-2xl flex-shrink-0"
-              >
-               <MdiIcon name='mdi:web-box' size={32}  className="mx-auto" />
-              </div>
-              <div>
-                <h3 class="text-xl font-bold text-primary-dark mb-4">Redes Sociais</h3>
-                <div class="flex gap-4">
+                <div>
+                  <h3 class="text-xl font-bold text-primary-dark mb-2">Endereço</h3>
+                  <p class="text-gray-600">
+                    {pageData.contato.endereco.rua}<br />
+                    {pageData.contato.endereco.bairro}<br />
+                    {pageData.contato.endereco.cidade}<br />
+                    CEP: {pageData.contato.endereco.cep}
+                  </p>
                   <a
-                    href={pageData.contato.instagramLink}
+                    href={pageData.contato.googleMapsLink}
                     target="_blank"
-                    class="w-12 h-12 bg-primary-dark text-white rounded-xl flex items-center justify-center hover:bg-primary-gold transition-all duration-300 transform hover:scale-110"
+                    class="text-primary-gold hover:text-gold-dark transition-colors mt-2 inline-block"
                   >
-                    <MdiIcon name='mdi:instagram' size={32}  className="mx-auto" />
-                  </a>
-                  <a
-                    href={pageData.contato.facebookLink}
-                    target="_blank"
-                    class="w-12 h-12 bg-primary-dark text-white rounded-xl flex items-center justify-center hover:bg-primary-gold transition-all duration-300 transform hover:scale-110"
-                  >
-                    <MdiIcon name='mdi:facebook' size={32}  className="mx-auto" />
-                  </a>
-                  <a
-                    href={whatsappLink}
-                    target="_blank"
-                    class="w-12 h-12 bg-green-500 text-white rounded-xl flex items-center justify-center hover:bg-green-600 transition-all duration-300 transform hover:scale-110"
-                  >
-                     <MdiIcon name='mdi:whatsapp' size={32}  className="mx-auto" />
+                    Ver no Google Maps →
                   </a>
                 </div>
               </div>
             </div>
+
+            <!-- Horários -->
+            <div class="mb-8">
+              <div class="flex items-start gap-4 mb-6">
+                <div
+                  class="w-14 h-14 bg-light-bg rounded-2xl flex items-center justify-center text-2xl flex-shrink-0"
+                >
+                  <MdiIcon name="mdi:clock-time-four" size={32} className="mx-auto" />
+                </div>
+                <div class="w-full">
+                  <h3 class="text-xl font-bold text-primary-dark mb-4">Horário de Atendimento</h3>
+                  <div class="space-y-3">
+                    {
+                      pageData.horarios.map((horario) => (
+                        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                          <span class="font-medium text-gray-700">{horario.dia}</span>
+                          <span class="text-primary-gold font-medium">{horario.horario}</span>
+                        </div>
+                      ))
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Redes Sociais -->
+            <div>
+              <div class="flex items-start gap-4">
+                <div
+                  class="w-14 h-14 bg-light-bg rounded-2xl flex items-center justify-center text-2xl flex-shrink-0"
+                >
+                  <MdiIcon name="mdi:web-box" size={32} className="mx-auto" />
+                </div>
+                <div>
+                  <h3 class="text-xl font-bold text-primary-dark mb-4">Redes Sociais</h3>
+                  <div class="flex gap-4">
+                    <a
+                      href={pageData.contato.instagramLink}
+                      target="_blank"
+                      class="w-12 h-12 bg-primary-dark text-white rounded-xl flex items-center justify-center hover:bg-primary-gold transition-all duration-300 transform hover:scale-110"
+                    >
+                      <MdiIcon name="mdi:instagram" size={32} className="mx-auto" />
+                    </a>
+                    <a
+                      href={pageData.contato.facebookLink}
+                      target="_blank"
+                      class="w-12 h-12 bg-primary-dark text-white rounded-xl flex items-center justify-center hover:bg-primary-gold transition-all duration-300 transform hover:scale-110"
+                    >
+                      <MdiIcon name="mdi:facebook" size={32} className="mx-auto" />
+                    </a>
+                    <a
+                      href={whatsappLink}
+                      target="_blank"
+                      class="w-12 h-12 bg-green-500 text-white rounded-xl flex items-center justify-center hover:bg-green-600 transition-all duration-300 transform hover:scale-110"
+                    >
+                      <MdiIcon name="mdi:whatsapp" size={32} className="mx-auto" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          </div>
-         
         </div>
       </div>
     </div>
@@ -289,8 +290,6 @@ const whatsappLink = `https://wa.me/${pageData.contato.whatsappLink}?text=${what
       loading="lazy"
       referrerpolicy="no-referrer-when-downgrade"
       class="w-full h-full"></iframe>
-
-
   </section>
 
   <!-- FAQ -->
@@ -348,7 +347,6 @@ const whatsappLink = `https://wa.me/${pageData.contato.whatsappLink}?text=${what
   </section>
 
   <!-- CTA Final -->
- 
 </MainLayout>
 
 <script>

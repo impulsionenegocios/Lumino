@@ -1,3 +1,5 @@
+import type { string } from 'astro:schema';
+
 export interface mainData {
   nome?: string;
   descricao?: string;
@@ -9,6 +11,11 @@ export interface mainData {
   endereco?: string;
   numero_cro?: number | string;
   responsavel_tecnico?: string;
+  link_instagram?: string;
+  link_facebook?: string;
+  link_google?: string;
+  link_whatsapp?: string;
+  link_youtube?: string;
 }
 
 const apiUrl = import.meta.env.PUBLIC_DIRECTUS_INTERNAL_URL; // usado no fetch (INTERNAMENTE no SSR)
@@ -18,7 +25,7 @@ export class DirectusError extends Error {
   constructor(
     message: string,
     public status?: number,
-    public url?: string
+    public url?: string,
   ) {
     super(message);
     this.name = 'DirectusError';
@@ -39,7 +46,7 @@ export async function getMainData(): Promise<mainData | null> {
       throw new DirectusError(
         `Erro ao buscar os dados da clínica: ${res.statusText}`,
         res.status,
-        url
+        url,
       );
     }
 
@@ -57,8 +64,17 @@ export async function getMainData(): Promise<mainData | null> {
       email: item.email,
       endereco: item.endereco,
       descricao: item.descricao,
-      logo_escura: item.logo_escura? `${assetsUrl}/assets/${item.logo_escura}?width=160&height=80&format=webp&quality=80`: '/images/placeholder-logo.jpg',
-      logo_clara: item.logo_clara ? `${assetsUrl}/assets/${item.logo_clara}?width=160&height=80&format=webp&quality=80` : '/images/placeholder-logo.jpg',
+      logo_escura: item.logo_escura
+        ? `${assetsUrl}/assets/${item.logo_escura}?width=160&height=80&format=webp&quality=80`
+        : '/images/placeholder-logo.jpg',
+      logo_clara: item.logo_clara
+        ? `${assetsUrl}/assets/${item.logo_clara}?width=380&height=80&format=webp&quality=80`
+        : '/images/placeholder-logo.jpg',
+      link_instagram: item.link_instagram,
+      link_facebook: item.link_facebook,
+      link_google: item.link_google,
+      link_whatsapp: item.link_whatsapp,
+      link_youtube: item.link_youtube,
     };
 
     return mappedMainData;
@@ -82,7 +98,7 @@ export async function getMainDataPublic(): Promise<mainData | null> {
       throw new DirectusError(
         `Erro ao buscar os dados da clínica: ${res.statusText}`,
         res.status,
-        url
+        url,
       );
     }
 

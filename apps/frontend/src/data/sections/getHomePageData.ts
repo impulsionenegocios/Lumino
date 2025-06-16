@@ -29,7 +29,7 @@ export async function getHomePageData() {
       getTestimonialsData(),
       getContactCTAData(),
       // Corrigindo a chamada do getBlogPosts - removendo a sintaxe JSX incorreta
-      getBlogPosts()
+      getBlogPosts(),
     ]);
 
     return {

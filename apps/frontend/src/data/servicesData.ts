@@ -170,7 +170,7 @@ export async function getServiceBySlug(slug: string): Promise<ServiceData | null
       ].join(',') +
       `&deep[casesBeforeAfter][_limit]=-1` +
       `&limit=1`;
-      
+
     const res = await fetch(url, {
       method: 'GET',
       headers: {
@@ -291,7 +291,7 @@ function transformServiceData(service: any): ServiceData {
     date_created: service.date_created,
     date_updated: service.date_updated,
     service_name: service.service_name,
-    
+
     // Hero Section
     heroImage: service.heroImage
       ? `${directusPublicUrl}/assets/${service.heroImage}?width=1920&height=1080&format=webp&quality=80`
@@ -342,9 +342,9 @@ function transformServiceData(service: any): ServiceData {
 
     // YAY FORMS - CORRIGIDO: acessando os campos corretos
     YayFormsSlug: service.yay_forms?.slug || '',
-    YayFormsId: service.yay_forms?.form_id || ''
+    YayFormsId: service.yay_forms?.form_id || '',
   };
-  
+
   return transformedService;
 }
 
@@ -419,11 +419,11 @@ export async function getAllServices(): Promise<ServiceData[]> {
       heroDescription: service.heroDescription || '',
       heroPrimaryButton: service.heroPrimaryButton || 0,
       heroSecondaryButton: service.heroSecondaryButton || 0,
-      
+
       // YAY FORMS
       YayFormsSlug: service.yay_forms?.slug || '',
       YayFormsId: service.yay_forms?.form_id || '',
-      
+
       // Campos vazios para compatibilidade (não carregados na listagem)
       benefitsTitle: '',
       benefitsTitleAccent: '',

@@ -18,7 +18,7 @@ export class DirectusError extends Error {
   constructor(
     message: string,
     public status?: number,
-    public url?: string
+    public url?: string,
   ) {
     super(message);
     this.name = 'DirectusError';
@@ -36,11 +36,7 @@ export async function getGalleryData(): Promise<GalleryData | null> {
     });
 
     if (!res.ok) {
-      throw new DirectusError(
-        `Erro ao buscar dados da galeria`,
-        res.status,
-        url
-      );
+      throw new DirectusError(`Erro ao buscar dados da galeria`, res.status, url);
     }
 
     const json = await res.json();
@@ -51,17 +47,18 @@ export async function getGalleryData(): Promise<GalleryData | null> {
     const mappedData: GalleryData = {
       title: item.title,
       description: item.description,
-      items: item.items?.map((rel: any) => {
-        const galleryItem = rel.gallery_section_item_id;
-        return {
-          id: galleryItem.id,
-          image: galleryItem.image
-            ? `${assetsUrl}/assets/${galleryItem.image}?width=800&height=600&format=webp&quality=85`
-            : '/images/gallery-placeholder.jpg',
-          title: galleryItem.title,
-          description: galleryItem.description,
-        };
-      }) || [],
+      items:
+        item.items?.map((rel: any) => {
+          const galleryItem = rel.gallery_section_item_id;
+          return {
+            id: galleryItem.id,
+            image: galleryItem.image
+              ? `${assetsUrl}/assets/${galleryItem.image}?width=800&height=600&format=webp&quality=85`
+              : '/images/gallery-placeholder.jpg',
+            title: galleryItem.title,
+            description: galleryItem.description,
+          };
+        }) || [],
     };
 
     return mappedData;

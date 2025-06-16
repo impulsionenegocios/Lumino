@@ -37,16 +37,15 @@ try {
   throw new Error('Erro ao buscar dados da clínica');
 }
 
-const serviceName = serviceData.service_name
+const serviceName = serviceData.service_name;
 const message = `Olá, tudo bem? Vim do site e queria saber mais sobre ${serviceData.service_name}`;
 const encodedMessage = encodeURIComponent(message);
 
 const whatsappLink = `https://wa.me/${mainData?.whatsapp}?text=${encodedMessage}`;
-const contactLink = serviceData.YayFormsId ? "#contact" : whatsappLink;
+const contactLink = serviceData.YayFormsId ? '#contact' : whatsappLink;
 
 const metaTitle = `${serviceData.heroTitle} | ${mainData?.nome}`;
 const metaDescription = serviceData.heroDescription;
-
 ---
 
 <MainLayout title={metaTitle} description={metaDescription}>
@@ -108,9 +107,9 @@ const metaDescription = serviceData.heroDescription;
           <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {serviceData.forWho.map((item) => (
               <div class="text-center reveal-effect">
-                  <div class="w-24 h-24 mx-auto mb-6 bg-light-bg rounded-2xl flex items-center justify-center hover:bg-primary-gold hover:text-white transition-all duration-500 transform hover:-translate-y-2">
-                    <MdiIcon name={item.icon || ''} size={32}  className="mx-auto" />
-                  </div>
+                <div class="w-24 h-24 mx-auto mb-6 bg-light-bg rounded-2xl flex items-center justify-center hover:bg-primary-gold hover:text-white transition-all duration-500 transform hover:-translate-y-2">
+                  <MdiIcon name={item.icon || ''} size={32} className="mx-auto" />
+                </div>
                 <p class="text-gray-700 font-medium">{item.text}</p>
               </div>
             ))}
@@ -123,7 +122,7 @@ const metaDescription = serviceData.heroDescription;
   <!-- Benefícios -->
   {
     serviceData.benefits && serviceData.benefits.length > 0 && (
-      <section class="bg-primary-dark text-white px-8 lg:px-16 py-8 lg:py-16"  id="beneficios">
+      <section class="bg-primary-dark text-white px-8 lg:px-16 py-8 lg:py-16" id="beneficios">
         <div class="shape shape-3" />
         <div>
           <div class="text-center mb-16">
@@ -143,7 +142,7 @@ const metaDescription = serviceData.heroDescription;
             {serviceData.benefits.map((benefit) => (
               <div class="text-center reveal-effect group cursor-pointer">
                 <div class="w-20 h-20 mx-auto mb-6 bg-white/10 rounded-2xl flex items-center justify-center text-3xl group-hover:bg-primary-gold transition-all duration-500 transform group-hover:scale-110">
-                   <MdiIcon name={benefit.icon || ''} size={32}  className="mx-auto" />
+                  <MdiIcon name={benefit.icon || ''} size={32} className="mx-auto" />
                 </div>
                 <h3 class="text-xl font-bold mb-2 text-primary-gold">{benefit.title}</h3>
                 <p class="text-white/80">{benefit.text}</p>
@@ -365,7 +364,12 @@ const metaDescription = serviceData.heroDescription;
   {
     serviceData.YayFormsId && (
       <section class="h-[80svh]" id="contact">
-        <div id="yay-container" data-yf-widget={serviceData.YayFormsId} data-form-id={serviceData.YayFormsId} style="width:100%;height:100%;"></div>
+        <div
+          id="yay-container"
+          data-yf-widget={serviceData.YayFormsId}
+          data-form-id={serviceData.YayFormsId}
+          style="width:100%;height:100%;"
+        />
       </section>
     )
   }
@@ -404,9 +408,6 @@ const metaDescription = serviceData.heroDescription;
       </div>
     </div>
   </section>
-
-
-  
 </MainLayout>
 
 <script is:inline>
@@ -418,17 +419,17 @@ const metaDescription = serviceData.heroDescription;
     // Pega o ID do formulário do atributo
     const yayContainer = document.getElementById('yay-container');
     if (!yayContainer) return; // Se não há container, não há formulário
-    
+
     const formId = yayContainer.getAttribute('data-form-id');
-    
+
     if (!formId) return; // Proteção extra
 
     // Cria o iframe
     const iframe = document.createElement('iframe');
     iframe.src = `https://yayforms.link/${formId}` + (paramString ? `?${paramString}` : '');
-    iframe.style.width = "100%";
-    iframe.style.height = "100%";
-    iframe.style.border = "none";
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
+    iframe.style.border = 'none';
     yayContainer.appendChild(iframe);
   });
 </script>
@@ -463,25 +464,25 @@ const metaDescription = serviceData.heroDescription;
 </script>
 
 <style>
-#tecnical {
-  zoom: 0.9
-}
-#cta {
-  zoom: 0.9
-}
-#faq {
-  zoom: 0.9
-}
-#sobre-nos {
-  zoom: 0.9
-}
-#casos {
-  zoom: 0.9
-}
-#for-who {
-  zoom: 0.9
-}
-#beneficios {
-  zoom: 0.9
-}
+  #tecnical {
+    zoom: 0.9;
+  }
+  #cta {
+    zoom: 0.9;
+  }
+  #faq {
+    zoom: 0.9;
+  }
+  #sobre-nos {
+    zoom: 0.9;
+  }
+  #casos {
+    zoom: 0.9;
+  }
+  #for-who {
+    zoom: 0.9;
+  }
+  #beneficios {
+    zoom: 0.9;
+  }
 </style>

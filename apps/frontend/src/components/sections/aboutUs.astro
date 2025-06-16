@@ -33,14 +33,14 @@ const sortedItems = items.sort((a, b) => {
 });
 
 // Converter items do Directus para o formato esperado pelos features
-const features = sortedItems.map(item => ({
+const features = sortedItems.map((item) => ({
   icon: '✨', // Ícone padrão, pode ser customizado depois
   title: item.title,
-  description: item.description
+  description: item.description,
 }));
 
 // URL da imagem do Directus
-const shapeImage = imagem 
+const shapeImage = imagem
   ? `${assetsUrl}/assets/${imagem}?width=700&height=800&format=webp&quality=80`
   : '/images/about-us-placeholder.jpg';
 ---

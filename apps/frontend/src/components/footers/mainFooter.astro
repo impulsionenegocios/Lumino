@@ -1,3 +1,13 @@
+---
+import { Image } from 'astro:assets';
+import { getMainData } from '../../data/mainData';
+import MdiIcon from '../utils/MdiIcon.astro';
+const mainData = await getMainData();
+if (!mainData) return Astro.redirect('/404');
+const date = new Date();
+const year = date.getFullYear();
+---
+
 <footer>
   <div class="counter-particles"></div>
   <div class="footer-shape footer-shape-1"></div>
@@ -5,16 +15,59 @@
   <div class="container">
     <div class="footer-top">
       <div class="footer-column footer-about">
-        <a href="#" class="footer-logo">Lumino <span class="footer-logo-accent">Clínica</span></a>
+        <Image
+          src={mainData.logo_clara || ''}
+          alt={'logo ' + mainData.nome || 'logo lumino'}
+          class="mb-8"
+          loading="eager"
+          width="200"
+          height="80"
+          decoding="async"
+          format="webp"
+          quality="90"
+        />
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec
-          ullamcorper mattis, pulvinar dapibus leo.
+          {mainData.descricao || ''}
         </p>
         <div class="footer-social">
-          <a href="#" class="social-icon">f</a>
-          <a href="#" class="social-icon">t</a>
-          <a href="#" class="social-icon">in</a>
-          <a href="#" class="social-icon">ig</a>
+          {
+            mainData.link_instagram && (
+              <a href={mainData.link_instagram || ''} class="social-icon">
+                <MdiIcon name="instagram" />
+              </a>
+            )
+          }
+
+          {
+            mainData.link_facebook && (
+              <a href={mainData.link_facebook || ''} class="social-icon">
+                <MdiIcon name="facebook" />
+              </a>
+            )
+          }
+
+          {
+            mainData.link_google && (
+              <a href={mainData.link_google || ''} class="social-icon">
+                <MdiIcon name="google" />
+              </a>
+            )
+          }
+
+          {
+            mainData.link_whatsapp && (
+              <a href={mainData.link_whatsapp || ''} class="social-icon">
+                <MdiIcon name="whatsapp" />
+              </a>
+            )
+          }
+          {
+            mainData.link_youtube && (
+              <a href={mainData.link_youtube || ''} class="social-icon">
+                <MdiIcon name="youtube" />
+              </a>
+            )
+          }
         </div>
       </div>
       <div class="footer-column footer-links">
@@ -33,33 +86,24 @@
         <div class="footer-contact-item">
           <div class="footer-contact-icon">📍</div>
           <div class="footer-contact-text">
-            Avenida Paulista, 1000, Jardim Paulista, São Paulo - SP, 01310-100
+            {mainData.endereco}
           </div>
         </div>
         <div class="footer-contact-item">
           <div class="footer-contact-icon">📞</div>
-          <div class="footer-contact-text">+55 (11) 3000-0000</div>
+          <div class="footer-contact-text">{mainData.telefone}</div>
         </div>
         <div class="footer-contact-item">
           <div class="footer-contact-icon">✉️</div>
-          <div class="footer-contact-text">contato@luminoclinica.com.br</div>
+          <div class="footer-contact-text">{mainData.email}</div>
         </div>
-      </div>
-      <div class="footer-column footer-newsletter">
-        <h3 class="footer-heading">Newsletter</h3>
-        <p>Inscreva-se para receber nossas novidades e promoções exclusivas.</p>
-        <form class="footer-newsletter-form">
-          <input type="email" placeholder="Seu e-mail" class="footer-newsletter-input" />
-          <button type="submit" class="footer-newsletter-button">→</button>
-        </form>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2025 Lumino Clínica. Todos os direitos reservados.</p>
+      <p>© {year} Lumino Clínica. Todos os direitos reservados.</p>
       <div class="footer-bottom-links">
         <a href="#">Política de Privacidade</a>
         <a href="#">Termos de Uso</a>
-        <a href="#">Mapa do Site</a>
       </div>
     </div>
   </div>

@@ -20,7 +20,7 @@ export class DirectusError extends Error {
   constructor(
     message: string,
     public status?: number,
-    public url?: string
+    public url?: string,
   ) {
     super(message);
     this.name = 'DirectusError';
@@ -38,11 +38,7 @@ export async function getAboutUsData(): Promise<AboutUsData | null> {
     });
 
     if (!res.ok) {
-      throw new DirectusError(
-        `Erro ao buscar dados da seção Sobre`,
-        res.status,
-        url
-      );
+      throw new DirectusError(`Erro ao buscar dados da seção Sobre`, res.status, url);
     }
 
     const json = await res.json();
@@ -56,12 +52,13 @@ export async function getAboutUsData(): Promise<AboutUsData | null> {
       subtitle: item.subtitle,
       description: item.description,
       imagem: item.imagem,
-      items: item.items?.map((rel: any) => ({
-        id: rel.about_us_section_items_id?.id,
-        title: rel.about_us_section_items_id?.title,
-        description: rel.about_us_section_items_id?.description,
-        sort: rel.about_us_section_items_id?.sort,
-      })) || [],
+      items:
+        item.items?.map((rel: any) => ({
+          id: rel.about_us_section_items_id?.id,
+          title: rel.about_us_section_items_id?.title,
+          description: rel.about_us_section_items_id?.description,
+          sort: rel.about_us_section_items_id?.sort,
+        })) || [],
     };
 
     return mapped;

@@ -20,7 +20,7 @@ export class DirectusError extends Error {
   constructor(
     message: string,
     public status?: number,
-    public url?: string
+    public url?: string,
   ) {
     super(message);
     this.name = 'DirectusError';
@@ -53,12 +53,13 @@ export async function getHeroData(): Promise<HeroData | null> {
       bg_image: item.bg_image
         ? `${assetsUrl}/assets/${item.bg_image}?width=1920&height=1080&format=webp&quality=80`
         : '/images/placeholder-bg.jpg',
-      buttons: item.buttons?.map((btn: any) => ({
-        id: btn.buttons_id?.id,
-        label: btn.buttons_id?.label,
-        href: btn.buttons_id?.href,
-        variant: btn.buttons_id?.variant ?? 'solid',
-      })) || [],
+      buttons:
+        item.buttons?.map((btn: any) => ({
+          id: btn.buttons_id?.id,
+          label: btn.buttons_id?.label,
+          href: btn.buttons_id?.href,
+          variant: btn.buttons_id?.variant ?? 'solid',
+        })) || [],
     };
 
     return mappedHeroData;

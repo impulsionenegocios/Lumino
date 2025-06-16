@@ -14,7 +14,11 @@ export interface seoPages {
 const apiUrl = import.meta.env.PUBLIC_DIRECTUS_INTERNAL_URL;
 
 export class DirectusError extends Error {
-  constructor(message: string, public status?: number, public url?: string) {
+  constructor(
+    message: string,
+    public status?: number,
+    public url?: string,
+  ) {
     super(message);
     this.name = 'DirectusError';
   }
