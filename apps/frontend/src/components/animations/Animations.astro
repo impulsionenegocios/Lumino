@@ -76,6 +76,7 @@
     // Animação para o contador
     const counters = document.querySelectorAll('.counter-value');
     counters.forEach((counter) => {
+      //@ts-ignore
       const target = parseInt(counter.textContent);
       gsap.to(counter, {
         innerHTML: target,
@@ -86,6 +87,7 @@
           start: 'top 80%',
         },
         onUpdate: function () {
+          //@ts-ignore
           counter.textContent = Math.round(this.targets()[0].innerHTML);
         },
       });
@@ -97,7 +99,7 @@
     document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
-
+        //@ts-ignore
         const targetId = this.getAttribute('href');
         if (targetId === '#') return;
 

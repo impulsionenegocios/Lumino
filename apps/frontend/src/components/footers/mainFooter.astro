@@ -15,11 +15,8 @@ export interface MenuItem {
   url: string;
 }
 
-const {
-  MenuItems
-} = Astro.props;
+const { MenuItems } = Astro.props;
 ---
-
 
 <footer>
   <div class="counter-particles"></div>
@@ -83,13 +80,15 @@ const {
           }
         </div>
       </div>
-     <div class="footer-column footer-links">
+      <div class="footer-column footer-links">
         <h3 class="footer-heading">Links Rápidos</h3>
         <ul class="grid grid-cols-2">
           {
             //@ts-ignore
-            MenuItems.map(item => (
-              <li><a href={item.url}>{item.label}</a></li>
+            MenuItems.map((item) => (
+              <li>
+                <a href={item.url}>{item.label}</a>
+              </li>
             ))
           }
         </ul>
